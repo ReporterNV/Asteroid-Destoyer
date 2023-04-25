@@ -52,7 +52,6 @@ function love.update(dt)
 		if love.keyboard.isDown("up") and player.y > 0 then
 			player.y = player.y - player.speed*dt
 		end
-		--if love.keyboard.isDown("down") then
 		if keys["down"] == true or keys["s"] == true then
 			if player.y + player.speed*dt + player.img:getHeight() > SCREEN_H then
 				player.y = SCREEN_H - player.img:getHeight()
