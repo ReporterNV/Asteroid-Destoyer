@@ -95,7 +95,7 @@ while true do
 	   line:endsWith("then") or
 	   line:endsWith("do") or
 	   line:endsWith("{") ) and 
-           not line:startsWith("--")
+           not line:startsWith("--") -- may be deleted
 	   then
 		nextIndent=currIndent+1
 	end

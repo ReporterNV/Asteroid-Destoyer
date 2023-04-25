@@ -5,10 +5,11 @@ SCORE = 0;
 
 function love.load()
 	-- Initialize the player's spaceship and asteroids
+	SCORE = 0;
 	player = {
 		x = 200, 
 		y = 500,
-		speed = 300,
+		speed = 900,
 		img = love.graphics.newImage("spaceship.png")
 	}
 	asteroids = {}
@@ -73,6 +74,7 @@ function love.update(dt)
 			asteroid.y = asteroid.y + asteroid.speed*dt
 			if asteroid.y > 600 then
 				table.remove(asteroids, i)
+				SCORE = SCORE+1;
 			end
 		end
 
@@ -92,6 +94,9 @@ function love.update(dt)
 end
 
 function love.draw()
+	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10)
+	love.graphics.print("SCORE: " .. tostring(SCORE), 10, 10)
+
 	if PAUSE == true then
 		love.graphics.print("PAUSE", SCREEN_W/2, SCREEN_H/2);
 	end
