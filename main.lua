@@ -1,3 +1,4 @@
+local anim8 = require ("anim8.anim8")
 SCREEN_H = 600
 SCREEN_W = 400
 PAUSE = false;
@@ -9,7 +10,7 @@ function love.load()
 	player = {
 		x = 200, 
 		y = 500,
-		speed = 900,
+		speed = 200,
 		img = love.graphics.newImage("spaceship.png")
 	}
 	asteroids = {}
@@ -74,7 +75,7 @@ function love.update(dt)
 			asteroid.y = asteroid.y + asteroid.speed*dt
 			if asteroid.y > 600 then
 				table.remove(asteroids, i)
-				SCORE = SCORE+1;
+				SCORE = SCORE+10000;
 			end
 		end
 
@@ -95,16 +96,23 @@ end
 
 function love.draw()
 	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10)
-	love.graphics.print("SCORE: " .. tostring(SCORE), 10, 10)
+	love.graphics.printf("SCORE: " .. tostring(SCORE), 10, 10, 60, "left")
 
 	if PAUSE == true then
-		love.graphics.print("PAUSE", SCREEN_W/2, SCREEN_H/2);
+		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
 	end
+
 	-- Draw the player's spaceship
+	love.graphics.setColor(0, 1, 0) -- set color to red
+	love.graphics.rectangle("line", player.x, player.y, player.img:getWidth(), player.img:getHeight())
+	love.graphics.setColor(1, 1, 1) -- set color to red
 	love.graphics.draw(player.img, player.x, player.y)
 
 	-- Draw the asteroids
 	for i, asteroid in ipairs(asteroids) do
+		love.graphics.setColor(0, 1, 0) -- set color to red
+		love.graphics.rectangle("line", asteroid.x, asteroid.y, asteroid.img:getWidth(), asteroid.img:getHeight())
+		love.graphics.setColor(1, 1, 1) -- set color to red
 		love.graphics.draw(asteroid.img, asteroid.x, asteroid.y)
 	end
 end
