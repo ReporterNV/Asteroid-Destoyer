@@ -20,6 +20,21 @@ function love.load()
 	-- Set up the game window
 	love.window.setTitle("Asteroid Dodge")
 	love.window.setMode(SCREEN_W, SCREEN_H)
+
+
+	IceSpriteS = love.graphics.newImage("IceS1.png");
+	IceSpriteA = love.graphics.newImage("IceS2.png");
+	IceSpriteE = love.graphics.newImage("IceS3.png");
+	gridS = anim8.newGrid(32, 32, IceSpriteS:getWidth(), IceSpriteS:getHeight())
+	gridA = anim8.newGrid(32, 32, IceSpriteA:getWidth(), IceSpriteA:getHeight())
+	gridE = anim8.newGrid(32, 32, IceSpriteE:getWidth(), IceSpriteE:getHeight())
+	animationS = anim8.newAnimation(gridS('1-9', 1), 0.09), {pauseAtEnd = true}
+	animationA = anim8.newAnimation(gridA('1-8', 1), 0.09)
+	animationE = anim8.newAnimation(gridE('1-18', 1), 0.09)
+	CurrentAnim = animationS;
+	frames = 9
+  	local timer = 0.09 * frames
+  	love.timer.performWithDelay(timer, function() CurrentAnim = animationA end)
 end
 
 function love.keypressed(key)
@@ -41,19 +56,35 @@ function love.focus(f)
 end
 
 function love.update(dt)
-
 	if PAUSE == false then
 
+		animationS:update(dt)
 		-- Move the player's spaceship
-		if love.keyboard.isDown("left") and player.x > 0 then
-			player.x = player.x - player.speed*dt
+
+		if keys["left"] == true or keys["a"] == true then
+			if player.x - player.speed*dt < 0 then
+				player.x = 0
+			else
+				player.x = player.x - player.speed*dt
+			end
 		end
-		if love.keyboard.isDown("right") and player.x < 300 then
-			player.x = player.x + player.speed*dt
+
+		if keys["right"] == true or keys["d"] == true then
+			if player.x + player.speed*dt > SCREEN_W - player.img:getWidth() then
+				player.x = SCREEN_W - player.img:getWidth()
+			else
+				player.x = player.x + player.speed*dt
+			end
 		end
-		if love.keyboard.isDown("up") and player.y > 0 then
-			player.y = player.y - player.speed*dt
+
+		if keys["up"] == true or keys["w"] == true then
+			if player.y - player.speed*dt < 0 then
+				player.y = 0
+			else
+				player.y = player.y - player.speed*dt
+			end
 		end
+
 		if keys["down"] == true or keys["s"] == true then
 			if player.y + player.speed*dt + player.img:getHeight() > SCREEN_H then
 				player.y = SCREEN_H - player.img:getHeight()
@@ -96,6 +127,8 @@ end
 
 function love.draw()
 	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10)
+	love.graphics.print("X: " .. tostring(player.x), 10, 30)
+	love.graphics.print("Y: " .. tostring(player.y), 10, 50)
 	love.graphics.printf("SCORE: " .. tostring(SCORE), 10, 10, 60, "left")
 
 	if PAUSE == true then
@@ -103,6 +136,14 @@ function love.draw()
 	end
 
 	-- Draw the player's spaceship
+	if CurrentAnim == animationS then
+		CurrentAnim:draw(IceSpriteS, 50, 50);
+	elseif CurrentAnim == animationA then
+		CurrentAnim:draw(IceSpriteA, 50, 50);
+	elseif CurrentAnim == animationE then
+		CurrentAnim:draw(IceSpriteE, 50, 50);
+	end
+
 	love.graphics.setColor(0, 1, 0) -- set color to red
 	love.graphics.rectangle("line", player.x, player.y, player.img:getWidth(), player.img:getHeight())
 	love.graphics.setColor(1, 1, 1) -- set color to red
