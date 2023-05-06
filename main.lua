@@ -21,20 +21,12 @@ function love.load()
 	love.window.setTitle("Asteroid Dodge")
 	love.window.setMode(SCREEN_W, SCREEN_H)
 
+	RedHoodImage = love.graphics.newImage("RedHood.png");
 
-	IceSpriteS = love.graphics.newImage("IceS1.png");
-	IceSpriteA = love.graphics.newImage("IceS2.png");
-	IceSpriteE = love.graphics.newImage("IceS3.png");
-	gridS = anim8.newGrid(32, 32, IceSpriteS:getWidth(), IceSpriteS:getHeight())
-	gridA = anim8.newGrid(32, 32, IceSpriteA:getWidth(), IceSpriteA:getHeight())
-	gridE = anim8.newGrid(32, 32, IceSpriteE:getWidth(), IceSpriteE:getHeight())
-	animationS = anim8.newAnimation(gridS('1-9', 1), 0.09), {pauseAtEnd = true}
-	animationA = anim8.newAnimation(gridA('1-8', 1), 0.09)
-	animationE = anim8.newAnimation(gridE('1-18', 1), 0.09)
-	CurrentAnim = animationS;
-	frames = 9
-  	local timer = 0.09 * frames
-  	love.timer.performWithDelay(timer, function() CurrentAnim = animationA end)
+	--Create Grid
+	RedHoodGrid = anim8.newGrid(112, 133, RedHoodImage:getWidth(), RedHoodImage:getHeight())
+	RedHoodAnim = anim8.newAnimation(RedHoodGrid('1-12', '1-11'), 0.04);
+
 end
 
 function love.keypressed(key)
@@ -58,8 +50,12 @@ end
 function love.update(dt)
 	if PAUSE == false then
 
-		animationS:update(dt)
+		RedHoodAnim:update(dt)
 		-- Move the player's spaceship
+
+		if keys["q"] == true then
+			RedHoodAnim:flipH();
+		end
 
 		if keys["left"] == true or keys["a"] == true then
 			if player.x - player.speed*dt < 0 then
@@ -130,20 +126,14 @@ function love.draw()
 	love.graphics.print("X: " .. tostring(player.x), 10, 30)
 	love.graphics.print("Y: " .. tostring(player.y), 10, 50)
 	love.graphics.printf("SCORE: " .. tostring(SCORE), 10, 10, 60, "left")
+	RedHoodAnim:draw(RedHoodImage, 50, 50);
 
 	if PAUSE == true then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
 	end
 
 	-- Draw the player's spaceship
-	if CurrentAnim == animationS then
-		CurrentAnim:draw(IceSpriteS, 50, 50);
-	elseif CurrentAnim == animationA then
-		CurrentAnim:draw(IceSpriteA, 50, 50);
-	elseif CurrentAnim == animationE then
-		CurrentAnim:draw(IceSpriteE, 50, 50);
-	end
-
+	
 	love.graphics.setColor(0, 1, 0) -- set color to red
 	love.graphics.rectangle("line", player.x, player.y, player.img:getWidth(), player.img:getHeight())
 	love.graphics.setColor(1, 1, 1) -- set color to red
