@@ -13,6 +13,27 @@ function love.load()
 		speed = 200,
 		img = love.graphics.newImage("spaceship.png")
 	}
+	obj = {
+		x = 0,
+		y = 0,
+		speed = 0,
+		img_name = "",
+		image = "",
+		Grid,
+		CurrentAnim,
+		Anim = {},
+		look;
+	}
+
+	RedHood = obj;
+	RedHood.speed = 100;
+	RedHood.img_name = "RedHood.png";
+	RedHood.image = love.graphics.newImage(RedHood.img_name);
+	RedHood.Grid = anim8.newGrid(112, 133, RedHood.image:getWidth(), RedHood.image:getHeight())
+	
+	RedHood.Anim.all = anim8.newAnimation(RedHood.Grid('1-12', '1-11'), 0.05);
+	RedHood.CurrentAnim = RedHood.Anim.all
+
 	asteroids = {}
 	asteroidTimer = 0
 	asteroidInterval = 2
@@ -21,11 +42,8 @@ function love.load()
 	love.window.setTitle("Asteroid Dodge")
 	love.window.setMode(SCREEN_W, SCREEN_H)
 
-	RedHoodImage = love.graphics.newImage("RedHood.png");
 
 	--Create Grid
-	RedHoodGrid = anim8.newGrid(112, 133, RedHoodImage:getWidth(), RedHoodImage:getHeight())
-	RedHoodAnim = anim8.newAnimation(RedHoodGrid('1-12', '1-11'), 0.04);
 
 end
 
@@ -50,7 +68,7 @@ end
 function love.update(dt)
 	if PAUSE == false then
 
-		RedHoodAnim:update(dt)
+		RedHood.CurrentAnim:update(dt)
 		-- Move the player's spaceship
 
 		if keys["q"] == true then
@@ -58,7 +76,8 @@ function love.update(dt)
 		end
 
 		if keys["left"] == true or keys["a"] == true then
-			if player.x - player.speed*dt < 0 then
+			--if player.x - player.speed*dt < 0 then
+			if checkCollision( player.x, player.y, player.img:getWidth(), player.img:getHeight(), 0,0, 1, SCREEN_H) then
 				player.x = 0
 			else
 				player.x = player.x - player.speed*dt
@@ -126,7 +145,7 @@ function love.draw()
 	love.graphics.print("X: " .. tostring(player.x), 10, 30)
 	love.graphics.print("Y: " .. tostring(player.y), 10, 50)
 	love.graphics.printf("SCORE: " .. tostring(SCORE), 10, 10, 60, "left")
-	RedHoodAnim:draw(RedHoodImage, 50, 50);
+	RedHood.CurrentAnim:draw(RedHood.image, RedHood.x, RedHood.y);
 
 	if PAUSE == true then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
