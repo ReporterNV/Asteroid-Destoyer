@@ -1,4 +1,4 @@
-local anim8 = require ("anim8.anim8")
+local anim8 = require("anim8.anim8");
 SCREEN_H = 600
 SCREEN_W = 400
 PAUSE = false;
@@ -7,6 +7,8 @@ SCORE = 0;
 function love.load()
 	-- Initialize the player's spaceship and asteroids
 	SCORE = 0;
+	keys = {};
+
 	player = {
 		x = 200, 
 		y = 500,
@@ -14,27 +16,12 @@ function love.load()
 		img = love.graphics.newImage("spaceship.png")
 	}
 	asteroids = {}
+	bullets = {}
 	asteroidTimer = 0
 	asteroidInterval = 2
-	keys = {};
 	-- Set up the game window
 	love.window.setTitle("Asteroid Dodge")
 	love.window.setMode(SCREEN_W, SCREEN_H)
-
-
-	IceSpriteS = love.graphics.newImage("IceS1.png");
-	IceSpriteA = love.graphics.newImage("IceS2.png");
-	IceSpriteE = love.graphics.newImage("IceS3.png");
-	gridS = anim8.newGrid(32, 32, IceSpriteS:getWidth(), IceSpriteS:getHeight())
-	gridA = anim8.newGrid(32, 32, IceSpriteA:getWidth(), IceSpriteA:getHeight())
-	gridE = anim8.newGrid(32, 32, IceSpriteE:getWidth(), IceSpriteE:getHeight())
-	animationS = anim8.newAnimation(gridS('1-9', 1), 0.09), {pauseAtEnd = true}
-	animationA = anim8.newAnimation(gridA('1-8', 1), 0.09)
-	animationE = anim8.newAnimation(gridE('1-18', 1), 0.09)
-	CurrentAnim = animationS;
-	frames = 9
-  	local timer = 0.09 * frames
-  	love.timer.performWithDelay(timer, function() CurrentAnim = animationA end)
 end
 
 function love.keypressed(key)
@@ -58,9 +45,7 @@ end
 function love.update(dt)
 	if PAUSE == false then
 
-		animationS:update(dt)
 		-- Move the player's spaceship
-
 		if keys["left"] == true or keys["a"] == true then
 			if player.x - player.speed*dt < 0 then
 				player.x = 0
@@ -93,6 +78,12 @@ function love.update(dt)
 			end
 		end
 
+		if keys["space"] == true then
+			NewBullet = {x = player.x, y = player.y, speed = 100, img = love.graphics.newImage("bullet.png")}
+			table.insert(bullets, NewBullet);
+		end
+
+
 		-- Create new asteroids
 		asteroidTimer = asteroidTimer + dt
 		if asteroidTimer > asteroidInterval then
@@ -104,11 +95,20 @@ function love.update(dt)
 		-- Move the asteroids
 		for i, asteroid in ipairs(asteroids) do
 			asteroid.y = asteroid.y + asteroid.speed*dt
-			if asteroid.y > 600 then
+			if asteroid.y > SCREEN_H then
 				table.remove(asteroids, i)
-				SCORE = SCORE+10000;
+				SCORE = SCORE+1;
 			end
 		end
+		for i, bullet in ipairs(bullets) do
+			bullet.y = bullet.y + bullet.speed*dt
+			if bullet.y > SCREEN_H then
+				table.remove(bullet, i)
+				SCORE = SCORE+1;
+			end
+		end
+
+
 
 		-- Check for collisions between the player's spaceship and asteroids
 		for i, asteroid in ipairs(asteroids) do
@@ -116,10 +116,12 @@ function love.update(dt)
 				love.load()
 			end
 		end
-		-- Check for collisions between the player's spaceship and asteroids
+		-- Check for collisions between the player's bullets and asteroids
 		for i, asteroid in ipairs(asteroids) do
-			if checkCollision(player.x, player.y, player.img:getWidth(), player.img:getHeight(), asteroid.x, asteroid.y, asteroid.img:getWidth(), asteroid.img:getHeight()) then
-				love.load()
+			for j, bullet in ipairs(bullets) do 
+				if checkCollision(bullet.x, bullet.y, bullet.img:getWidth(), bullet.img:getHeight(), asteroid.x, asteroid.y, asteroid.img:getWidth(), asteroid.img:getHeight()) then
+					love.load()
+				end
 			end
 		end
 	end
@@ -136,18 +138,16 @@ function love.draw()
 	end
 
 	-- Draw the player's spaceship
-	if CurrentAnim == animationS then
-		CurrentAnim:draw(IceSpriteS, 50, 50);
-	elseif CurrentAnim == animationA then
-		CurrentAnim:draw(IceSpriteA, 50, 50);
-	elseif CurrentAnim == animationE then
-		CurrentAnim:draw(IceSpriteE, 50, 50);
-	end
 
 	love.graphics.setColor(0, 1, 0) -- set color to red
 	love.graphics.rectangle("line", player.x, player.y, player.img:getWidth(), player.img:getHeight())
 	love.graphics.setColor(1, 1, 1) -- set color to red
+
 	love.graphics.draw(player.img, player.x, player.y)
+
+	for i, bullet in ipairs(bullets) do
+		love.graphics.draw(bullet.img, bullet.x, bullet.y)
+	end
 
 	-- Draw the asteroids
 	for i, asteroid in ipairs(asteroids) do
