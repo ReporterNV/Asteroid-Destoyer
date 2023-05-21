@@ -1,4 +1,5 @@
 local anim8 = require ("anim8.anim8")
+
 SCREEN_H = 600
 SCREEN_W = 400
 PAUSE = false;
@@ -22,7 +23,7 @@ function love.load()
 		Grid,
 		CurrentAnim,
 		Anim = {},
-		look;
+		look = "a";
 	}
 
 	RedHood = obj;
@@ -32,7 +33,12 @@ function love.load()
 	RedHood.Grid = anim8.newGrid(112, 133, RedHood.image:getWidth(), RedHood.image:getHeight())
 	
 	RedHood.Anim.all = anim8.newAnimation(RedHood.Grid('1-12', '1-11'), 0.05);
-	RedHood.CurrentAnim = RedHood.Anim.all
+	RedHood.Anim.move = anim8.newAnimation(RedHood.Grid('2-12', 1, '1-12', 2, 1, 3), 0.05);
+	RedHood.Anim.bowattack = anim8.newAnimation(RedHood.Grid('2-10', 3), 0.05);
+	RedHood.Anim.attack = anim8.newAnimation(RedHood.Grid(12, 5, '1-12', 9), 0.05);
+	RedHood.CurrentAnim = RedHood.Anim.move
+	RedHood.CurrentAnim = RedHood.Anim.bowattack
+	RedHood.CurrentAnim = RedHood.Anim.attack
 
 	asteroids = {}
 	asteroidTimer = 0
@@ -71,8 +77,15 @@ function love.update(dt)
 		RedHood.CurrentAnim:update(dt)
 		-- Move the player's spaceship
 
-		if keys["q"] == true then
-			RedHoodAnim:flipH();
+		if keys["d"] == true and RedHood.look == "a" then
+			RedHood.CurrentAnim:flipH();
+			RedHood.look = "d"
+
+		end
+
+		if keys["a"] == true and RedHood.look == "d" then
+			RedHood.CurrentAnim:flipH();
+			RedHood.look = "a"
 		end
 
 		if keys["left"] == true or keys["a"] == true then
