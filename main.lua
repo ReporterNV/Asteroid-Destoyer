@@ -21,13 +21,16 @@ function love.load()
 
 	destroy = love.audio.newSource("destroy.wav", "static")
 	attack = love.audio.newSource("attack.wav", "static")
+	asteroidImg = love.graphics.newImage("asteroid.png")
+
+
 
 
 	score = 0;
 	asteroidTimer = 0
-	asteroidInterval = 2
+	asteroidInterval = 1
 	attackTimer = 0;
-	attackInterval = 1; 
+	attackInterval = 0.5; 
 
 end
 
@@ -90,20 +93,20 @@ function love.update(dt)
 
 		attackTimer = attackTimer + dt
 		if attackTimer > attackInterval then
-		
-		if keys["space"] == true then
-			NewBullet = {x = player.x, y = player.y, speed = 100, img = love.graphics.newImage("bullet.png")}
-			table.insert(bullets, NewBullet);
-			attack:play();
+			if keys["space"] == true then
+				attackTimer = 0
+				NewBullet = {x = player.x, y = player.y, speed = -500, img = love.graphics.newImage("bullet.png")}
+				table.insert(bullets, NewBullet);
+				attack:play();
+			end
 		end
-	end
 
 
 		-- Create new asteroids
 		asteroidTimer = asteroidTimer + dt
 		if asteroidTimer > asteroidInterval then
-			asteroidTimer = 0
-			newAsteroid = {x = math.random(0, 400), y = -50, speed = math.random(50, 200), img = love.graphics.newImage("asteroid.png")}
+			asteroidTimer = 0;
+			newAsteroid = {x = math.random(0, SCREEN_W-asteroidImg:getWidth()), y = -50, speed = math.random(50, 200), img = asteroidImg}
 			table.insert(asteroids, newAsteroid)
 		end
 
@@ -112,20 +115,19 @@ function love.update(dt)
 			asteroid.y = asteroid.y + asteroid.speed*dt
 			if asteroid.y > SCREEN_H then
 				table.remove(asteroids, i)
-				score = score+1;
+				score = score-1;
 			end
 		end
 		for i, bullet in ipairs(bullets) do
 			bullet.y = bullet.y + bullet.speed*dt
 			if bullet.y > SCREEN_H then
 				table.remove(bullet, i)
-				score = score+1;
+				score = score-1;
 			end
 		end
 
 
 
-		-- Check for collisions between the player's spaceship and asteroids
 		for i, asteroid in ipairs(asteroids) do
 			if checkCollision(player.x, player.y, player.img:getWidth(), player.img:getHeight(), asteroid.x, asteroid.y, asteroid.img:getWidth(), asteroid.img:getHeight()) then
 				--love.window.close()
@@ -133,11 +135,14 @@ function love.update(dt)
 				--love.load()
 			end
 		end
-		-- Check for collisions between the player's bullets and asteroids
+
 		for i, asteroid in ipairs(asteroids) do
 			for j, bullet in ipairs(bullets) do 
 				if checkCollision(bullet.x, bullet.y, bullet.img:getWidth(), bullet.img:getHeight(), asteroid.x, asteroid.y, asteroid.img:getWidth(), asteroid.img:getHeight()) then
-					love.load()
+					score = score+1;
+					table.remove(bullets, j)
+					table.remove(asteroids, i)
+					destroy:play();
 				end
 			end
 		end
