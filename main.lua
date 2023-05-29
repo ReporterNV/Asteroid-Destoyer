@@ -1,12 +1,11 @@
 local anim8 = require("anim8.anim8");
-SCREEN_H = 600
-SCREEN_W = 400
-PAUSE = false;
-SCORE = 0;
+local SCREEN_H = 600
+local SCREEN_W = 400
+local PAUSE = false;
+local SCORE = 0;
 
 function love.load()
 	-- Initialize the player's spaceship and asteroids
-	SCORE = 0;
 	keys = {};
 
 	player = {
@@ -15,8 +14,10 @@ function love.load()
 		speed = 200,
 		img = love.graphics.newImage("spaceship.png")
 	}
+
 	asteroids = {}
 	bullets = {}
+
 	asteroidTimer = 0
 	asteroidInterval = 2
 	-- Set up the game window
