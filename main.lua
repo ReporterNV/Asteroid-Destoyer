@@ -6,6 +6,8 @@ local SCORE = 0;
 
 function love.load()
 	-- Initialize the player's spaceship and asteroids
+	love.window.setTitle("Asteroid destroyer")
+	love.window.setMode(SCREEN_W, SCREEN_H)
 	keys = {};
 
 	player = {
@@ -21,8 +23,6 @@ function love.load()
 	asteroidTimer = 0
 	asteroidInterval = 2
 	-- Set up the game window
-	love.window.setTitle("Asteroid Dodge")
-	love.window.setMode(SCREEN_W, SCREEN_H)
 end
 
 function love.keypressed(key)
