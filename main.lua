@@ -2,10 +2,8 @@ local anim8 = require("anim8.anim8");
 local SCREEN_H = 600
 local SCREEN_W = 400
 local PAUSE = false;
-local SCORE = 0;
 
 function love.load()
-	-- Initialize the player's spaceship and asteroids
 	love.window.setTitle("Asteroid destroyer")
 	love.window.setMode(SCREEN_W, SCREEN_H)
 	keys = {};
@@ -17,12 +15,17 @@ function love.load()
 		img = love.graphics.newImage("spaceship.png")
 	}
 
+
 	asteroids = {}
 	bullets = {}
 
+	destroy = love.audio.newSource("destroy.wav", "static")
+	attack = love.audio.newSource("attack.wav", "static")
+
+
+	score = 0;
 	asteroidTimer = 0
 	asteroidInterval = 2
-	-- Set up the game window
 end
 
 function love.keypressed(key)
@@ -33,12 +36,15 @@ function love.keyreleased(key)
 	keys[key] = false
 end
 
+function love.quit()
+  print("Спасибо за игру!")
+  print("SCORE: " .. tostring(score))
+end
+
 function love.focus(f)
 	if not f then
-		print("ФОКУС ПОТЕРЯН")
 		PAUSE = true
 	else
-		print("ФОКУС ПОЛУЧЕН")
 		PAUSE = false;
 	end
 end
@@ -79,10 +85,15 @@ function love.update(dt)
 			end
 		end
 
+		attackTimer = attackTimer + dt
+		if attackTimer > attackInterval then
+		
 		if keys["space"] == true then
 			NewBullet = {x = player.x, y = player.y, speed = 100, img = love.graphics.newImage("bullet.png")}
 			table.insert(bullets, NewBullet);
+			attack:play();
 		end
+	end
 
 
 		-- Create new asteroids
@@ -98,14 +109,14 @@ function love.update(dt)
 			asteroid.y = asteroid.y + asteroid.speed*dt
 			if asteroid.y > SCREEN_H then
 				table.remove(asteroids, i)
-				SCORE = SCORE+1;
+				score = score+1;
 			end
 		end
 		for i, bullet in ipairs(bullets) do
 			bullet.y = bullet.y + bullet.speed*dt
 			if bullet.y > SCREEN_H then
 				table.remove(bullet, i)
-				SCORE = SCORE+1;
+				score = score+1;
 			end
 		end
 
@@ -114,7 +125,9 @@ function love.update(dt)
 		-- Check for collisions between the player's spaceship and asteroids
 		for i, asteroid in ipairs(asteroids) do
 			if checkCollision(player.x, player.y, player.img:getWidth(), player.img:getHeight(), asteroid.x, asteroid.y, asteroid.img:getWidth(), asteroid.img:getHeight()) then
-				love.load()
+				--love.window.close()
+				love.event.quit()
+				--love.load()
 			end
 		end
 		-- Check for collisions between the player's bullets and asteroids
@@ -132,7 +145,7 @@ function love.draw()
 	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10)
 	love.graphics.print("X: " .. tostring(player.x), 10, 30)
 	love.graphics.print("Y: " .. tostring(player.y), 10, 50)
-	love.graphics.printf("SCORE: " .. tostring(SCORE), 10, 10, 60, "left")
+	love.graphics.printf("SCORE: " .. tostring(score), 10, 10, 60, "left")
 
 	if PAUSE == true then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
@@ -164,4 +177,9 @@ function checkCollision(x1,y1,w1,h1, x2,y2,w2,h2)
 	x2 < x1+w1 and
 	y1 < y2+h2 and
 	y2 < y1+h1
+end
+
+function love.quit()
+  print("Спасибо за игру!")
+  print("SCORE: " .. tostring(score))
 end
