@@ -26,6 +26,9 @@ function love.load()
 	score = 0;
 	asteroidTimer = 0
 	asteroidInterval = 2
+	attackTimer = 0;
+	attackInterval = 1; 
+
 end
 
 function love.keypressed(key)
