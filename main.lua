@@ -23,8 +23,12 @@ function love.load()
 	attack = love.audio.newSource("attack.wav", "static")
 	asteroidImg = love.graphics.newImage("asteroid.png")
 
-
-
+	destroyImg= love.graphics.newImage("asteroidDestroy.png")
+	destroyGrid = anim8.newGrid(96, 96, destroyImg:getWidth(), destroyImg:getHeight());
+	destroyAnim = anim8.newAnimation(destroyGrid('1-5', 1), 0.09)
+	
+	destroys = {}
+	
 
 	score = 0;
 	asteroidTimer = 0
@@ -57,6 +61,7 @@ end
 
 function love.update(dt)
 	if PAUSE == false then
+		destroyAnim:update(dt);
 
 		-- Move the player's spaceship
 		if keys["left"] == true or keys["a"] == true then
@@ -159,6 +164,7 @@ function love.draw()
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
 	end
 
+	destroyAnim:draw(destroyImg, 300, 300);
 	-- Draw the player's spaceship
 
 	love.graphics.setColor(0, 1, 0) -- set color to red
@@ -187,7 +193,3 @@ function checkCollision(x1,y1,w1,h1, x2,y2,w2,h2)
 	y2 < y1+h1
 end
 
-function love.quit()
-  print("Спасибо за игру!")
-  print("SCORE: " .. tostring(score))
-end
