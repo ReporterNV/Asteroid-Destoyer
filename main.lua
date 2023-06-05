@@ -161,8 +161,6 @@ end
 
 function love.draw()
 	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10);
-	love.graphics.print("X: " .. tostring(player.x), 10, 30);
-	love.graphics.print("Y: " .. tostring(player.y), 10, 50);
 	love.graphics.printf("SCORE: " .. tostring(score), 10, 10, 60, "left");
 
 	if PAUSE == true then
