@@ -112,7 +112,6 @@ function love.update(dt)
 			asteroid.y = asteroid.y + asteroid.speed*dt;
 
 			if asteroid.y > SCREEN_H then
-				table.remove(asteroids, i);
 				love.event.quit();
 			end
 
