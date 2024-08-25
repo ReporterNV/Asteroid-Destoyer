@@ -21,12 +21,37 @@ function love.load()
 	SndDestoyAsteroidPath = SoundsDir.."destroy.wav"
 	SndAttackPath = SoundsDir.."attack.wav"
 
+	Object = {
+		x = 0,
+		y = 0,
+		w = 0,
+		h = 0,
+		speedX = 0,
+		speedY = 0,
+		img = nil,
+	}
+	function Object:new(args)
+		ChildObj = {}
+		ChildObj.x = args.x or 0;
+		ChildObj.y = args.y or 0;
+		ChildObj.w = args.w or 0;
+		ChildObj.h = args.h or 0;
+		ChildObj.speedX = args.speedX or 0;
+		ChildObj.speedY = args.speedY or 0;
+		ChildObj.img = args.img or nil;
+		self.__index = self;
+		return setmetatable(ChildObj, self);
+	end
+	Player = Object:new({x = 200, y = 500, speedX = 200, speedY = 100});
+	Player.img = love.graphics.newImage("spaceship.png");
+--[[
 	Player = {
 		x = 200, 
 		y = 500,
 		speed = 200,
 		img = love.graphics.newImage("spaceship.png");
 	}
+	--]]
 
 	asteroids = {};
 	bullets = {};
@@ -91,34 +116,34 @@ function love.update(dt)
 	if UserPause == false and AFKPause == false then
 
 		if Keys["left"] == true or Keys["a"] == true then
-			if Player.x - Player.speed*dt < 0 then
+			if Player.x - Player.speedX*dt < 0 then
 				Player.x = 0;
 			else
-				Player.x = Player.x - Player.speed*dt;
+				Player.x = Player.x - Player.speedX*dt;
 			end
 		end
 
 		if Keys["right"] == true or Keys["d"] == true then
-			if Player.x + Player.speed*dt > SCREEN_W - Player.img:getWidth() then
+			if Player.x + Player.speedX*dt > SCREEN_W - Player.img:getWidth() then
 				Player.x = SCREEN_W - Player.img:getWidth();
 			else
-				Player.x = Player.x + Player.speed*dt;
+				Player.x = Player.x + Player.speedX*dt;
 			end
 		end
 
 		if Keys["up"] == true or Keys["w"] == true then
-			if Player.y - Player.speed*dt < 0 then
+			if Player.y - Player.speedY*dt < 0 then
 				Player.y = 0;
 			else
-				Player.y = Player.y - Player.speed*dt;
+				Player.y = Player.y - Player.speedY*dt;
 			end
 		end
 
 		if Keys["down"] == true or Keys["s"] == true then
-			if Player.y + Player.speed*dt + Player.img:getHeight() > SCREEN_H then
+			if Player.y + Player.speedY*dt + Player.img:getHeight() > SCREEN_H then
 				Player.y = SCREEN_H - Player.img:getHeight();
 			else
-				Player.y = Player.y + Player.speed*dt;
+				Player.y = Player.y + Player.speedY*dt;
 			end
 		end
 
@@ -214,7 +239,6 @@ function love.update(dt)
 end
 
 function love.draw()
-
 
 	love.graphics.draw(Player.img, Player.x, Player.y);
 
