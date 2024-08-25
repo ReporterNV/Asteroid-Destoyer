@@ -1,7 +1,7 @@
 local anim8 = require("anim8.anim8")
 local SCREEN_H = 600
 local SCREEN_W = 400
-local PAUSE = false
+local UserPause = false
 
 local function checkCollision(x1,y1,w1,h1, x2,y2,w2,h2)
 	return x1 < x2+w2 and
@@ -15,7 +15,8 @@ function love.load()
 	love.window.setMode(SCREEN_W, SCREEN_H);
 
 	Keys = {};
-	KeysReleased = {};
+	OnceKey = {};
+	CanPressPause = true;
 	SoundsDir = "sounds/"
 	SndDestoyAsteroidPath = SoundsDir.."destroy.wav"
 	SndAttackPath = SoundsDir.."attack.wav"
@@ -48,12 +49,14 @@ function love.load()
 end
 
 function love.keypressed(key)
-	KeysReleased[key] = Keys[key];
 	Keys[key] = true;
+--[[
+	OnceKey[key].prev = OnceKey[key].curr;
+	OnceKey[key].curr = true;
+	--]]
 end
 
 function love.keyreleased(key)
-	KeysReleased[key] = Keys[key];
 	Keys[key] = false;
 end
 
@@ -64,22 +67,29 @@ end
 
 function love.focus(f)
 	if not f then
-		PAUSE = true;
+		AFKPause = true;
 	else
-		PAUSE = false;
+		AFKPause = false;
 	end
 end
 
 function love.update(dt)
-	if Keys["escape"] == true and CanPressPause then
-		PAUSE = not PAUSE;
+	if Keys["escape"] and CanPressPause then
+		UserPause = not UserPause;
 		CanPressPause = false;
-	end
-	if Keys["escape"] == false then
+	elseif Keys["escape"] == false then
 		CanPressPause = true;
 	end
 
-	if PAUSE == false then
+	--[[
+	if Keys["escape"] then
+		UserPause = not UserPause;
+		Keys["escape"] = false; --bad code pattern
+	end
+	--]]
+
+	if UserPause == false and AFKPause == false then
+
 		if Keys["left"] == true or Keys["a"] == true then
 			if Player.x - Player.speed*dt < 0 then
 				Player.x = 0;
@@ -116,7 +126,12 @@ function love.update(dt)
 		if AttackTimer > AttackInterval then
 			if Keys["space"] == true then
 				AttackTimer = 0;
-				NewBullet = {x = Player.x, y = Player.y, speed = -500, img = love.graphics.newImage("bullet.png")};
+				NewBullet = {
+					speed = -500,
+					img = love.graphics.newImage("bullet.png"),
+				};
+				NewBullet.x = Player.x + Player.img:getWidth()/2 - NewBullet.img:getWidth()/2;
+				NewBullet.y = Player.y;
 				table.insert(bullets, NewBullet);
 				attack:play();
 			end
@@ -125,7 +140,12 @@ function love.update(dt)
 		AsteroidTimer = AsteroidTimer + dt;
 		if AsteroidTimer > AsteroidInterval then
 			AsteroidTimer = 0;
-			NewAsteroid = {x = math.random(0, SCREEN_W-asteroidImg:getWidth()), y = -50, speed = math.random(50, 200), img = asteroidImg};
+			NewAsteroid = {
+				x = math.random(0, SCREEN_W - asteroidImg:getWidth()),
+				y = -50,
+				speed = math.random(50, 200),
+				img = asteroidImg
+			};
 			table.insert(asteroids, NewAsteroid);
 		end
 
@@ -136,30 +156,46 @@ function love.update(dt)
 				love.event.quit();
 			end
 
-			if checkCollision(Player.x, Player.y, Player.img:getWidth(), Player.img:getHeight(), asteroid.x, asteroid.y, asteroid.img:getWidth(), asteroid.img:getHeight()) then
+			if checkCollision(Player.x,
+				Player.y,
+				Player.img:getWidth(),
+				Player.img:getHeight(),
+				asteroid.x,
+				asteroid.y,
+				asteroid.img:getWidth(),
+				asteroid.img:getHeight()
+				) then
 				love.event.quit();
-			end	
+			end
 
 			if asteroid.speed == 0 then
 				if  asteroid.prevframe == 4 then -- use 4 insted of 5 bcz we skip 1 frame.
 					table.remove(asteroids, i);
 				end
-
+			-- Use change object. when bullet hit asteroid change asteroid to animated obj?
 				asteroid.prevframe = asteroid.anim.position;
 				asteroid.anim:update(dt);
 			end
 
 			if asteroid.speed ~= 0 then
-				for j, bullet in ipairs(bullets) do 
-					if checkCollision(bullet.x, bullet.y, bullet.img:getWidth(), bullet.img:getHeight(),
-							  asteroid.x, asteroid.y, asteroid.img:getWidth(), asteroid.img:getHeight()) then
-						Score = Score+1;
-						table.remove(bullets, j);
-						asteroid.speed = 0;
-						asteroid.timer = 0;
-						asteroid.anim = destroyAnim:clone();
-						asteroid.anim.looping = false;
-						SndDestroy:play();
+				for j, bullet in ipairs(bullets) do
+					if checkCollision ( --rewrite this to 2 obj
+						bullet.x,
+						bullet.y,
+						bullet.img:getWidth(),
+						bullet.img:getHeight(),
+						asteroid.x,
+						asteroid.y,
+						asteroid.img:getWidth(),
+						asteroid.img:getHeight()
+						) then
+					Score = Score+1;
+					table.remove(bullets, j);
+					asteroid.speed = 0;
+					asteroid.timer = 0;
+					asteroid.anim = destroyAnim:clone();
+					asteroid.anim.looping = false;
+					SndDestroy:play();
 					end
 				end
 			end
@@ -168,22 +204,17 @@ function love.update(dt)
 
 		for i, bullet in ipairs(bullets) do
 			bullet.y = bullet.y + bullet.speed*dt;
-
 			if bullet.y < 0 then
 				table.remove(bullets, i);
 			end
 		end
 
 	end
+
 end
 
 function love.draw()
-	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10);
-	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
 
-	if PAUSE == true then
-		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
-	end
 
 	love.graphics.draw(Player.img, Player.x, Player.y);
 
@@ -199,5 +230,11 @@ function love.draw()
 			love.graphics.draw(asteroid.img, asteroid.x, asteroid.y);
 		end
 	end
+
+	if UserPause or AFKPause then
+		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
+	end
+	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10);
+	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
 end
 
