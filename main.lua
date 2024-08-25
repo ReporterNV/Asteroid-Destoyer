@@ -2,6 +2,7 @@ local anim8 = require("anim8.anim8")
 local SCREEN_H = 600
 local SCREEN_W = 400
 local UserPause = false
+local LoadTimer, UpdateTimer, DrawTimer;
 
 local function checkCollision(x1,y1,w1,h1, x2,y2,w2,h2)
 	return x1 < x2+w2 and
@@ -11,6 +12,7 @@ local function checkCollision(x1,y1,w1,h1, x2,y2,w2,h2)
 end
 
 function love.load()
+	--local startTimer = os.clock();
 	love.window.setTitle("Asteroid destroyer");
 	love.window.setMode(SCREEN_W, SCREEN_H);
 
@@ -30,6 +32,7 @@ function love.load()
 		speedY = 0,
 		img = nil,
 	}
+
 	function Object:new(args)
 		ChildObj = {}
 		ChildObj.x = args.x or 0;
@@ -42,9 +45,50 @@ function love.load()
 		self.__index = self;
 		return setmetatable(ChildObj, self);
 	end
-	Player = Object:new({x = 200, y = 500, speedX = 200, speedY = 100});
-	Player.img = love.graphics.newImage("spaceship.png");
---[[
+
+	function Object:setWHfromImage()
+		if self.img ~= nil then
+			self.h = self.img:getHeight();
+			self.w = self.img:getWidth();
+		else
+			printf("image not set");
+		end
+	end
+
+	Player = Object:new({
+		x = 200,
+		y = 500,
+		speedX = 200,
+		speedY = 100,
+		img = love.graphics.newImage("spaceship.png");
+	});
+	Player:setWHfromImage();
+	Asteroid = Object:new();
+	--[[Asteroid = {}
+	function Asteroid:new(args)
+		ChildObj = {}; -- looks like i do it wrong
+		ChildObj.x = args.x or 0;
+		ChildObj.y = args.y or 0;
+		ChildObj.w = args.w or 0;
+		ChildObj.h = args.h or 0;
+		ChildObj.speedX = 0;
+		ChildObj.speedY = args.speedY or 0;
+		ChildObj.img = love.graphics.newImage("asteroid.png") or nil;
+		self.__index = self;
+		return setmetatable(ChildObj, self);
+	end
+	--[[
+	Asteroid:setWHfromImage();
+	function Asteroid:spawn()
+		self.x = math.random(0, SCREEN_W - (self.w or 0))
+		self.y = -50;
+		self.speedY = math.random(50, 200)
+		table.insert(Asteroids, self)
+	end
+--]]
+
+	--Player.img = love.graphics.newImage("spaceship.png");
+	--[[
 	Player = {
 		x = 200, 
 		y = 500,
@@ -53,7 +97,8 @@ function love.load()
 	}
 	--]]
 
-	asteroids = {};
+	Objects = {};
+	Asteroids = {};
 	bullets = {};
 
 	SndDestroy = love.audio.newSource(SndDestoyAsteroidPath, "static");
@@ -71,6 +116,7 @@ function love.load()
 	AsteroidInterval = 1;
 	AttackTimer = 0;
 	AttackInterval = 0.5;
+	--LoadTimer = os.clock() - startTimer;
 end
 
 function love.keypressed(key)
@@ -99,6 +145,7 @@ function love.focus(f)
 end
 
 function love.update(dt)
+	local startTimer = os.clock();
 	if Keys["escape"] and CanPressPause then
 		UserPause = not UserPause;
 		CanPressPause = false;
@@ -124,8 +171,8 @@ function love.update(dt)
 		end
 
 		if Keys["right"] == true or Keys["d"] == true then
-			if Player.x + Player.speedX*dt > SCREEN_W - Player.img:getWidth() then
-				Player.x = SCREEN_W - Player.img:getWidth();
+			if Player.x + Player.speedX*dt > SCREEN_W - Player.w then
+				Player.x = SCREEN_W - Player.w;
 			else
 				Player.x = Player.x + Player.speedX*dt;
 			end
@@ -140,8 +187,8 @@ function love.update(dt)
 		end
 
 		if Keys["down"] == true or Keys["s"] == true then
-			if Player.y + Player.speedY*dt + Player.img:getHeight() > SCREEN_H then
-				Player.y = SCREEN_H - Player.img:getHeight();
+			if Player.y + Player.speedY*dt + Player.h > SCREEN_H then
+				Player.y = SCREEN_H - Player.h;
 			else
 				Player.y = Player.y + Player.speedY*dt;
 			end
@@ -155,7 +202,8 @@ function love.update(dt)
 					speed = -500,
 					img = love.graphics.newImage("bullet.png"),
 				};
-				NewBullet.x = Player.x + Player.img:getWidth()/2 - NewBullet.img:getWidth()/2;
+				NewBullet.x = Player.x + Player.w/2 - NewBullet.img:getWidth()/2;
+				--NewBullet.x = Player.x + Player.img:getWidth()/2 - NewBullet.img:getWidth()/2;
 				NewBullet.y = Player.y;
 				table.insert(bullets, NewBullet);
 				attack:play();
@@ -171,10 +219,10 @@ function love.update(dt)
 				speed = math.random(50, 200),
 				img = asteroidImg
 			};
-			table.insert(asteroids, NewAsteroid);
+			table.insert(Asteroids, NewAsteroid);
 		end
 
-		for i, asteroid in ipairs(asteroids) do
+		for i, asteroid in ipairs(Asteroids) do
 			asteroid.y = asteroid.y + asteroid.speed*dt;
 
 			if asteroid.y > SCREEN_H then
@@ -195,7 +243,7 @@ function love.update(dt)
 
 			if asteroid.speed == 0 then
 				if  asteroid.prevframe == 4 then -- use 4 insted of 5 bcz we skip 1 frame.
-					table.remove(asteroids, i);
+					table.remove(Asteroids, i);
 				end
 			-- Use change object. when bullet hit asteroid change asteroid to animated obj?
 				asteroid.prevframe = asteroid.anim.position;
@@ -236,17 +284,18 @@ function love.update(dt)
 
 	end
 
+	--UpdateTimer = os.clock() - startTimer;
 end
 
 function love.draw()
-
+	--local startTimer = os.time();
 	love.graphics.draw(Player.img, Player.x, Player.y);
 
 	for i, bullet in ipairs(bullets) do
 		love.graphics.draw(bullet.img, bullet.x, bullet.y);
 	end
 
-	for i, asteroid in ipairs(asteroids) do
+	for _, asteroid in ipairs(Asteroids) do
 		if asteroid.speed == 0 then
 			--This const from image for sync size asteroid and SndDestroyasset.
 			asteroid.anim:draw(destroyImg, asteroid.x-29, asteroid.y-32);
@@ -260,5 +309,11 @@ function love.draw()
 	end
 	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10);
 	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
+--[[
+	DrawTimer = os.time() - startTimer;
+	love.graphics.printf("LoadTimer: " .. tostring(LoadTimer), 10, 25, 90, "left");
+	love.graphics.printf("UpdateTimer: " .. tostring(UpdateTimer), 10, 55, 90, "left");
+	love.graphics.printf("DrawTimer: " .. tostring(DrawTimer), 10, 95, 90, "left");
+	--]]
 end
 
