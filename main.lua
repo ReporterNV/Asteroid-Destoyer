@@ -3,12 +3,24 @@ local SCREEN_H = 600
 local SCREEN_W = 400
 local PAUSE = false
 
+local function checkCollision(x1,y1,w1,h1, x2,y2,w2,h2)
+	return x1 < x2+w2 and
+	x2 < x1+w1 and
+	y1 < y2+h2 and
+	y2 < y1+h1
+end
+
 function love.load()
 	love.window.setTitle("Asteroid destroyer");
 	love.window.setMode(SCREEN_W, SCREEN_H);
-	keys = {};
 
-	player = {
+	Keys = {};
+	KeysReleased = {};
+	SoundsDir = "sounds/"
+	SndDestoyAsteroidPath = SoundsDir.."destroy.wav"
+	SndAttackPath = SoundsDir.."attack.wav"
+
+	Player = {
 		x = 200, 
 		y = 500,
 		speed = 200,
@@ -18,9 +30,9 @@ function love.load()
 	asteroids = {};
 	bullets = {};
 
-	destroy = love.audio.newSource("destroy.wav", "static");
-	attack = love.audio.newSource("attack.wav", "static");
-	love.audio.setVolume(0.5);
+	SndDestroy = love.audio.newSource(SndDestoyAsteroidPath, "static");
+	attack = love.audio.newSource(SndAttackPath, "static");
+	love.audio.setVolume(0.333)
 
 	asteroidImg = love.graphics.newImage("asteroid.png");
 
@@ -28,24 +40,26 @@ function love.load()
 	destroyGrid = anim8.newGrid(96, 96, destroyImg:getWidth(), destroyImg:getHeight());
 	destroyAnim = anim8.newAnimation(destroyGrid('2-5', 1), 0.06, "pauseAtEnd");
 
-	score = 0;
-	asteroidTimer = 0;
-	asteroidInterval = 1;
-	attackTimer = 0;
-	attackInterval = 0.5; 
+	Score = 0;
+	AsteroidTimer = 0;
+	AsteroidInterval = 1;
+	AttackTimer = 0;
+	AttackInterval = 0.5;
 end
 
 function love.keypressed(key)
-	keys[key] = true;
+	KeysReleased[key] = Keys[key];
+	Keys[key] = true;
 end
 
 function love.keyreleased(key)
-	keys[key] = false;
+	KeysReleased[key] = Keys[key];
+	Keys[key] = false;
 end
 
 function love.quit()
   print("GAME OVER");
-  print("SCORE: " .. tostring(score));
+  print("SCORE: " .. tostring(Score));
 end
 
 function love.focus(f)
@@ -57,55 +71,62 @@ function love.focus(f)
 end
 
 function love.update(dt)
+	if Keys["escape"] == true and CanPressPause then
+		PAUSE = not PAUSE;
+		CanPressPause = false;
+	end
+	if Keys["escape"] == false then
+		CanPressPause = true;
+	end
+
 	if PAUSE == false then
-
-		if keys["left"] == true or keys["a"] == true then
-			if player.x - player.speed*dt < 0 then
-				player.x = 0;
+		if Keys["left"] == true or Keys["a"] == true then
+			if Player.x - Player.speed*dt < 0 then
+				Player.x = 0;
 			else
-				player.x = player.x - player.speed*dt;
+				Player.x = Player.x - Player.speed*dt;
 			end
 		end
 
-		if keys["right"] == true or keys["d"] == true then
-			if player.x + player.speed*dt > SCREEN_W - player.img:getWidth() then
-				player.x = SCREEN_W - player.img:getWidth();
+		if Keys["right"] == true or Keys["d"] == true then
+			if Player.x + Player.speed*dt > SCREEN_W - Player.img:getWidth() then
+				Player.x = SCREEN_W - Player.img:getWidth();
 			else
-				player.x = player.x + player.speed*dt;
+				Player.x = Player.x + Player.speed*dt;
 			end
 		end
 
-		if keys["up"] == true or keys["w"] == true then
-			if player.y - player.speed*dt < 0 then
-				player.y = 0;
+		if Keys["up"] == true or Keys["w"] == true then
+			if Player.y - Player.speed*dt < 0 then
+				Player.y = 0;
 			else
-				player.y = player.y - player.speed*dt;
+				Player.y = Player.y - Player.speed*dt;
 			end
 		end
 
-		if keys["down"] == true or keys["s"] == true then
-			if player.y + player.speed*dt + player.img:getHeight() > SCREEN_H then
-				player.y = SCREEN_H - player.img:getHeight();
+		if Keys["down"] == true or Keys["s"] == true then
+			if Player.y + Player.speed*dt + Player.img:getHeight() > SCREEN_H then
+				Player.y = SCREEN_H - Player.img:getHeight();
 			else
-				player.y = player.y + player.speed*dt;
+				Player.y = Player.y + Player.speed*dt;
 			end
 		end
 
-		attackTimer = attackTimer + dt;
-		if attackTimer > attackInterval then
-			if keys["space"] == true then
-				attackTimer = 0;
-				NewBullet = {x = player.x, y = player.y, speed = -500, img = love.graphics.newImage("bullet.png")};
+		AttackTimer = AttackTimer + dt;
+		if AttackTimer > AttackInterval then
+			if Keys["space"] == true then
+				AttackTimer = 0;
+				NewBullet = {x = Player.x, y = Player.y, speed = -500, img = love.graphics.newImage("bullet.png")};
 				table.insert(bullets, NewBullet);
 				attack:play();
 			end
 		end
 
-		asteroidTimer = asteroidTimer + dt;
-		if asteroidTimer > asteroidInterval then
-			asteroidTimer = 0;
-			newAsteroid = {x = math.random(0, SCREEN_W-asteroidImg:getWidth()), y = -50, speed = math.random(50, 200), img = asteroidImg};
-			table.insert(asteroids, newAsteroid);
+		AsteroidTimer = AsteroidTimer + dt;
+		if AsteroidTimer > AsteroidInterval then
+			AsteroidTimer = 0;
+			NewAsteroid = {x = math.random(0, SCREEN_W-asteroidImg:getWidth()), y = -50, speed = math.random(50, 200), img = asteroidImg};
+			table.insert(asteroids, NewAsteroid);
 		end
 
 		for i, asteroid in ipairs(asteroids) do
@@ -115,7 +136,7 @@ function love.update(dt)
 				love.event.quit();
 			end
 
-			if checkCollision(player.x, player.y, player.img:getWidth(), player.img:getHeight(), asteroid.x, asteroid.y, asteroid.img:getWidth(), asteroid.img:getHeight()) then
+			if checkCollision(Player.x, Player.y, Player.img:getWidth(), Player.img:getHeight(), asteroid.x, asteroid.y, asteroid.img:getWidth(), asteroid.img:getHeight()) then
 				love.event.quit();
 			end	
 
@@ -132,15 +153,13 @@ function love.update(dt)
 				for j, bullet in ipairs(bullets) do 
 					if checkCollision(bullet.x, bullet.y, bullet.img:getWidth(), bullet.img:getHeight(),
 							  asteroid.x, asteroid.y, asteroid.img:getWidth(), asteroid.img:getHeight()) then
-						
-						score = score+1;
+						Score = Score+1;
 						table.remove(bullets, j);
 						asteroid.speed = 0;
 						asteroid.timer = 0;
 						asteroid.anim = destroyAnim:clone();
 						asteroid.anim.looping = false;
-	
-						destroy:play();
+						SndDestroy:play();
 					end
 				end
 			end
@@ -160,13 +179,13 @@ end
 
 function love.draw()
 	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10);
-	love.graphics.printf("SCORE: " .. tostring(score), 10, 10, 60, "left");
+	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
 
 	if PAUSE == true then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
 	end
 
-	love.graphics.draw(player.img, player.x, player.y);
+	love.graphics.draw(Player.img, Player.x, Player.y);
 
 	for i, bullet in ipairs(bullets) do
 		love.graphics.draw(bullet.img, bullet.x, bullet.y);
@@ -174,18 +193,11 @@ function love.draw()
 
 	for i, asteroid in ipairs(asteroids) do
 		if asteroid.speed == 0 then
-			--This const from image for sync size asteroid and destroy asset.
+			--This const from image for sync size asteroid and SndDestroyasset.
 			asteroid.anim:draw(destroyImg, asteroid.x-29, asteroid.y-32);
 		else
 			love.graphics.draw(asteroid.img, asteroid.x, asteroid.y);
 		end
 	end
-end
-
-function checkCollision(x1,y1,w1,h1, x2,y2,w2,h2)
-	return x1 < x2+w2 and
-	x2 < x1+w1 and
-	y1 < y2+h2 and
-	y2 < y1+h1
 end
 
