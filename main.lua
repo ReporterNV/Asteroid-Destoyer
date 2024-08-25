@@ -34,7 +34,10 @@ function love.load()
 	}
 
 	function Object:new(args)
-		ChildObj = {}
+		local ChildObj = {}
+		if args == nil then
+			args = {}
+		end
 		ChildObj.x = args.x or 0;
 		ChildObj.y = args.y or 0;
 		ChildObj.w = args.w or 0;
@@ -51,7 +54,7 @@ function love.load()
 			self.h = self.img:getHeight();
 			self.w = self.img:getWidth();
 		else
-			printf("image not set");
+			print("image not set");
 		end
 	end
 
@@ -64,28 +67,29 @@ function love.load()
 	});
 	Player:setWHfromImage();
 	Asteroid = Object:new();
-	--[[Asteroid = {}
 	function Asteroid:new(args)
-		ChildObj = {}; -- looks like i do it wrong
+		local ChildObj = {}; -- looks like i do it wrong
+		if args == nil then
+			args = {};
+		end
 		ChildObj.x = args.x or 0;
 		ChildObj.y = args.y or 0;
 		ChildObj.w = args.w or 0;
 		ChildObj.h = args.h or 0;
 		ChildObj.speedX = 0;
 		ChildObj.speedY = args.speedY or 0;
-		ChildObj.img = love.graphics.newImage("asteroid.png") or nil;
+		ChildObj.img = love.graphics.newImage("asteroid.png");
 		self.__index = self;
 		return setmetatable(ChildObj, self);
 	end
-	--[[
-	Asteroid:setWHfromImage();
 	function Asteroid:spawn()
-		self.x = math.random(0, SCREEN_W - (self.w or 0))
-		self.y = -50;
-		self.speedY = math.random(50, 200)
-		table.insert(Asteroids, self)
+		local asteroid = Asteroid:new()
+		asteroid:setWHfromImage();
+		asteroid.x = math.random(0, SCREEN_W - (asteroid.w or 0))
+		asteroid.y = -asteroid.h;
+		asteroid.speedY = math.random(50, 200)
+		table.insert(Asteroids, asteroid)
 	end
---]]
 
 	--Player.img = love.graphics.newImage("spaceship.png");
 	--[[
@@ -213,6 +217,7 @@ function love.update(dt)
 		AsteroidTimer = AsteroidTimer + dt;
 		if AsteroidTimer > AsteroidInterval then
 			AsteroidTimer = 0;
+			--[[
 			NewAsteroid = {
 				x = math.random(0, SCREEN_W - asteroidImg:getWidth()),
 				y = -50,
@@ -220,10 +225,12 @@ function love.update(dt)
 				img = asteroidImg
 			};
 			table.insert(Asteroids, NewAsteroid);
+			--]]
+			Asteroid:spawn();
 		end
 
 		for i, asteroid in ipairs(Asteroids) do
-			asteroid.y = asteroid.y + asteroid.speed*dt;
+			asteroid.y = asteroid.y + asteroid.speedY*dt;
 
 			if asteroid.y > SCREEN_H then
 				love.event.quit();
