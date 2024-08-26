@@ -11,6 +11,20 @@ local function checkCollision(x1,y1,w1,h1, x2,y2,w2,h2)
 	y2 < y1+h1
 end
 
+local function checkCollisionObj(Obj1, Obj2)
+	if Obj1 == nil then
+		print("func checkCollision Obj1 is nil")
+	end
+	if Obj2 == nil then
+		print("func checkCollision Obj2 is nil")
+	end
+	return checkCollision(
+			Obj1.x, Obj1.y, Obj1.w, Obj1.h,
+			Obj2.x, Obj2.y, Obj2.w, Obj2.h
+	);
+end
+
+
 function love.load()
 	--local startTimer = os.clock();
 	love.window.setTitle("Asteroid destroyer");
@@ -66,6 +80,25 @@ function love.load()
 		img = love.graphics.newImage("spaceship.png");
 	});
 	Player:setWHfromImage();
+	Bullet = Object:new();
+	function Bullet:new(args)
+		local ChildObj = {};
+		if args == nil then
+			args = {};
+		end
+		ChildObj.x = args.x or 0;
+		ChildObj.y = args.y or 0;
+		ChildObj.w = args.w or 0;
+		ChildObj.h = args.h or 0;
+		ChildObj.speedX = 0;
+		ChildObj.speedY = args.speedY or -500;
+		ChildObj.img = love.graphics.newImage("bullet.png");
+		ChildObj.callback = nil;
+		self.__index = self;
+		return setmetatable(ChildObj, self);
+	end
+	Bullet:setWHfromImage();
+
 	Asteroid = Object:new();
 	function Asteroid:new(args)
 		local ChildObj = {}; -- looks like i do it wrong
@@ -79,6 +112,8 @@ function love.load()
 		ChildObj.speedX = 0;
 		ChildObj.speedY = args.speedY or 0;
 		ChildObj.img = love.graphics.newImage("asteroid.png");
+		ChildObj.callback = nil;
+		ChildObj.dmgr = nil;
 		self.__index = self;
 		return setmetatable(ChildObj, self);
 	end
@@ -91,25 +126,13 @@ function love.load()
 		table.insert(Asteroids, asteroid)
 	end
 
-	--Player.img = love.graphics.newImage("spaceship.png");
-	--[[
-	Player = {
-		x = 200, 
-		y = 500,
-		speed = 200,
-		img = love.graphics.newImage("spaceship.png");
-	}
-	--]]
-
-	Objects = {};
+	Objects = {}; --add for every object callback function?
 	Asteroids = {};
 	bullets = {};
 
 	SndDestroy = love.audio.newSource(SndDestoyAsteroidPath, "static");
 	attack = love.audio.newSource(SndAttackPath, "static");
 	love.audio.setVolume(0.333)
-
-	asteroidImg = love.graphics.newImage("asteroid.png");
 
 	destroyImg = love.graphics.newImage("asteroidDestroy.png");
 	destroyGrid = anim8.newGrid(96, 96, destroyImg:getWidth(), destroyImg:getHeight());
@@ -125,7 +148,7 @@ end
 
 function love.keypressed(key)
 	Keys[key] = true;
---[[
+	--[[
 	OnceKey[key].prev = OnceKey[key].curr;
 	OnceKey[key].curr = true;
 	--]]
@@ -149,7 +172,7 @@ function love.focus(f)
 end
 
 function love.update(dt)
-	local startTimer = os.clock();
+	--local startTimer = os.clock();
 	if Keys["escape"] and CanPressPause then
 		UserPause = not UserPause;
 		CanPressPause = false;
@@ -217,15 +240,6 @@ function love.update(dt)
 		AsteroidTimer = AsteroidTimer + dt;
 		if AsteroidTimer > AsteroidInterval then
 			AsteroidTimer = 0;
-			--[[
-			NewAsteroid = {
-				x = math.random(0, SCREEN_W - asteroidImg:getWidth()),
-				y = -50,
-				speed = math.random(50, 200),
-				img = asteroidImg
-			};
-			table.insert(Asteroids, NewAsteroid);
-			--]]
 			Asteroid:spawn();
 		end
 
@@ -235,16 +249,19 @@ function love.update(dt)
 			if asteroid.y > SCREEN_H then
 				love.event.quit();
 			end
-
-			if checkCollision(Player.x,
+--[[
+			if checkCollision(
+				Player.x,
 				Player.y,
-				Player.img:getWidth(),
-				Player.img:getHeight(),
+				Player.w,
+				Player.h,
 				asteroid.x,
 				asteroid.y,
-				asteroid.img:getWidth(),
-				asteroid.img:getHeight()
+				asteroid.w,
+				asteroid.h
 				) then
+				--]]
+				if checkCollisionObj(Player, asteroid) then
 				love.event.quit();
 			end
 
@@ -266,8 +283,8 @@ function love.update(dt)
 						bullet.img:getHeight(),
 						asteroid.x,
 						asteroid.y,
-						asteroid.img:getWidth(),
-						asteroid.img:getHeight()
+						asteroid.w,
+						asteroid.h
 						) then
 					Score = Score+1;
 					table.remove(bullets, j);
