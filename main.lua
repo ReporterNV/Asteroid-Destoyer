@@ -93,11 +93,21 @@ function love.load()
 		ChildObj.speedX = 0;
 		ChildObj.speedY = args.speedY or -500;
 		ChildObj.img = love.graphics.newImage("bullet.png");
+		ChildObj.spawnSound = love.audio.newSource(SndAttackPath, "static");
 		ChildObj.callback = nil;
 		self.__index = self;
 		return setmetatable(ChildObj, self);
 	end
-	Bullet:setWHfromImage();
+
+	function Bullet:spawn()
+		local bullet = Bullet:new()
+		bullet:setWHfromImage();
+		bullet.x = Player.x + Player.w/2 - bullet.w/2;
+		bullet.y = Player.y
+		bullet.spawnSound:play();
+		table.insert(Bullets, bullet)
+	end
+
 
 	Asteroid = Object:new();
 	function Asteroid:new(args)
@@ -111,9 +121,9 @@ function love.load()
 		ChildObj.h = args.h or 0;
 		ChildObj.speedX = 0;
 		ChildObj.speedY = args.speedY or 0;
-		ChildObj.img = love.graphics.newImage("asteroid.png");
+		ChildObj.img = love.graphics.newImage("asteroid.png")
+		ChildObj.destroySound = nil
 		ChildObj.callback = nil;
-		ChildObj.dmgr = nil;
 		self.__index = self;
 		return setmetatable(ChildObj, self);
 	end
@@ -125,13 +135,17 @@ function love.load()
 		asteroid.speedY = math.random(50, 200)
 		table.insert(Asteroids, asteroid)
 	end
+	function Asteroid:destroy()
+		self.destroy:play();
+		table.remove(Asteroids, self)
+	end
+
 
 	Objects = {}; --add for every object callback function?
 	Asteroids = {};
-	bullets = {};
+	Bullets = {};
 
 	SndDestroy = love.audio.newSource(SndDestoyAsteroidPath, "static");
-	attack = love.audio.newSource(SndAttackPath, "static");
 	love.audio.setVolume(0.333)
 
 	destroyImg = love.graphics.newImage("asteroidDestroy.png");
@@ -159,8 +173,8 @@ function love.keyreleased(key)
 end
 
 function love.quit()
-  print("GAME OVER");
-  print("SCORE: " .. tostring(Score));
+	print("GAME OVER");
+	print("SCORE: " .. tostring(Score));
 end
 
 function love.focus(f)
@@ -225,15 +239,7 @@ function love.update(dt)
 		if AttackTimer > AttackInterval then
 			if Keys["space"] == true then
 				AttackTimer = 0;
-				NewBullet = {
-					speed = -500,
-					img = love.graphics.newImage("bullet.png"),
-				};
-				NewBullet.x = Player.x + Player.w/2 - NewBullet.img:getWidth()/2;
-				--NewBullet.x = Player.x + Player.img:getWidth()/2 - NewBullet.img:getWidth()/2;
-				NewBullet.y = Player.y;
-				table.insert(bullets, NewBullet);
-				attack:play();
+				NewBullet = Bullet:spawn();
 			end
 		end
 
@@ -249,60 +255,40 @@ function love.update(dt)
 			if asteroid.y > SCREEN_H then
 				love.event.quit();
 			end
---[[
-			if checkCollision(
-				Player.x,
-				Player.y,
-				Player.w,
-				Player.h,
-				asteroid.x,
-				asteroid.y,
-				asteroid.w,
-				asteroid.h
-				) then
-				--]]
-				if checkCollisionObj(Player, asteroid) then
-				love.event.quit();
+			if checkCollisionObj(Player, asteroid) then
+				if asteroid.speedY ~= 0 then
+					love.event.quit();
+				end
 			end
 
 			if asteroid.speed == 0 then
 				if  asteroid.prevframe == 4 then -- use 4 insted of 5 bcz we skip 1 frame.
 					table.remove(Asteroids, i);
 				end
-			-- Use change object. when bullet hit asteroid change asteroid to animated obj?
+				-- Use change object. when bullet hit asteroid change asteroid to animated obj?
 				asteroid.prevframe = asteroid.anim.position;
 				asteroid.anim:update(dt);
 			end
 
-			if asteroid.speed ~= 0 then
-				for j, bullet in ipairs(bullets) do
-					if checkCollision ( --rewrite this to 2 obj
-						bullet.x,
-						bullet.y,
-						bullet.img:getWidth(),
-						bullet.img:getHeight(),
-						asteroid.x,
-						asteroid.y,
-						asteroid.w,
-						asteroid.h
-						) then
-					Score = Score+1;
-					table.remove(bullets, j);
-					asteroid.speed = 0;
-					asteroid.timer = 0;
-					asteroid.anim = destroyAnim:clone();
-					asteroid.anim.looping = false;
-					SndDestroy:play();
+			if asteroid.speedY ~= 0 then
+				for j, bullet in ipairs(Bullets) do
+					if checkCollisionObj(bullet, asteroid) then
+						Score = Score+1;
+						table.remove(Bullets, j);
+						asteroid.speedY = 0;
+						asteroid.speed = 0;
+						asteroid.anim = destroyAnim:clone();
+						asteroid.anim.looping = false;
+						SndDestroy:play();
 					end
 				end
 			end
 		end
 
-
-		for i, bullet in ipairs(bullets) do
-			bullet.y = bullet.y + bullet.speed*dt;
+		for i, bullet in ipairs(Bullets) do
+			bullet.y = bullet.y + bullet.speedY*dt;
 			if bullet.y < 0 then
-				table.remove(bullets, i);
+				table.remove(Bullets, i);
 			end
 		end
 
@@ -315,7 +301,7 @@ function love.draw()
 	--local startTimer = os.time();
 	love.graphics.draw(Player.img, Player.x, Player.y);
 
-	for i, bullet in ipairs(bullets) do
+	for i, bullet in ipairs(Bullets) do
 		love.graphics.draw(bullet.img, bullet.x, bullet.y);
 	end
 
@@ -325,6 +311,7 @@ function love.draw()
 			asteroid.anim:draw(destroyImg, asteroid.x-29, asteroid.y-32);
 		else
 			love.graphics.draw(asteroid.img, asteroid.x, asteroid.y);
+			--love.graphics.rectangle("line", asteroid.x, asteroid.y, asteroid.w, asteroid.h)
 		end
 	end
 
