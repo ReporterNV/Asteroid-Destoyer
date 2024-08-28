@@ -1,3 +1,8 @@
+--[[
+--TODO:
+--[ ] Separate main.lua
+--[ ] Add new obj for anim death
+--]]
 local anim8 = require("anim8.anim8")
 local SCREEN_H = 600
 local SCREEN_W = 400
@@ -29,6 +34,7 @@ function love.load()
 	--local startTimer = os.clock();
 	love.window.setTitle("Asteroid destroyer");
 	love.window.setMode(SCREEN_W, SCREEN_H);
+	--require("player.lua")
 
 	Keys = {};
 	OnceKey = {};
@@ -122,7 +128,7 @@ function love.load()
 		ChildObj.speedX = 0;
 		ChildObj.speedY = args.speedY or 0;
 		ChildObj.img = love.graphics.newImage("asteroid.png")
-		ChildObj.destroySound = nil
+		ChildObj.destroySound = love.audio.newSource(SndDestoyAsteroidPath, "static");
 		ChildObj.callback = nil;
 		self.__index = self;
 		return setmetatable(ChildObj, self);
@@ -135,8 +141,13 @@ function love.load()
 		asteroid.speedY = math.random(50, 200)
 		table.insert(Asteroids, asteroid)
 	end
-	function Asteroid:destroy()
-		self.destroy:play();
+	function Asteroid:destroyAnimation()
+		self.destroySound:play();
+		table.remove(Asteroids, self)
+	end
+
+function Asteroid:destroy()
+		self.destroySound:play();
 		table.remove(Asteroids, self)
 	end
 
@@ -150,10 +161,10 @@ function love.load()
 
 	destroyImg = love.graphics.newImage("asteroidDestroy.png");
 	destroyGrid = anim8.newGrid(96, 96, destroyImg:getWidth(), destroyImg:getHeight());
-	destroyAnim = anim8.newAnimation(destroyGrid('2-5', 1), 0.06, "pauseAtEnd");
+	destroyAnim = anim8.newAnimation(destroyGrid('2-8', 1), 0.1, "pauseAtEnd");
 
 	Score = 0;
-	AsteroidTimer = 0;
+	AsteroidTimer = 1;
 	AsteroidInterval = 1;
 	AttackTimer = 0;
 	AttackInterval = 0.5;
@@ -262,12 +273,22 @@ function love.update(dt)
 			end
 
 			if asteroid.speed == 0 then
-				if  asteroid.prevframe == 4 then -- use 4 insted of 5 bcz we skip 1 frame.
+				--if  asteroid.prevframe == 4 then -- use 4 insted of 5 bcz we skip 1 frame.
+				if  asteroid.anim.position == 4 then -- use 4 insted of 5 bcz we skip 1 frame.
+				--[[	if math.random(0, 1) == 1 then
+						asteroid.anim:flipV();
+					end
+					if math.random(0, 1) == 1 then
+						asteroid.anim:flipH();
+					end
+					--]]
+				end
+
+				if  asteroid.anim.position == 8 then -- use 4 insted of 5 bcz we skip 1 frame.
 					table.remove(Asteroids, i);
 				end
-				-- Use change object. when bullet hit asteroid change asteroid to animated obj?
-				asteroid.prevframe = asteroid.anim.position;
 				asteroid.anim:update(dt);
+				-- Use change object. when bullet hit asteroid change asteroid to animated obj?
 			end
 
 			if asteroid.speedY ~= 0 then
@@ -297,6 +318,7 @@ function love.update(dt)
 	--UpdateTimer = os.clock() - startTimer;
 end
 
+local NeedPrintDBG = true;
 function love.draw()
 	--local startTimer = os.time();
 	love.graphics.draw(Player.img, Player.x, Player.y);
@@ -305,10 +327,13 @@ function love.draw()
 		love.graphics.draw(bullet.img, bullet.x, bullet.y);
 	end
 
+
 	for _, asteroid in ipairs(Asteroids) do
 		if asteroid.speed == 0 then
 			--This const from image for sync size asteroid and SndDestroyasset.
-			asteroid.anim:draw(destroyImg, asteroid.x-29, asteroid.y-32);
+			--if asteroid.anim.position ~= 5 then
+				asteroid.anim:draw(destroyImg, asteroid.x-29, asteroid.y-32);
+			--end
 		else
 			love.graphics.draw(asteroid.img, asteroid.x, asteroid.y);
 			--love.graphics.rectangle("line", asteroid.x, asteroid.y, asteroid.w, asteroid.h)
@@ -317,6 +342,16 @@ function love.draw()
 
 	if UserPause or AFKPause then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
+		if NeedPrintDBG == true then
+			for i, asteroid in ipairs(Asteroids) do
+				print("id:"..i.." X:"..asteroid.x.." Y:"..asteroid.y.." SPEED:".. asteroid.speedY )
+			end
+			NeedPrintDBG = false
+		end
+	end
+	if not (UserPause or AFKPause) then
+		NeedPrintDBG = true;
+		--os.execute("clear")
 	end
 	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10);
 	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
