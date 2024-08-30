@@ -2,7 +2,7 @@
 --TODO:
 --[ ] Separate main.lua
 --[ ] Add new obj for anim death
---[ ] Move assets to other dir
+--[x] Move assets to other dir
 --]]
 local anim8 = require("anim8.anim8")
 local SCREEN_H = 600
@@ -123,6 +123,10 @@ function love.load()
 	end
 
 
+	destroyImg = love.graphics.newImage(ImageAsteroidDestroy);
+	destroyGrid = anim8.newGrid(96, 96, destroyImg:getWidth(), destroyImg:getHeight());
+	destroyAnim = anim8.newAnimation(destroyGrid('2-8', 1), 0.1, "pauseAtEnd");
+
 	Asteroid = Object:new();
 	function Asteroid:new(args)
 		local ChildObj = {}; -- looks like i do it wrong
@@ -136,6 +140,7 @@ function love.load()
 		ChildObj.speedX = 0;
 		ChildObj.speedY = args.speedY or 0;
 		ChildObj.img = love.graphics.newImage(ImageAsteroid)
+		ChildObj.animation =  anim8.newAnimation(destroyGrid('1-8', 1), 0.1, "pauseAtEnd");
 		ChildObj.destroySound = love.audio.newSource(SndDestoyAsteroidPath, "static");
 		ChildObj.callback = nil;
 		self.__index = self;
@@ -147,6 +152,7 @@ function love.load()
 		asteroid.x = math.random(0, SCREEN_W - (asteroid.w or 0))
 		asteroid.y = -asteroid.h;
 		asteroid.speedY = math.random(50, 200)
+		asteroid.animation:pauseAtStart();
 		table.insert(Asteroids, asteroid)
 	end
 	function Asteroid:destroyAnimation()
@@ -154,9 +160,9 @@ function love.load()
 		table.remove(Asteroids, self)
 	end
 
-function Asteroid:destroy()
+function Asteroid:destroy(numberObj)
 		self.destroySound:play();
-		table.remove(Asteroids, self)
+		table.remove(Asteroids, numberObj)
 	end
 
 
@@ -164,18 +170,15 @@ function Asteroid:destroy()
 	Asteroids = {};
 	Bullets = {};
 
-	SndDestroy = love.audio.newSource(SndDestoyAsteroidPath, "static");
-	love.audio.setVolume(0.333)
 
-	destroyImg = love.graphics.newImage(ImageAsteroidDestroy);
-	destroyGrid = anim8.newGrid(96, 96, destroyImg:getWidth(), destroyImg:getHeight());
-	destroyAnim = anim8.newAnimation(destroyGrid('2-8', 1), 0.1, "pauseAtEnd");
+	SndDestroy = love.audio.newSource(SndDestoyAsteroidPath, "static");
 
 	Score = 0;
 	AsteroidTimer = 1;
 	AsteroidInterval = 1;
 	AttackTimer = 0;
 	AttackInterval = 0.5;
+	love.audio.setVolume(0.333)
 	--LoadTimer = os.clock() - startTimer;
 end
 
@@ -282,7 +285,6 @@ function love.update(dt)
 
 			if asteroid.speed == 0 then
 				--if  asteroid.prevframe == 4 then -- use 4 insted of 5 bcz we skip 1 frame.
-				if  asteroid.anim.position == 4 then -- use 4 insted of 5 bcz we skip 1 frame.
 				--[[	if math.random(0, 1) == 1 then
 						asteroid.anim:flipV();
 					end
@@ -290,12 +292,11 @@ function love.update(dt)
 						asteroid.anim:flipH();
 					end
 					--]]
-				end
 
-				if  asteroid.anim.position == 8 then -- use 4 insted of 5 bcz we skip 1 frame.
+				if  asteroid.animation.status == "paused" then -- use 4 insted of 5 bcz we skip 1 frame.
 					table.remove(Asteroids, i);
 				end
-				asteroid.anim:update(dt);
+				asteroid.animation:update(dt);
 				-- Use change object. when bullet hit asteroid change asteroid to animated obj?
 			end
 
@@ -306,8 +307,10 @@ function love.update(dt)
 						table.remove(Bullets, j);
 						asteroid.speedY = 0;
 						asteroid.speed = 0;
-						asteroid.anim = destroyAnim:clone();
-						asteroid.anim.looping = false;
+						--asteroid.anim = destroyAnim:clone();
+						--asteroid.anim.looping = false;
+						asteroid.animation:gotoFrame(2)
+						asteroid.animation:resume()
 						SndDestroy:play();
 					end
 				end
@@ -337,15 +340,16 @@ function love.draw()
 
 
 	for _, asteroid in ipairs(Asteroids) do
+		asteroid.animation:draw(destroyImg, asteroid.x, asteroid.y, nil, 1,1, 29, 32); --offset 29 for original animation
+		love.graphics.rectangle("line", asteroid.x, asteroid.y, asteroid.w, asteroid.h)
+		--[[
 		if asteroid.speed == 0 then
-			--This const from image for sync size asteroid and SndDestroyasset.
-			--if asteroid.anim.position ~= 5 then
+			--This const from image for sync size asteroid and destroyImg.
 				asteroid.anim:draw(destroyImg, asteroid.x-29, asteroid.y-32);
-			--end
 		else
 			love.graphics.draw(asteroid.img, asteroid.x, asteroid.y);
-			--love.graphics.rectangle("line", asteroid.x, asteroid.y, asteroid.w, asteroid.h)
 		end
+		--]]
 	end
 
 	if UserPause or AFKPause then
@@ -355,6 +359,7 @@ function love.draw()
 				print("id:"..i.." X:"..asteroid.x.." Y:"..asteroid.y.." SPEED:".. asteroid.speedY )
 			end
 			NeedPrintDBG = false
+			print("");
 		end
 	end
 	if not (UserPause or AFKPause) then
