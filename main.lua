@@ -2,6 +2,7 @@
 --TODO:
 --[ ] Separate main.lua
 --[ ] Add new obj for anim death
+--[ ] Move assets to other dir
 --]]
 local anim8 = require("anim8.anim8")
 local SCREEN_H = 600
@@ -42,6 +43,11 @@ function love.load()
 	SoundsDir = "sounds/"
 	SndDestoyAsteroidPath = SoundsDir.."destroy.wav"
 	SndAttackPath = SoundsDir.."attack.wav"
+	ImagesDir = "images/"
+	ImagePlayer = ImagesDir.."spaceship.png"
+	ImageBullet = ImagesDir.."bullet.png"
+	ImageAsteroid = ImagesDir.."asteroid.png"
+	ImageAsteroidDestroy = ImagesDir.."asteroidDestroy.png"--make separate dir for anim?
 
 	Object = {
 		x = 0,
@@ -51,6 +57,7 @@ function love.load()
 		speedX = 0,
 		speedY = 0,
 		img = nil,
+		collision = true;
 	}
 
 	function Object:new(args)
@@ -65,6 +72,7 @@ function love.load()
 		ChildObj.speedX = args.speedX or 0;
 		ChildObj.speedY = args.speedY or 0;
 		ChildObj.img = args.img or nil;
+		ChildObj.collision = true;
 		self.__index = self;
 		return setmetatable(ChildObj, self);
 	end
@@ -83,7 +91,7 @@ function love.load()
 		y = 500,
 		speedX = 200,
 		speedY = 100,
-		img = love.graphics.newImage("spaceship.png");
+		img = love.graphics.newImage(ImagePlayer);
 	});
 	Player:setWHfromImage();
 	Bullet = Object:new();
@@ -98,7 +106,7 @@ function love.load()
 		ChildObj.h = args.h or 0;
 		ChildObj.speedX = 0;
 		ChildObj.speedY = args.speedY or -500;
-		ChildObj.img = love.graphics.newImage("bullet.png");
+		ChildObj.img = love.graphics.newImage(ImageBullet);
 		ChildObj.spawnSound = love.audio.newSource(SndAttackPath, "static");
 		ChildObj.callback = nil;
 		self.__index = self;
@@ -127,7 +135,7 @@ function love.load()
 		ChildObj.h = args.h or 0;
 		ChildObj.speedX = 0;
 		ChildObj.speedY = args.speedY or 0;
-		ChildObj.img = love.graphics.newImage("asteroid.png")
+		ChildObj.img = love.graphics.newImage(ImageAsteroid)
 		ChildObj.destroySound = love.audio.newSource(SndDestoyAsteroidPath, "static");
 		ChildObj.callback = nil;
 		self.__index = self;
@@ -159,7 +167,7 @@ function Asteroid:destroy()
 	SndDestroy = love.audio.newSource(SndDestoyAsteroidPath, "static");
 	love.audio.setVolume(0.333)
 
-	destroyImg = love.graphics.newImage("asteroidDestroy.png");
+	destroyImg = love.graphics.newImage(ImageAsteroidDestroy);
 	destroyGrid = anim8.newGrid(96, 96, destroyImg:getWidth(), destroyImg:getHeight());
 	destroyAnim = anim8.newAnimation(destroyGrid('2-8', 1), 0.1, "pauseAtEnd");
 
