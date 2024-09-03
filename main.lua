@@ -25,8 +25,8 @@ local function checkCollisionObj(Obj1, Obj2)
 		print("func checkCollision Obj2 is nil")
 	end
 	return checkCollision(
-			Obj1.x, Obj1.y, Obj1.w, Obj1.h,
-			Obj2.x, Obj2.y, Obj2.w, Obj2.h
+	Obj1.x, Obj1.y, Obj1.w, Obj1.h,
+	Obj2.x, Obj2.y, Obj2.w, Obj2.h
 	);
 end
 
@@ -84,6 +84,27 @@ function love.load()
 		else
 			print("image not set");
 		end
+	end
+
+	Animation = Object:new()
+	function Animation:new(args)
+		if args == nil then
+			args = {}
+		end
+		local ChildObj = {}
+		ChildObj.x = args.x or 0;
+		ChildObj.y = args.y or 0;
+		ChildObj.w = args.w or 0;
+		ChildObj.h = args.h or 0;
+		ChildObj.speedX = args.speedX or 0;
+		ChildObj.speedY = args.speedY or 0;
+		ChildObj.grid = args.grid
+		ChildObj.img = args.img or nil;
+		ChildObj.frames = args.frames or nil;
+		ChildObj.animation = anim8.newAnimation(ChildObj.grid(ChildObj.frames, 1), 0.1, "pauseAtEnd");
+		ChildObj.collision = false;
+		self.__index = self;
+		return setmetatable(ChildObj, self);
 	end
 
 	Player = Object:new({
@@ -160,15 +181,18 @@ function love.load()
 		table.remove(Asteroids, self)
 	end
 
-function Asteroid:destroy(numberObj)
+	function Asteroid:destroy(numberObj)
 		self.destroySound:play();
 		table.remove(Asteroids, numberObj)
 	end
+	
+
 
 
 	Objects = {}; --add for every object callback function?
 	Asteroids = {};
 	Bullets = {};
+	Animations = {};
 
 
 	SndDestroy = love.audio.newSource(SndDestoyAsteroidPath, "static");
