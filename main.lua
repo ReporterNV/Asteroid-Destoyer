@@ -1,6 +1,7 @@
 --[[
 --TODO:
---[ ] Separate main.lua
+--[ ] Separate logic in modules
+--[ ] Update main.lua
 --[ ] Add new obj for anim death
 --[x] Move assets to other dir
 --]]
@@ -39,14 +40,6 @@ function love.load()
 	Keys = {};
 	OnceKey = {};
 	CanPressPause = true;
-	SoundsDir = "sounds/"
-	SndDestoyAsteroidPath = SoundsDir.."destroy.wav"
-	SndAttackPath = SoundsDir.."attack.wav"
-	ImagesDir = "images/"
-	ImagePlayer = ImagesDir.."spaceship.png"
-	ImageBullet = ImagesDir.."bullet.png"
-	ImageAsteroid = ImagesDir.."asteroid.png"
-	ImageAsteroidDestroy = ImagesDir.."asteroidDestroy.png"--make separate dir for anim?
 
 	Object = {
 		x = 0,
@@ -148,9 +141,6 @@ function love.load()
 	destroyAnim = anim8.newAnimation(destroyGrid('2-8', 1), 0.1, "pauseAtEnd");
 	Asteroid = require("asteroid")
 	
-	
-
-
 
 	Objects = {}; --add for every object callback function?
 	Asteroids = {};
@@ -158,23 +148,16 @@ function love.load()
 	Animations = {};
 
 
-	SndDestroy = love.audio.newSource(SndDestoyAsteroidPath, "static");
-
 	Score = 0;
 	AsteroidTimer = 1;
 	AsteroidInterval = 1;
 	AttackTimer = 0;
 	AttackInterval = 0.5;
-	love.audio.setVolume(0.333)
 	--LoadTimer = os.clock() - startTimer;
 end
 
 function love.keypressed(key)
 	Keys[key] = true;
-	--[[
-	OnceKey[key].prev = OnceKey[key].curr;
-	OnceKey[key].curr = true;
-	--]]
 end
 
 function love.keyreleased(key)
@@ -202,13 +185,6 @@ function love.update(dt)
 	elseif Keys["escape"] == false then
 		CanPressPause = true;
 	end
-
-	--[[
-	if Keys["escape"] then
-		UserPause = not UserPause;
-		Keys["escape"] = false; --bad code pattern
-	end
-	--]]
 
 	if UserPause == false and AFKPause == false then
 
