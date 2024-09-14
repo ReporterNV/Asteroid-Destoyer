@@ -10,26 +10,6 @@ local vars = require("vars")
 local UserPause = false
 local LoadTimer, UpdateTimer, DrawTimer;
 
-local function checkCollision(x1,y1,w1,h1, x2,y2,w2,h2)
-	return x1 < x2+w2 and
-	x2 < x1+w1 and
-	y1 < y2+h2 and
-	y2 < y1+h1
-end
-
-local function checkCollisionObj(Obj1, Obj2)
-	if Obj1 == nil then
-		print("func checkCollision Obj1 is nil")
-	end
-	if Obj2 == nil then
-		print("func checkCollision Obj2 is nil")
-	end
-	return checkCollision(
-	Obj1.x, Obj1.y, Obj1.w, Obj1.h,
-	Obj2.x, Obj2.y, Obj2.w, Obj2.h
-	);
-end
-
 
 function love.load()
 	--local startTimer = os.clock();
@@ -40,43 +20,7 @@ function love.load()
 	Keys = {};
 	OnceKey = {};
 	CanPressPause = true;
-
-	Object = {
-		x = 0,
-		y = 0,
-		w = 0,
-		h = 0,
-		speedX = 0,
-		speedY = 0,
-		img = nil,
-		collision = true;
-	}
-
-	function Object:new(args)
-		local ChildObj = {}
-		if args == nil then
-			args = {}
-		end
-		ChildObj.x = args.x or 0;
-		ChildObj.y = args.y or 0;
-		ChildObj.w = args.w or 0;
-		ChildObj.h = args.h or 0;
-		ChildObj.speedX = args.speedX or 0;
-		ChildObj.speedY = args.speedY or 0;
-		ChildObj.img = args.img or nil;
-		ChildObj.collision = true;
-		self.__index = self;
-		return setmetatable(ChildObj, self);
-	end
-
-	function Object:setWHfromImage()
-		if self.img ~= nil then
-			self.h = self.img:getHeight();
-			self.w = self.img:getWidth();
-		else
-			print("image not set");
-		end
-	end
+	Object = require("classes.object")
 
 	Animation = Object:new()
 	function Animation:new(args)
@@ -98,7 +42,8 @@ function love.load()
 		self.__index = self;
 		return setmetatable(ChildObj, self);
 	end
-
+	Player = require("classes.player")
+	--[[
 	Player = Object:new({
 		x = 200,
 		y = 500,
@@ -107,6 +52,7 @@ function love.load()
 		img = love.graphics.newImage(ImagePlayer);
 	});
 	Player:setWHfromImage();
+	--]]
 	Bullet = Object:new();
 	function Bullet:new(args)
 		local ChildObj = {};
@@ -139,7 +85,7 @@ function love.load()
 	destroyImg = love.graphics.newImage(ImageAsteroidDestroy);
 	destroyGrid = anim8.newGrid(96, 96, destroyImg:getWidth(), destroyImg:getHeight());
 	destroyAnim = anim8.newAnimation(destroyGrid('2-8', 1), 0.1, "pauseAtEnd");
-	Asteroid = require("asteroid")
+	Asteroid = require("classes.asteroid")
 	
 
 	Objects = {}; --add for every object callback function?
@@ -240,7 +186,8 @@ function love.update(dt)
 			if asteroid.y > SCREEN_H then
 				love.event.quit();
 			end
-			if checkCollisionObj(Player, asteroid) then
+			--if checkCollisionObj(Player, asteroid) then
+			if asteroid:checkCollisionObj(Player) then
 				if asteroid.speedY ~= 0 then
 					love.event.quit();
 				end
@@ -265,7 +212,7 @@ function love.update(dt)
 
 			if asteroid.speedY ~= 0 then
 				for j, bullet in ipairs(Bullets) do
-					if checkCollisionObj(bullet, asteroid) then
+					if asteroid:checkCollisionObj(bullet) then
 						Score = Score+1;
 						table.remove(Bullets, j);
 						asteroid.speedY = 0;
