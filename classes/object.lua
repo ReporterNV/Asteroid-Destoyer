@@ -50,7 +50,7 @@ function Object:checkCollisionObj(Obj2)
 	if Obj2 == nil then
 		print("func checkCollision Obj2 is nil")
 	end
-	return checkCollision(
+	return self.collision and checkCollision(
 	Obj1.x, Obj1.y, Obj1.w, Obj1.h,
 	Obj2.x, Obj2.y, Obj2.w, Obj2.h
 	);

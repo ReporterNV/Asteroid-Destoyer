@@ -30,14 +30,37 @@ function Asteroid:spawn()
 	asteroid.animation:pauseAtStart();
 	table.insert(Asteroids, asteroid)
 end
+--[[
 function Asteroid:destroyAnimation()
 	self.destroySound:play();
 	table.remove(Asteroids, self)
 end
+--]]
 
 function Asteroid:destroy(numberObj)
-	self.destroySound:play();
-	table.remove(Asteroids, numberObj)
+	--self.destroySound:play();
+	--table.remove(Asteroids, numberObj)
+end
+
+function Asteroid:draw()
+	self.animation:draw(destroyImg, self.x, self.y, nil, 1,1, 29, 32); --offset 29 for original animation
+	--love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+end
+
+function Asteroid:update(dt, numberObj)
+	self.y = self.y + self.speedY*dt;
+	if self.y > SCREEN_H then
+		love.event.quit();
+	end
+	if self.speed == 0 then
+		if  self.animation.status == "paused" then -- use 4 insted of 5 bcz we skip 1 frame.
+			self.destroy(numberObj)
+		else
+			self.animation:update(dt);
+			-- Use change object. when bullet hit asteroid change asteroid to animated obj?
+		end
+	end
+
 end
 
 return Asteroid
