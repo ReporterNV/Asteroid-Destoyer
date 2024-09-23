@@ -128,9 +128,6 @@ function love.update(dt)
 						table.remove(Bullets, j);
 						asteroid.speedY = 0;
 						asteroid.speed = 0;
-						--asteroid.anim = destroyAnim:clone();
-						--asteroid.anim.looping = false;
-						asteroid.animation:gotoFrame(2)
 						asteroid.animation:resume()
 						SndDestroy:play();
 					end
