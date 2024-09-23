@@ -27,6 +27,7 @@ function Asteroid:spawn()
 	asteroid.x = math.random(0, SCREEN_W - (asteroid.w or 0))
 	asteroid.y = -asteroid.h;
 	asteroid.speedY = math.random(50, 200)
+	asteroid.animation:gotoFrame(2)
 	asteroid.animation:pauseAtStart();
 	table.insert(Asteroids, asteroid)
 end

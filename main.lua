@@ -78,10 +78,10 @@ function love.quit()
 end
 
 function love.focus(f)
-	if not f then
-		AFKPause = true;
-	else
+	if f then
 		AFKPause = false;
+	else
+		AFKPause = true;
 	end
 end
 
