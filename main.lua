@@ -4,6 +4,15 @@
 --[ ] Update main.lua
 --[ ] Add new obj for anim death
 --[x] Move assets to other dir
+--[ ] Create event manager:
+-- EVENT MANAGER:
+-- __________
+-- |        | <- Control objects (add, remove)
+-- |        | <- Control events (SPAWN NEW ASTEROIDS, collision obj)
+-- |        |
+-- |        |
+-- __________
+-- add type object? like type == "asteroid"
 --]]
 
 local anim8 = require("anim8.anim8")
