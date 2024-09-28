@@ -52,6 +52,7 @@ function love.load()
 		self.__index = self;
 		return setmetatable(ChildObj, self);
 	end
+	eventmanager = require("classes.eventmanager")
 	Player = require("classes.player")
 	Bullet = require("classes.bullet");
 	destroyImg = love.graphics.newImage(ImageAsteroidDestroy);
@@ -63,11 +64,17 @@ function love.load()
 	Asteroids = {};
 	Bullets = {};
 	Animations = {};
+	eventmanager:init({
+		Objects,
+		Asteroids,
+		Bullets,
+		Animations,
+		Player
+	})
 
 
 	Score = 0;
-	AsteroidTimer = 1;
-	AsteroidInterval = 1;
+
 	AttackTimer = 0;
 	AttackInterval = 0.5;
 	--LoadTimer = os.clock() - startTimer;
@@ -106,51 +113,7 @@ function love.update(dt)
 	if UserPause == false and AFKPause == false then
 
 		Player:update(dt, Keys)
-
-		AsteroidTimer = AsteroidTimer + dt;
-		if AsteroidTimer > AsteroidInterval then
-			AsteroidTimer = 0;
-			Asteroid:spawn();
-		end
-
-		for i, asteroid in ipairs(Asteroids) do
-			asteroid:update(dt);
-			--if checkCollisionObj(Player, asteroid) then
-			if asteroid:checkCollisionObj(Player) then
-				if asteroid.speedY ~= 0 then
-					love.event.quit();
-				end
-			end
-
-			if asteroid.speed == 0 then
-				if  asteroid.animation.status == "paused" then -- use 4 insted of 5 bcz we skip 1 frame.
-					table.remove(Asteroids, i);
-				end
-				asteroid.animation:update(dt);
-				-- Use change object. when bullet hit asteroid change asteroid to animated obj?
-			end
-
-			if asteroid.speedY ~= 0 then
-				for j, bullet in ipairs(Bullets) do
-					if asteroid:checkCollisionObj(bullet) then
-						Score = Score+1;
-						table.remove(Bullets, j);
-						asteroid.speedY = 0;
-						asteroid.speed = 0;
-						asteroid.animation:resume()
-						SndDestroy:play();
-					end
-				end
-			end
-		end
-
-		for i, bullet in ipairs(Bullets) do
-			bullet.y = bullet.y + bullet.speedY*dt;
-			if bullet.y < 0 then
-				table.remove(Bullets, i);
-			end
-		end
-
+		eventmanager:update(dt)
 	end
 
 	--UpdateTimer = os.clock() - startTimer;
