@@ -4,7 +4,10 @@
 --[ ] Update main.lua
 --[ ] Add new obj for anim death
 --[x] Move assets to other dir
---[ ] Create event manager:
+--[x] Create event manager:
+--[ ] add Player event for spawn bullets
+--[ ] add animation class
+--[ ] add background
 -- EVENT MANAGER:
 -- __________
 -- |        | <- Control objects (add, remove)
@@ -52,7 +55,9 @@ function love.load()
 		self.__index = self;
 		return setmetatable(ChildObj, self);
 	end
-	eventmanager = require("classes.eventmanager")
+	Eventmanager = require("classes.eventmanager")
+	Background = require("classes.background")
+	Background:init();
 	Player = require("classes.player")
 	Bullet = require("classes.bullet");
 	destroyImg = love.graphics.newImage(ImageAsteroidDestroy);
@@ -64,7 +69,7 @@ function love.load()
 	Asteroids = {};
 	Bullets = {};
 	Animations = {};
-	eventmanager:init({
+	Eventmanager:init({
 		Objects,
 		Asteroids,
 		Bullets,
@@ -113,8 +118,10 @@ function love.update(dt)
 	if UserPause == false and AFKPause == false then
 
 		Player:update(dt, Keys)
-		eventmanager:update(dt)
+		Eventmanager:update(dt)
 	end
+
+	Background:update()
 
 	--UpdateTimer = os.clock() - startTimer;
 end
@@ -122,6 +129,7 @@ end
 local NeedPrintDBG = true;
 function love.draw()
 	--local startTimer = os.time();
+	Background:draw();
 	Player:draw();
 
 	for _, bullet in ipairs(Bullets) do
