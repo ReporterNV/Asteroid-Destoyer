@@ -7,7 +7,7 @@
 --[x] Create event manager:
 --[ ] add Player event for spawn bullets
 --[ ] add animation class
---[ ] add background
+--[x] add background
 -- EVENT MANAGER:
 -- __________
 -- |        | <- Control objects (add, remove)
@@ -58,6 +58,7 @@ function love.load()
 	Eventmanager = require("classes.eventmanager")
 	Background = require("classes.background")
 	Background:init();
+
 	Player = require("classes.player")
 	Bullet = require("classes.bullet");
 	destroyImg = love.graphics.newImage(ImageAsteroidDestroy);
@@ -119,9 +120,9 @@ function love.update(dt)
 
 		Player:update(dt, Keys)
 		Eventmanager:update(dt)
+		Background:update()
 	end
 
-	Background:update()
 
 	--UpdateTimer = os.clock() - startTimer;
 end
