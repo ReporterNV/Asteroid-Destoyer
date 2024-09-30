@@ -120,7 +120,7 @@ function love.update(dt)
 
 		Player:update(dt, Keys)
 		Eventmanager:update(dt)
-		Background:update()
+		Background:update(dt)
 	end
 
 
@@ -136,7 +136,6 @@ function love.draw()
 	for _, bullet in ipairs(Bullets) do
 		bullet:draw();
 	end
-
 
 	for _, asteroid in ipairs(Asteroids) do
 		asteroid:draw()

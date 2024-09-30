@@ -5,7 +5,7 @@ local background = Object:new({
 	img = love.graphics.newImage(ImageBackground);
 	x = 0,
 	y = 0,
-	speedY = 0.1,
+	speedY = 10,
 })
 
 function background:init()
@@ -18,8 +18,8 @@ function background:draw()
 end
 
 
-function background:update()
-	self.y = self.y + self.speedY;
+function background:update(dt)
+	self.y = self.y + self.speedY * dt;
 end
 
 
