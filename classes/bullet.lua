@@ -26,7 +26,7 @@ function Bullet:spawn()
 	bullet.x = Player.x + Player.w/2 - bullet.w/2;
 	bullet.y = Player.y
 	bullet.spawnSound:play();
-	table.insert(Bullets, bullet)
+	return bullet;
 end
 
 function Bullet:draw()

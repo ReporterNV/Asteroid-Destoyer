@@ -28,6 +28,11 @@ end
 function GameOver()
 	love.event.quit();
 end
+function EventManager:playerShoot()
+	NewBullet = Bullet:spawn();
+	table.insert(Bullets, NewBullet)
+end
+
 
 function EventManager:update(dt)
 	AsteroidTimer = AsteroidTimer + dt;

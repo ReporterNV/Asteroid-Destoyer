@@ -1,11 +1,15 @@
 print("Hi from player.lua")
 local Object = require("classes.object")
+local eventmanager = require("classes.eventmanager")
+
 Player = Object:new({
 	x = 200,
 	y = 500,
 	speedX = 200,
 	speedY = 100,
-	img = love.graphics.newImage(ImagePlayer);
+	img = love.graphics.newImage(ImagePlayer),
+	ShootTimer = 0,
+	ShootReload = 0; 
 });
 Player:setWHfromImage();
 
@@ -51,7 +55,7 @@ function Player:update(dt, Keys)
 		if AttackTimer > AttackInterval then
 			if Keys["space"] == true then
 				AttackTimer = 0;
-				NewBullet = Bullet:spawn();
+				eventmanager:playerShoot();
 			end
 		end
 

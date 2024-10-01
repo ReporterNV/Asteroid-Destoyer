@@ -6,6 +6,7 @@
 --[x] Move assets to other dir
 --[x] Create event manager:
 --[ ] add Player event for spawn bullets
+--[ ] add atr fire speed
 --[ ] add animation class
 --[x] add background
 -- EVENT MANAGER:
@@ -28,7 +29,6 @@ function love.load()
 	--local startTimer = os.clock();
 	love.window.setTitle("Asteroid destroyer");
 	love.window.setMode(SCREEN_W, SCREEN_H);
-	--require("player.lua")
 
 	Keys = {};
 	OnceKey = {};
@@ -117,7 +117,6 @@ function love.update(dt)
 	end
 
 	if UserPause == false and AFKPause == false then
-
 		Player:update(dt, Keys)
 		Eventmanager:update(dt)
 		Background:update(dt)
