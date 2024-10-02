@@ -5,13 +5,17 @@ local eventmanager = require("classes.eventmanager")
 Player = Object:new({
 	x = 200,
 	y = 500,
+	a = 1,
 	speedX = 200,
 	speedY = 100,
+	ShootTimer = 2,
+	ShootReload = 0.5,
 	img = love.graphics.newImage(ImagePlayer),
-	ShootTimer = 0,
-	ShootReload = 0; 
 });
+
 Player:setWHfromImage();
+Player.ShootTimer = 0;
+Player.ShootReload = 0.6;
 
 function Player:draw()
 	love.graphics.draw(Player.img, Player.x, Player.y);
@@ -50,14 +54,24 @@ function Player:update(dt, Keys)
 				Player.y = Player.y + Player.speedY*dt;
 			end
 		end
-
+		if Player.ShootTimer > 0 then
+			self.ShootTimer = self.ShootTimer - dt;
+		else
+			if Keys["space"] == true then
+				self.ShootTimer = self.ShootReload;
+				eventmanager:playerShoot();
+			end
+		end
 		AttackTimer = AttackTimer + dt;
+
+--[[
 		if AttackTimer > AttackInterval then
 			if Keys["space"] == true then
 				AttackTimer = 0;
 				eventmanager:playerShoot();
 			end
 		end
+		--]]
 
 
 end
