@@ -1,5 +1,7 @@
 local Object = require("classes.object")
 local Asteroid = require("classes.asteroid")
+local Asteroid = require("classes.asteroid")
+local Bullet = require("classes.bullet")
 local EventManager = {};
 
 local AsteroidTimer = 1;
@@ -42,30 +44,35 @@ function EventManager:update(dt)
 		Asteroid:spawn();
 	end
 
+	for _, animation in ipairs(Animations) do
+		animation:update(dt);
+	end
 
 	for i, asteroid in ipairs(Asteroids) do
 		asteroid:update(dt);
-		if asteroid:checkCollisionObj(Player) then
-			if asteroid.speedY ~= 0 then
+		if asteroid.speedY ~= 0 then
+			if asteroid:checkCollisionObj(Player) then
 				GameOver();
 			end
-		end
-
-		if asteroid.speed == 0 then
-			if  asteroid.animation.status == "paused" then
-				table.remove(Asteroids, i);
-			end
-			asteroid.animation:update(dt);
 		end
 
 		if asteroid.speedY ~= 0 then
 			for j, bullet in ipairs(Bullets) do
 				if asteroid:checkCollisionObj(bullet) then
 					Score = Score+1;
+					DestroyAnimation = Animation:new({
+						img = love.graphics.newImage(ImageAsteroidDestroy),
+						frameW = 96,
+						frameH = 96,
+						framesColumns='2-8',
+						x = asteroid.x,
+						y = asteroid.y,
+						offsetx = 29,
+						offsety = 32,
+					})
+					table.insert(Animations, DestroyAnimation)
+					table.remove(Asteroids, i);
 					table.remove(Bullets, j);
-					asteroid.speedY = 0;
-					asteroid.speed = 0;
-					asteroid.animation:resume()
 					SndDestroy:play();
 				end
 			end
