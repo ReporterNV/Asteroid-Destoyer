@@ -22,7 +22,6 @@ function Player:draw()
 end
 
 function Player:update(dt, Keys)
-
 		if Keys["left"] == true or Keys["a"] == true then
 			if Player.x - Player.speedX*dt < 0 then
 				Player.x = 0;
@@ -62,20 +61,6 @@ function Player:update(dt, Keys)
 				eventmanager:playerShoot();
 			end
 		end
-		AttackTimer = AttackTimer + dt;
-
---[[
-		if AttackTimer > AttackInterval then
-			if Keys["space"] == true then
-				AttackTimer = 0;
-				eventmanager:playerShoot();
-			end
-		end
-		--]]
-
-
 end
-
-
 
 return Player

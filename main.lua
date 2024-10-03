@@ -6,9 +6,10 @@
 --[x] Move assets to other dir
 --[x] Create event manager:
 --[ ] add Player event for spawn bullets
---[ ] add atr fire speed
+--[x] add atr fire speed
 --[x] add animation class
 --[x] add background
+--[ ] add ingame class for windows for menu setting etc
 --[ ] add spectre bullet? destroy random asteroid
 -- EVENT MANAGER:
 -- __________
@@ -34,19 +35,18 @@ function love.load()
 	Keys = {};
 	OnceKey = {};
 	CanPressPause = true;
-	Object = require("classes.object")
-
-	Eventmanager = require("classes.eventmanager")
-	Background = require("classes.background")
-	Background:init();
-
-	Animation = require("classes.animation")
-	Player = require("classes.player")
-	Bullet = require("classes.bullet");
 	Objects = {}; --add for every object callback function?
 	Asteroids = {};
 	Bullets = {};
 	Animations = {};
+
+	Eventmanager = require("classes.eventmanager")
+	Object = require("classes.object")
+	Background = require("classes.background")
+	Animation = require("classes.animation")
+	Player = require("classes.player")
+	Bullet = require("classes.bullet");
+
 	Eventmanager:init({
 		Objects,
 		Asteroids,
@@ -55,11 +55,10 @@ function love.load()
 		Player
 	})
 
+	Background:init();
 
 	Score = 0;
 
-	AttackTimer = 0;
-	AttackInterval = 0.5;
 	--LoadTimer = os.clock() - startTimer;
 end
 
@@ -102,7 +101,7 @@ function love.update(dt)
 	--UpdateTimer = os.clock() - startTimer;
 end
 
-local NeedPrintDBG = true;
+--local NeedPrintDBG = true;
 function love.draw()
 	--local startTimer = os.time();
 	Background:draw();
@@ -123,6 +122,10 @@ function love.draw()
 
 	if UserPause or AFKPause then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
+	end
+
+	--[[
+	if UserPause or AFKPause then
 		if NeedPrintDBG == true then
 			for i, asteroid in ipairs(Asteroids) do
 				print("id:"..i.." X:"..asteroid.x.." Y:"..asteroid.y.." SPEED:".. asteroid.speedY )
@@ -137,7 +140,6 @@ function love.draw()
 	end
 	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10);
 	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
---[[
 	DrawTimer = os.time() - startTimer;
 	love.graphics.printf("LoadTimer: " .. tostring(LoadTimer), 10, 25, 90, "left");
 	love.graphics.printf("UpdateTimer: " .. tostring(UpdateTimer), 10, 55, 90, "left");
