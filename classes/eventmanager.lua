@@ -1,6 +1,7 @@
+require("vars")
 local Object = require("classes.object")
 local Asteroid = require("classes.asteroid")
-local Asteroid = require("classes.asteroid")
+local Animation = require("classes.animation")
 local Bullet = require("classes.bullet")
 local EventManager = {};
 
@@ -50,10 +51,9 @@ function EventManager:update(dt)
 
 	for i, asteroid in ipairs(Asteroids) do
 		asteroid:update(dt);
-		if asteroid.speedY ~= 0 then
-			if asteroid:checkCollisionObj(Player) then
-				GameOver();
-			end
+		if asteroid:checkCollisionObj(Player)
+		or asteroid.y > SCREEN_H then
+			GameOver();
 		end
 
 		if asteroid.speedY ~= 0 then

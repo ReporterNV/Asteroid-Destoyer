@@ -36,7 +36,6 @@ function love.load()
 	CanPressPause = true;
 	Object = require("classes.object")
 
-
 	Eventmanager = require("classes.eventmanager")
 	Background = require("classes.background")
 	Background:init();
@@ -44,23 +43,6 @@ function love.load()
 	Animation = require("classes.animation")
 	Player = require("classes.player")
 	Bullet = require("classes.bullet");
-	destroyImg = love.graphics.newImage(ImageAsteroidDestroy);
-	destroyGrid = anim8.newGrid(96, 96, destroyImg:getWidth(), destroyImg:getHeight());
-	destroyAnim = anim8.newAnimation(destroyGrid('2-8', 1), 0.1, "pauseAtEnd");
-	Asteroid = require("classes.asteroid")
-	boom = Animation:new({
-		img = destroyImg,
-		frameW = 96,
-		frameH = 96,
-		grid = destroyGrid,
-		framesColumns='2-8',
-		x = 100,
-		y = 100,
-		offsetx = 29,
-		offsety = 32,
-		followedObject = Player,
-	})
-
 	Objects = {}; --add for every object callback function?
 	Asteroids = {};
 	Bullets = {};
@@ -116,8 +98,6 @@ function love.update(dt)
 		Eventmanager:update(dt)
 		Background:update(dt)
 	end
-
-	boom:update(dt);
 
 	--UpdateTimer = os.clock() - startTimer;
 end
