@@ -1,16 +1,23 @@
 --[[
 --TODO:
---[ ] Separate logic in modules
---[ ] Update main.lua
---[ ] Add new obj for anim death
+--[x] Separate logic in modules
+--[x] Update main.lua
+--[x] Add new obj for anim death
 --[x] Move assets to other dir
 --[x] Create event manager:
---[ ] add Player event for spawn bullets
+--[x] add Player event for spawn bullets
 --[x] add atr fire speed
 --[x] add animation class
 --[x] add background
 --[ ] add ingame class for windows for menu setting etc
+--[ ] control sound
 --[ ] add spectre bullet? destroy random asteroid
+--[ ] add this?
+--function setDefaults(obj, defaults, args)
+    for k, v in pairs(defaults) do
+        obj[k] = args[k] or v
+    end
+end
 -- EVENT MANAGER:
 -- __________
 -- |        | <- Control objects (add, remove)

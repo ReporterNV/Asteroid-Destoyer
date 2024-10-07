@@ -60,6 +60,7 @@ function EventManager:update(dt)
 			for j, bullet in ipairs(Bullets) do
 				if asteroid:checkCollisionObj(bullet) then
 					Score = Score+1;
+					asteroid.destroySound:play();
 					DestroyAnimation = Animation:new({
 						img = love.graphics.newImage(ImageAsteroidDestroy),
 						frameW = 96,
@@ -73,7 +74,6 @@ function EventManager:update(dt)
 					table.insert(Animations, DestroyAnimation)
 					table.remove(Asteroids, i);
 					table.remove(Bullets, j);
-					SndDestroy:play();
 				end
 			end
 		end

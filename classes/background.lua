@@ -19,7 +19,12 @@ end
 
 
 function background:update(dt)
-	self.y = self.y + self.speedY * dt;
+	local NewY = self.y + self.speedY * dt;
+	if (background.h - SCREEN_H > NewY) then
+		self.y = NewY;
+	else
+		self.y = background.h - SCREEN_H;
+	end
 end
 
 
