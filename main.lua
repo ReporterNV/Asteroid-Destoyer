@@ -30,7 +30,7 @@ end
 
 local anim8 = require("anim8.anim8")
 local vars = require("vars")
-local UserPause = false
+local UserPause = True 
 local LoadTimer, UpdateTimer, DrawTimer;
 
 
@@ -48,11 +48,16 @@ function love.load()
 	Animations = {};
 
 	Eventmanager = require("classes.eventmanager")
-	Object = require("classes.object")
 	Background = require("classes.background")
-	Animation = require("classes.animation")
 	Player = require("classes.player")
-	Bullet = require("classes.bullet");
+	Window = require("classes.window");
+	StartMenu = Window:new({
+		title = "CustomTitle",
+		options = {"One", "Two", "3"}
+	})
+	--Object = require("classes.object")
+	--Animation = require("classes.animation")
+	--Bullet = require("classes.bullet");
 
 	Eventmanager:init({
 		Objects,
@@ -98,6 +103,7 @@ function love.update(dt)
 	elseif Keys["escape"] == false then
 		CanPressPause = true;
 	end
+	StartMenu:update(dt, Keys)
 
 	if UserPause == false and AFKPause == false then
 		Player:update(dt, Keys)
@@ -114,6 +120,8 @@ function love.draw()
 	Background:draw();
 
 	Player:draw();
+
+	StartMenu:draw();
 
 	for _, animation in ipairs(Animations) do
 		animation:draw();
