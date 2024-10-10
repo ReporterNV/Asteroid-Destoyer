@@ -42,7 +42,7 @@ function EventManager:update(dt)
 
 	if AsteroidTimer > AsteroidInterval then
 		AsteroidTimer = 0;
-		Asteroid:spawn();
+		--Asteroid:spawn();
 	end
 
 	for _, animation in ipairs(Animations) do

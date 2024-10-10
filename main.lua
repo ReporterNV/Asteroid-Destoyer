@@ -51,9 +51,18 @@ function love.load()
 	Background = require("classes.background")
 	Player = require("classes.player")
 	Window = require("classes.window");
+
 	StartMenu = Window:new({
-		title = "CustomTitle",
-		options = {"One", "Two", "3"}
+		x = SCREEN_W/3;
+		w = SCREEN_W/3;
+		h = SCREEN_H/2;
+		visible = true;
+		title = love.window.getTitle(),
+		options = {
+			{name = "One"},
+			{name = "One"},
+			{name = "Exit", callback = function() love.event.quit() end}
+		}
 	})
 	--Object = require("classes.object")
 	--Animation = require("classes.animation")
