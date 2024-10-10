@@ -1,6 +1,10 @@
 SCREEN_H = 600
 SCREEN_W = 400
 
+CanPressPause = true;
+--UserPause = true;
+--AFKPause = false;
+
 ImagesDir = "images/"
 ImagePlayer = ImagesDir.."spaceship.png"
 ImageBullet = ImagesDir.."bullet.png"

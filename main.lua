@@ -30,7 +30,6 @@ end
 
 local anim8 = require("anim8.anim8")
 local vars = require("vars")
-local UserPause = True 
 local LoadTimer, UpdateTimer, DrawTimer;
 
 
@@ -41,25 +40,21 @@ function love.load()
 
 	Keys = {};
 	OnceKey = {};
-	CanPressPause = true;
 	Objects = {}; --add for every object callback function?
 	Asteroids = {};
 	Bullets = {};
 	Animations = {};
 
-	Eventmanager = require("classes.eventmanager")
+	EventManager = require("classes.eventmanager")
+	Pause = require("classes.pause")
 	Background = require("classes.background")
 	Player = require("classes.player")
-	Window = require("classes.window");
-	StartMenu = Window:new({
-		title = "CustomTitle",
-		options = {"One", "Two", "3"}
-	})
-	--Object = require("classes.object")
+	WindowManager = require("classes.windowmanager");
+
 	--Animation = require("classes.animation")
 	--Bullet = require("classes.bullet");
 
-	Eventmanager:init({
+	EventManager:init({
 		Objects,
 		Asteroids,
 		Bullets,
@@ -68,9 +63,7 @@ function love.load()
 	})
 
 	Background:init();
-
 	Score = 0;
-
 	--LoadTimer = os.clock() - startTimer;
 end
 
@@ -87,27 +80,15 @@ function love.quit()
 	print("SCORE: " .. tostring(Score));
 end
 
-function love.focus(f)
-	if f then
-		AFKPause = false;
-	else
-		AFKPause = true;
-	end
-end
-
 function love.update(dt)
 	--local startTimer = os.clock();
-	if Keys["escape"] and CanPressPause then
-		UserPause = not UserPause;
-		CanPressPause = false;
-	elseif Keys["escape"] == false then
-		CanPressPause = true;
-	end
-	StartMenu:update(dt, Keys)
+	--StartMenu:update(dt, Keys);
+	WindowManager:update(dt, Keys);
 
-	if UserPause == false and AFKPause == false then
+	Pause:update(dt, Keys);
+	if not Pause:IsOnPause() then
 		Player:update(dt, Keys)
-		Eventmanager:update(dt)
+		EventManager:update(dt)
 		Background:update(dt)
 	end
 
@@ -121,7 +102,8 @@ function love.draw()
 
 	Player:draw();
 
-	StartMenu:draw();
+	--StartMenu:draw();
+	WindowManager:draw();
 
 	for _, animation in ipairs(Animations) do
 		animation:draw();
@@ -135,7 +117,7 @@ function love.draw()
 		asteroid:draw()
 	end
 
-	if UserPause or AFKPause then
+	if Pause:IsOnPause() then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
 	end
 
