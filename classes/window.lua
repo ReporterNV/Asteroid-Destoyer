@@ -4,17 +4,34 @@ function Window:new(args)
 	if args == nil then
 		args = {};
 	end
-	self.x = args.x or 100;
-	self.y = args.y or 100;
-	self.w = args.w or 400;
-	self.h = args.h or 300;
-	self.visible = args.visible or false;
-	self.title = args.title or "Menu";
-	self.options = args.options or {name = "ERROR"};
-	self.selectedOption = 1;
+
+	NewWindow = setmetatable({}, Window)
 	self.__index = self;
-	local self = setmetatable({}, Window)
-	return self
+	NewWindow.x = args.x or 100;
+	NewWindow.y = args.y or 100;
+	NewWindow.w = args.w or 400;
+	NewWindow.h = args.h or 300;
+	NewWindow.visible = args.visible or false;
+	NewWindow.title = args.title or "Menu";
+	NewWindow.options = args.options or {{name = "ERROR", callback = function() print("ERROR! Option not set!") end}};
+	NewWindow.selectedOption = 1;
+	NewWindow.prevWindow = nil;
+	return NewWindow
+end
+
+function Window:callback()
+	local CurrentOption = self.options[self.selectedOption]
+	if CurrentOption.callback ~= nil then
+		print("Try call nil callback!");
+	end
+
+	if CurrentOption.args == nil then
+		CurrentOption.args = {window = self};
+	else
+		CurrentOption.args.window = self;
+	end
+
+	CurrentOption.callback(self.args)
 end
 
 function Window:draw()
