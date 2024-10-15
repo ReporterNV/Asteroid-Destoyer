@@ -1,6 +1,5 @@
-local anim8 = require("anim8.anim8")
 require("vars")
-require("classes.object")
+local Object = require("classes.object")
 
 Asteroid = Object:new();
 function Asteroid:new(args)

@@ -28,8 +28,8 @@ end
 -- add type object? like type == "asteroid"
 --]]
 
-local anim8 = require("anim8.anim8")
-local vars = require("vars")
+_G.love = love;
+require("vars")
 local LoadTimer, UpdateTimer, DrawTimer;
 
 
@@ -52,7 +52,6 @@ function love.load()
 	WindowManager = require("classes.windowmanager");
 	Windows = require("classes.windows")
 	WindowManager:SetActiveWindow(Windows.Start);
-	print(Windows.Start.title);
 
 	--Animation = require("classes.animation")
 	--Bullet = require("classes.bullet");
@@ -66,6 +65,7 @@ function love.load()
 	})
 
 	Background:init();
+
 	Score = 0;
 	--LoadTimer = os.clock() - startTimer;
 end
@@ -106,7 +106,6 @@ function love.draw()
 	Player:draw();
 
 	--StartMenu:draw();
-	WindowManager:draw();
 
 	for _, animation in ipairs(Animations) do
 		animation:draw();
@@ -123,6 +122,8 @@ function love.draw()
 	if Pause:IsOnPause() then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
 	end
+
+	WindowManager:draw();
 
 	--[[
 	if UserPause or AFKPause then

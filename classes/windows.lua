@@ -10,7 +10,6 @@ Windows.Pause = Window:new({
 	title = "Pause";
 	options = {
 		{name = "Continue", callback = option.Resume},
-		--{name = "Settings", callback = option.OpenWindow, args = {NewWindow = Windows.Pause}},
 		{name = "Exit", callback = option.ExitGame}
 	}
 })
@@ -22,9 +21,8 @@ Windows.Start = Window:new({
 	visible = true;
 	title = love.window.getTitle(),
 	options = {
-		{name = "Start", callback = option.CloseAllWindows},
+		{name = "Start", callback = option.Resume},
 		{name = "Settings", callback = option.OpenWindow, args = {NewWindow = Windows.Pause}},
-		{name = "Settings", callback = option.OpenWindow, args = {NewWindow = "a"}},
 		{name = "Exit", callback = option.ExitGame}
 	}
 })
