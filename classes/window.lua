@@ -21,8 +21,9 @@ end
 
 function Window:callback()
 	local CurrentOption = self.options[self.selectedOption]
-	if CurrentOption.callback ~= nil then
+	if CurrentOption.callback == nil then
 		print("Try call nil callback!");
+		return;
 	end
 
 	if CurrentOption.args == nil then
