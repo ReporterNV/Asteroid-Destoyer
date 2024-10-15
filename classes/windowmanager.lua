@@ -41,6 +41,13 @@ function WindowManager:update(dt, Keys)
 		if Keys["return"] then
 			--	print (ActiveWindow.options[ActiveWindow.selectedOption].name)
 			if ActiveWindow.options[ActiveWindow.selectedOption].callback ~= nil then
+				if ActiveWindow.options[ActiveWindow.selectedOption].args ~= nil then
+					print("WindowManager find args for callback");
+					if ActiveWindow.options[ActiveWindow.selectedOption].args.NewWindow ~= nil then
+						print("WindowManager find arg NewWindow");
+					end
+				end
+				print("")
 				--[[
 				print(ActiveWindow.options[ActiveWindow.selectedOption].args.NewWindow)
 				ActiveWindow.options[ActiveWindow.selectedOption].args.window = ActiveWindow;

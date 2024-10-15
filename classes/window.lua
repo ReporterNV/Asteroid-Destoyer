@@ -22,17 +22,23 @@ end
 function Window:callback()
 	local CurrentOption = self.options[self.selectedOption]
 	if CurrentOption.callback == nil then
-		print("Try call nil callback!");
+		print("Window: Try call nil callback!");
 		return;
 	end
 
 	if CurrentOption.args == nil then
+		print("args is nil");
 		CurrentOption.args = {window = self};
 	else
 		CurrentOption.args.window = self;
 	end
 
-	CurrentOption.callback(self.args)
+	if CurrentOption.args.NewWindow ~= nil then
+		print(CurrentOption.args.NewWindow.title)
+	else
+		print("NewWindow is nil")
+	end
+	CurrentOption.callback(CurrentOption.args)
 end
 
 function Window:draw()
