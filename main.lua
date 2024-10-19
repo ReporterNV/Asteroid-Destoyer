@@ -1,30 +1,11 @@
 --[[
 --TODO:
---[x] Separate logic in modules
---[x] Update main.lua
---[x] Add new obj for anim death
---[x] Move assets to other dir
---[x] Create event manager:
---[x] add Player event for spawn bullets
---[x] add atr fire speed
---[x] add animation class
---[x] add background
---[ ] add ingame class for windows for menu setting etc
---[ ] control sound
+--[ ] setting + control sound
+--[ ] add event after reach end of background 
+--[ ] add progress in weapon
 --[ ] add spectre bullet? destroy random asteroid
+--[ ] make windows looks better
 --[ ] add this?
---function setDefaults(obj, defaults, args)
-    for k, v in pairs(defaults) do
-        obj[k] = args[k] or v
-    end
-end
--- EVENT MANAGER:
--- __________
--- |        | <- Control objects (add, remove)
--- |        | <- Control events (SPAWN NEW ASTEROIDS, collision obj)
--- |        |
--- |        |
--- __________
 -- add type object? like type == "asteroid"
 --]]
 
@@ -50,7 +31,7 @@ function love.load()
 	Background = require("classes.background")
 	Player = require("classes.player")
 	WindowManager = require("classes.windowmanager");
-	Windows = require("classes.windows")
+	WindowManager = require("classes.windows");
 	WindowManager:SetActiveWindow(Windows.Start);
 
 	--Animation = require("classes.animation")

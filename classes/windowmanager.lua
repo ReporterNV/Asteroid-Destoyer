@@ -1,5 +1,4 @@
 local window = require("classes.window");
---local windows = require("classes.windows");
 
 WindowManager = {};
 WindowManager.ActiveWindow = nil;
@@ -9,7 +8,6 @@ function WindowManager:RemoveActiveWindow()
 end
 
 function WindowManager:SetActiveWindow(NewWindow)
-	print("call SetActiveWindow")
 	if WindowManager.ActiveWindow ~= nil then
 		NewWindow.prevWindow = WindowManager.ActiveWindow;
 	end
@@ -39,7 +37,6 @@ function WindowManager:update(dt, Keys)
 		end
 
 		if Keys["return"] then
-			--	print (ActiveWindow.options[ActiveWindow.selectedOption].name)
 			if ActiveWindow.options[ActiveWindow.selectedOption].callback ~= nil then
 				if ActiveWindow.options[ActiveWindow.selectedOption].args ~= nil then
 					print("WindowManager find args for callback");
@@ -48,13 +45,6 @@ function WindowManager:update(dt, Keys)
 					end
 				end
 				print("")
-				--[[
-				print(ActiveWindow.options[ActiveWindow.selectedOption].args.NewWindow)
-				ActiveWindow.options[ActiveWindow.selectedOption].args.window = ActiveWindow;
-				print(ActiveWindow.options[ActiveWindow.selectedOption].args.window)
-				print(ActiveWindow.options[ActiveWindow.selectedOption].args.NewWindow)
-				ActiveWindow.options[ActiveWindow.selectedOption].callback(ActiveWindow.options[ActiveWindow.selectedOption].args);
-				--]]
 				ActiveWindow:callback();
 			end
 		end

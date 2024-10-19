@@ -27,17 +27,11 @@ function Window:callback()
 	end
 
 	if CurrentOption.args == nil then
-		print("args is nil");
 		CurrentOption.args = {window = self};
 	else
 		CurrentOption.args.window = self;
 	end
 
-	if CurrentOption.args.NewWindow ~= nil then
-		print(CurrentOption.args.NewWindow.title)
-	else
-		print("NewWindow is nil")
-	end
 	CurrentOption.callback(CurrentOption.args)
 end
 
