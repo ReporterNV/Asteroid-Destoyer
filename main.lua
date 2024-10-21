@@ -5,6 +5,11 @@
 --[ ] add progress in weapon
 --[ ] add spectre bullet? destroy random asteroid
 --[ ] make windows looks better
+--[ ] add ally fallen ships which one we should not destroy bcz pilots inside still alive
+--[ ] add reload bar
+--[ ] rename Windows in WindowList; add function for init them
+--[ ] fix double enter for WindowManager
+--[ ] add option for back to prev window;
 --[ ] add this?
 -- add type object? like type == "asteroid"
 --]]

@@ -14,6 +14,16 @@ function WindowManager:SetActiveWindow(NewWindow)
 	WindowManager.ActiveWindow = NewWindow;
 end
 
+function WindowManager:BackToPreviousWindow()
+	if WindowManager.ActiveWindow.prevWindow ~= nil then
+		WindowManager.ActiveWindow = WindowManager.ActiveWindow.prevWindow;
+	else
+		print("Error! Previous Window not set. Check if this window exist.");
+	end
+end
+
+
+
 local prevButton = "up";
 function WindowManager:update(dt, Keys)
 	ActiveWindow = WindowManager.ActiveWindow;
