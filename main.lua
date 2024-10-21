@@ -9,7 +9,7 @@
 --[ ] add reload bar
 --[ ] rename Windows in WindowList; add function for init them
 --[ ] fix double enter for WindowManager
---[ ] add option for back to prev window;
+--[x] add option for back to prev window;
 --[ ] add this?
 -- add type object? like type == "asteroid"
 --]]
