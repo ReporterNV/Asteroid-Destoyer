@@ -31,7 +31,7 @@ function love.load()
 	Background = require("classes.background")
 	Player = require("classes.player")
 	WindowManager = require("classes.windowmanager");
-	WindowManager = require("classes.windows");
+	Windows = require("classes.windows");
 	WindowManager:SetActiveWindow(Windows.Start);
 
 	--Animation = require("classes.animation")
