@@ -25,6 +25,7 @@ end
 
 
 local prevButton = "up";
+local CanPressEnter = true;
 function WindowManager:update(dt, Keys)
 	ActiveWindow = WindowManager.ActiveWindow;
 	if ActiveWindow ~= nil then
@@ -46,7 +47,8 @@ function WindowManager:update(dt, Keys)
 			ActiveWindow.selectedOption = 1;
 		end
 
-		if Keys["return"] then
+		if Keys["return"] and CanPressEnter then
+			CanPressEnter = false;
 			if ActiveWindow.options[ActiveWindow.selectedOption].callback ~= nil then
 				if ActiveWindow.options[ActiveWindow.selectedOption].args ~= nil then
 					print("WindowManager find args for callback");
@@ -57,6 +59,10 @@ function WindowManager:update(dt, Keys)
 				print("")
 				ActiveWindow:callback();
 			end
+		--end
+		--if
+		elseif not Keys["return"] then
+			CanPressEnter = true;
 		end
 	end
 end
