@@ -9,8 +9,10 @@ Windows.Settings = Window:new({
 	visible = true;
 	title = "Settings";
 	options = {
-		{name = "Back", callback = option.OpenPreviousWindow},
 		{name = "Continue", callback = option.Resume},
+		{name = "BGM", style = "slider", args = {variable = "SoundsLv", max=1, min=0, step = 0.1}},
+		{name = "Sounds", callback = option.OpenPreviousWindow},
+		{name = "Back", callback = option.OpenPreviousWindow},
 	}
 })
 --]]
@@ -40,7 +42,6 @@ Windows.Start = Window:new({
 		{name = "Exit", callback = option.ExitGame}
 	}
 })
---[ [
 
 
 return Windows;

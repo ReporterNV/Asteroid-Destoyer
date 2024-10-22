@@ -8,7 +8,7 @@
 --[ ] add ally fallen ships which one we should not destroy bcz pilots inside still alive
 --[ ] add reload bar
 --[ ] rename Windows in WindowList; add function for init them
---[ ] fix double enter for WindowManager
+--[x] fix double enter for WindowManager
 --[x] add option for back to prev window;
 --[ ] add this?
 -- add type object? like type == "asteroid"
@@ -111,6 +111,9 @@ function love.draw()
 
 	WindowManager:draw();
 
+	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10);
+	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
+
 	--[[
 	if UserPause or AFKPause then
 		if NeedPrintDBG == true then
@@ -125,8 +128,6 @@ function love.draw()
 		NeedPrintDBG = true;
 		--os.execute("clear")
 	end
-	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10);
-	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
 	DrawTimer = os.time() - startTimer;
 	love.graphics.printf("LoadTimer: " .. tostring(LoadTimer), 10, 25, 90, "left");
 	love.graphics.printf("UpdateTimer: " .. tostring(UpdateTimer), 10, 55, 90, "left");

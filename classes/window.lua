@@ -13,7 +13,7 @@ function Window:new(args)
 	NewWindow.h = args.h or 300;
 	NewWindow.visible = args.visible or false;
 	NewWindow.title = args.title or "Menu";
-	NewWindow.options = args.options or {{name = "ERROR", callback = function() print("ERROR! Option not set!") end}};
+	NewWindow.options = args.options or {{name = "ERROR", style = "simple", callback = function() print("ERROR! Option not set!") end}};
 	NewWindow.selectedOption = 1;
 	NewWindow.prevWindow = nil;
 	return NewWindow
@@ -43,14 +43,28 @@ function Window:draw()
 		love.graphics.printf(self.title, self.x, self.y + 10, self.w, "center")
 
 		for i, option in ipairs(self.options) do
+
 			local optionY = self.y + 50 + (i - 1) * 40
 			if i == self.selectedOption then
 				love.graphics.setColor(1, 0, 0)
 			end
-			love.graphics.printf(option.name, self.x, optionY, self.w, "center")
+
+			if option.style == nil or option.style == "simple" then
+				love.graphics.printf(option.name, self.x, optionY, self.w, "center")
+			elseif option.style == "slider" then
+				if option.args == nil then
+					print("ERROR. Need set args for style slide")
+				end
+				if option.args.min == nil or
+					option.args.max == nil or
+					option.args.variable == nil or
+					option.args.step == nil then
+					print("ERROR. Need set args for style slide(min, max, variable, step)")
+				end
+				love.graphics.printf(option.name..": ".._G[option.args.variable], self.x, optionY, self.w, "center")
+			end
 			love.graphics.setColor(1, 1, 1)
 		end
 	end
 end
-
 return Window

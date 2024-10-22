@@ -1,4 +1,3 @@
-print("Hi from player.lua")
 local Object = require("classes.object")
 local eventmanager = require("classes.eventmanager")
 

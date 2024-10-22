@@ -15,6 +15,7 @@ ImageBackground = ImagesDir.."background.png"
 SoundsDir = "sounds/"
 SndDestoyAsteroidPath = SoundsDir.."destroy.wav"
 SndAttackPath = SoundsDir.."attack.wav"
-
-love.audio.setVolume(0.333)
+BGM = 0.3
+SoundsLv = 0.333
+love.audio.setVolume(SoundsLv)
 SndDestroy = love.audio.newSource(SndDestoyAsteroidPath, "static");
