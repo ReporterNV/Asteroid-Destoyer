@@ -46,11 +46,10 @@ function WindowManager:update(dt, Keys)
 				else
 					if Keys["left"] and prevButton ~= "left" then
 						prevButton = "left"
-						_G[ActiveWindow.options[ActiveWindow.selectedOption].args.variable] = _G[ActiveWindow.options[ActiveWindow.selectedOption].args.variable] - ActiveWindow.options[ActiveWindow.selectedOption].args.step;
-
+						ActiveWindow:sliderMinus();
 					elseif Keys["right"] and prevButton ~= "right" then
 						prevButton = "right"
-						_G[ActiveWindow.options[ActiveWindow.selectedOption].args.variable] = _G[ActiveWindow.options[ActiveWindow.selectedOption].args.variable] + ActiveWindow.options[ActiveWindow.selectedOption].args.step;
+						ActiveWindow:sliderPlus();
 					end
 				end
 			else

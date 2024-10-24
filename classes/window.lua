@@ -35,6 +35,62 @@ function Window:callback()
 	CurrentOption.callback(CurrentOption.args)
 end
 
+function Window:sliderMinus() --copy-paste not good
+	local CurrentOption = self.options[self.selectedOption]
+	if CurrentOption.args == nil then
+		print("Window: Try call nil slider with nill args!");
+		return;
+	end
+
+	if CurrentOption.args.variable == nil then
+		print("Window: variable name for slider is nil!");
+		return;
+	end
+
+	if CurrentOption.args.step == nil then
+		print("Window: arg step for slider is nil!");
+	end
+
+	if CurrentOption.args.min == nil then
+		print("Window: arg min for slider args is nil!");
+	end
+
+	if _G[CurrentOption.args.variable] - CurrentOption.args.step < CurrentOption.args.min then
+		_G[CurrentOption.args.variable] = CurrentOption.args.min;
+	else
+		_G[CurrentOption.args.variable] = _G[CurrentOption.args.variable] - CurrentOption.args.step;
+	end
+
+end
+
+function Window:sliderPlus() --copy-paste not good
+	local CurrentOption = self.options[self.selectedOption]
+	if CurrentOption.args == nil then
+		print("Window: Try call nil slider with nill args!");
+		return;
+	end
+
+	if CurrentOption.args.variable == nil then
+		print("Window: variable name for slider is nil!");
+		return;
+	end
+
+	if CurrentOption.args.step == nil then
+		print("Window: arg step for slider is nil!");
+	end
+
+	if CurrentOption.args.max == nil then
+		print("Window: arg max for slider args is nil!");
+	end
+
+	if _G[CurrentOption.args.variable] + CurrentOption.args.step > CurrentOption.args.max then
+		_G[CurrentOption.args.variable] = CurrentOption.args.max;
+	else
+		_G[CurrentOption.args.variable] = _G[CurrentOption.args.variable] + CurrentOption.args.step;
+	end
+
+end
+
 function Window:draw()
 	if self.visible then
 		love.graphics.setColor(0, 0, 0)
