@@ -53,7 +53,7 @@ function EventManager:update(dt)
 		if asteroid.speedY ~= 0 then
 			for j, bullet in ipairs(Bullets) do
 				if asteroid:checkCollisionObj(bullet) then
-					Score = Score+1;
+					Score = Score + 1;
 					asteroid.destroySound:play();
 					DestroyAnimation = Animation:new({
 						img = love.graphics.newImage(ImageAsteroidDestroy),

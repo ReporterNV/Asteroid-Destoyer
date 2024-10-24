@@ -10,6 +10,10 @@ local background = Object:new({
 
 function background:init()
 	background:setWHfromImage();
+	background.Music = love.audio.newSource(SndBackgroundMusic, "stream");
+end
+function background:pause()
+	background.Music:pause();
 end
 
 function background:draw()
@@ -19,7 +23,10 @@ end
 
 
 function background:update(dt)
-	local NewY = self.y + self.speedY * dt;
+	if not background.Music:isPlaying() then
+		background.Music:play();
+	end
+local NewY = self.y + self.speedY * dt;
 	if (background.h - SCREEN_H > NewY) then
 		self.y = NewY;
 	else

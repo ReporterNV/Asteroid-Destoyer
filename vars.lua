@@ -15,7 +15,9 @@ ImageBackground = ImagesDir.."background.png"
 SoundsDir = "sounds/"
 SndDestoyAsteroidPath = SoundsDir.."destroy.wav"
 SndAttackPath = SoundsDir.."attack.wav"
+SndBackgroundMusic = SoundsDir.."The Story Continues.ogg"
+MasterSoundLV = 0.3;
 BGM = 0.3
-SoundsLv = 0.333
-love.audio.setVolume(SoundsLv)
+SoundsLv = 0.3
+love.audio.setVolume(MasterSoundLV);
 SndDestroy = love.audio.newSource(SndDestoyAsteroidPath, "static");
