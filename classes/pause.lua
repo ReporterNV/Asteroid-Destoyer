@@ -22,6 +22,7 @@ function Pause:update(dt, Keys)
 		self.CanPressPause = false;
 		if self.UserPause == true then
 			WindowManager:SetActiveWindow(Windows.Pause)
+			Background:pause();
 		else
 			WindowManager:RemoveActiveWindow()
 		end

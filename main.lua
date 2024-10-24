@@ -10,6 +10,7 @@
 --[ ] rename Windows in WindowList; add function for init them
 --[x] fix double enter for WindowManager
 --[x] add option for back to prev window;
+--[ ] add build for windows and linux
 --[ ] add this?
 -- add type object? like type == "asteroid"
 --]]

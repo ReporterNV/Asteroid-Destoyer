@@ -26,9 +26,12 @@ end
 
 local prevButton = "up";
 local CanPressEnter = true;
+
 function WindowManager:update(dt, Keys)
+
 	ActiveWindow = WindowManager.ActiveWindow;
 	if ActiveWindow ~= nil then
+
 		if Keys["up"] and prevButton ~= "up" then
 			ActiveWindow.selectedOption = ActiveWindow.selectedOption - 1
 			prevButton = "up"
@@ -36,24 +39,22 @@ function WindowManager:update(dt, Keys)
 			ActiveWindow.selectedOption = ActiveWindow.selectedOption + 1
 			prevButton = "down"
 		end
+
 		if ActiveWindow.options[ActiveWindow.selectedOption].style == "slider" then
-			if ActiveWindow.options[ActiveWindow.selectedOption].args ~= nil then --remove this check bcz this should be check in init window
-				if ActiveWindow.options[ActiveWindow.selectedOption].args.max == nil or
-					ActiveWindow.options[ActiveWindow.selectedOption].args.min == nil or
-					ActiveWindow.options[ActiveWindow.selectedOption].args.variable == nil or
-					ActiveWindow.options[ActiveWindow.selectedOption].args.step == nil then
-					print("ERROR. For slider option not set args(variable, max, min, step)")
-				else
-					if Keys["left"] and prevButton ~= "left" then
-						prevButton = "left"
-						ActiveWindow:sliderMinus();
-					elseif Keys["right"] and prevButton ~= "right" then
-						prevButton = "right"
-						ActiveWindow:sliderPlus();
+			if ActiveWindow:checkSliderArgs() then
+				if Keys["left"] and prevButton ~= "left" then
+					prevButton = "left"
+					ActiveWindow:sliderL();
+					if ActiveWindow.selectedOption[ActiveWindow.selectedOption].callbackL ~= nil then
+						ActiveWindow:callbackL();
+					end
+				elseif Keys["right"] and prevButton ~= "right" then
+					prevButton = "right"
+					ActiveWindow:sliderR();
+					if ActiveWindow.selectedOption[ActiveWindow.selectedOption].callbackR ~= nil then
+						ActiveWindow:callbackR();
 					end
 				end
-			else
-				print("ERROR vars for slide not set")
 			end
 		end
 
