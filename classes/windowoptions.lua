@@ -30,6 +30,11 @@ function option.slider()
 end
 
 
+function option.updateVolume()
+	love.audio.setVolume(MasterSoundLV);
+end
+
+
 
 function option.OpenWindow(args)
 	if args.window == nil then

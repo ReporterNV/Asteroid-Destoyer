@@ -10,7 +10,7 @@ Windows.Settings = Window:new({
 	title = "Settings";
 	options = {
 		{name = "Continue", callback = option.Resume},
-		{name = "BGM", style = "slider", args = {variable = "SoundsLv", max=1, min=0, step = 0.1}},
+		{name = "BGM", style = "slider", callbackL = option.updateVolume, callbackR = option.updateVolume, args = {variable = "MasterSoundLV", max=1, min=0, step = 0.1}},
 		{name = "Sounds", callback = option.OpenPreviousWindow},
 		{name = "Back", callback = option.OpenPreviousWindow},
 	}

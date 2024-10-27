@@ -15,6 +15,9 @@
 -- add type object? like type == "asteroid"
 --]]
 
+
+-- ADD OPTION VOLUME R and L
+
 _G.love = love;
 require("vars")
 local LoadTimer, UpdateTimer, DrawTimer;

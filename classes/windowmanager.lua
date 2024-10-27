@@ -45,14 +45,14 @@ function WindowManager:update(dt, Keys)
 				if Keys["left"] and prevButton ~= "left" then
 					prevButton = "left"
 					ActiveWindow:sliderL();
-					if ActiveWindow.selectedOption[ActiveWindow.selectedOption].callbackL ~= nil then
-						ActiveWindow:callbackL();
+					if ActiveWindow.options[ActiveWindow.selectedOption].callbackL ~= nil then
+						ActiveWindow.options[ActiveWindow.selectedOption].callbackL();
 					end
 				elseif Keys["right"] and prevButton ~= "right" then
 					prevButton = "right"
 					ActiveWindow:sliderR();
-					if ActiveWindow.selectedOption[ActiveWindow.selectedOption].callbackR ~= nil then
-						ActiveWindow:callbackR();
+					if ActiveWindow.options[ActiveWindow.selectedOption].callbackR ~= nil then
+						ActiveWindow.options[ActiveWindow.selectedOption].callbackR();
 					end
 				end
 			end
