@@ -18,12 +18,8 @@ LOVE_FILES = $(addprefix $(LOVE_FILES_DIR)/, $(LOVE_REQUIRES))
 windows: $(GAME_NAME).exe $(BUILD_DIR)/windows $(LOVE_FILES)
 	cp $(LOVE_FILES) $(BUILD_DIR)/windows/
 
-
-
-
 $(GAME_NAME).exe: $(BUILD_DIR)/$(GAME_NAME).love $(BUILD_DIR)/windows love-win64/love.exe
 	cat love-win64/love.exe $(BUILD_DIR)/$(GAME_NAME).love > $(BUILD_DIR)/windows/$(GAME_NAME).exe
-
 
 $(BUILD_DIR)/$(GAME_NAME).love: main.lua vars.lua $(BUILD_DIR) anim8 classes images sounds
 	zip -9 -r $(BUILD_DIR)/$(GAME_NAME).love main.lua vars.lua anim8 classes images sounds
