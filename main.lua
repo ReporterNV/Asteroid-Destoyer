@@ -8,15 +8,13 @@
 --[ ] add ally fallen ships which one we should not destroy bcz pilots inside still alive
 --[ ] add reload bar
 --[ ] rename Windows in WindowList; add function for init them
+--[ ] add special interation when hold fire
+--[ ] add shield if dont fire?
 --[x] fix double enter for WindowManager
 --[x] add option for back to prev window;
---[ ] add build for windows and linux
---[ ] add this?
--- add type object? like type == "asteroid"
+--[x] add build for windows and linux
+--[ ] add this object type ? like type == "asteroid"
 --]]
-
-
--- ADD OPTION VOLUME R and L
 
 _G.love = love;
 require("vars")
@@ -94,8 +92,6 @@ function love.draw()
 	Background:draw();
 
 	Player:draw();
-
-	--StartMenu:draw();
 
 	for _, animation in ipairs(Animations) do
 		animation:draw();
