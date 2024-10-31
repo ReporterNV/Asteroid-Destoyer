@@ -1,4 +1,4 @@
-local WindowManager = require("classes.windowmanager");
+local WindowManager = require("classes.window.windowmanager");
 --local Pause = require("classes.pause");
 local option = {};
 

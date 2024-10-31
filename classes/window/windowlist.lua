@@ -1,5 +1,5 @@
-local Window = require("classes.window");
-local option = require("classes.windowoptions");
+local Window = require("classes.window.window");
+local option = require("classes.window.windowoptions");
 Windows = {}
 --order of windows right now is important. need fix it.
 Windows.Settings = Window:new({

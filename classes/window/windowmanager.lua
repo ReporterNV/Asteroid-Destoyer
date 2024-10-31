@@ -1,4 +1,4 @@
-local window = require("classes.window");
+local window = require("classes.window.window");
 
 WindowManager = {};
 WindowManager.ActiveWindow = nil;

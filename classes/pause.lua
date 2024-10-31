@@ -1,6 +1,6 @@
 --require("vars")
-local WindowManager = require("classes.windowmanager")-- Pause control window manager ?????
-local Windows = require("classes.windows")
+local WindowManager = require("classes.window.windowmanager")-- Pause control window manager ?????
+local Windows = require("classes.window.windowlist")
 
 local Pause = {
 UserPause = true;

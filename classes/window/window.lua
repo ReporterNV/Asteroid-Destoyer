@@ -107,15 +107,7 @@ function Window:draw()
 			if option.style == nil or option.style == "simple" then
 				love.graphics.printf(option.name, self.x, optionY, self.w, "center")
 			elseif option.style == "slider" then
-				if option.args == nil then
-					print("ERROR. Need set args for style slide")
-				end
-				if option.args.min == nil or
-					option.args.max == nil or
-					option.args.variable == nil or
-					option.args.step == nil then
-					print("ERROR. Need set args for style slide(min, max, variable, step)")
-				end
+				self:checkSliderArgs();
 				love.graphics.printf(option.name..": ".._G[option.args.variable], self.x, optionY, self.w, "center")
 			end
 			love.graphics.setColor(1, 1, 1)
