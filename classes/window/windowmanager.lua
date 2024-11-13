@@ -40,6 +40,12 @@ function WindowManager:update(dt, Keys)
 			prevButton = "down"
 		end
 
+		if ActiveWindow.selectedOption > #ActiveWindow.options then
+			ActiveWindow.selectedOption = #ActiveWindow.options;
+		elseif ActiveWindow.selectedOption < 1 then
+			ActiveWindow.selectedOption = 1;
+		end
+
 		if ActiveWindow.options[ActiveWindow.selectedOption].style == "slider" then
 			if ActiveWindow:checkSliderArgs() then
 				if Keys["left"] and prevButton ~= "left" then
@@ -62,12 +68,7 @@ function WindowManager:update(dt, Keys)
 			prevButton = "";
 		end
 
-		if ActiveWindow.selectedOption > #ActiveWindow.options then
-			ActiveWindow.selectedOption = #ActiveWindow.options;
-		elseif ActiveWindow.selectedOption < 1 then
-			ActiveWindow.selectedOption = 1;
-		end
-
+	
 		if Keys["return"] and CanPressEnter then
 			CanPressEnter = false;
 			if ActiveWindow.options[ActiveWindow.selectedOption].callback ~= nil then

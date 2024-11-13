@@ -32,8 +32,9 @@ Windows.Pause = Window:new({
 
 Windows.Start = Window:new({
 	x = SCREEN_W/3;
+	y = SCREEN_H/5;
 	w = SCREEN_W/3;
-	h = SCREEN_H/2;
+	h = SCREEN_H/3;
 	visible = true;
 	title = love.window.getTitle(),
 	options = {
