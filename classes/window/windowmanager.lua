@@ -68,7 +68,6 @@ function WindowManager:update(dt, Keys)
 			prevButton = "";
 		end
 
-	
 		if Keys["return"] and CanPressEnter then
 			CanPressEnter = false;
 			if ActiveWindow.options[ActiveWindow.selectedOption].callback ~= nil then

@@ -77,6 +77,9 @@ function Window:sliderL() --copy-paste not good
 			_G[args.variable] = _G[args.variable] - args.step;
 		end
 	end
+	if _G[args.variable] - 0.000001 < 0 then -- i don't llike this solution
+		_G[args.variable] = 0;
+	end
 end
 
 function Window:sliderR() --copy-paste not good
@@ -87,6 +90,9 @@ function Window:sliderR() --copy-paste not good
 		else
 			_G[CurrentOption.args.variable] = _G[CurrentOption.args.variable] + CurrentOption.args.step;
 		end
+	end
+	if _G[CurrentOption.args.variable] - 0.000001 < 0 then --just i want be sure
+		_G[CurrentOption.args.variable] = 0;
 	end
 end
 
@@ -107,7 +113,6 @@ function Window:draw()
 			if option.style == nil or option.style == "simple" then
 				love.graphics.printf(option.name, self.x, optionY, self.w, "center")
 			elseif option.style == "slider" then
-				self:checkSliderArgs();
 				love.graphics.printf(option.name..": ".._G[option.args.variable], self.x, optionY, self.w, "center")
 			end
 			love.graphics.setColor(1, 1, 1)
