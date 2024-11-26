@@ -7,6 +7,7 @@
 --[ ] make windows looks better
 --[ ] add ally fallen ships which one we should not destroy bcz pilots inside still alive
 --[x] add reload bar
+--[ ] move relaod bar in other class for not recalc percent. just calc once and then step by step add delta?
 --[ ] rename Windows in WindowList; add function for init them
 --[ ] add special interation when hold fire
 --[ ] add shield if dont fire?
