@@ -18,6 +18,10 @@ Player.ShootReload = 0.6;
 
 function Player:draw()
 	love.graphics.draw(Player.img, Player.x, Player.y);
+	love.graphics.rectangle("line", self.x , self.y + self.h, self.w, self.h * 0.1)
+	local percent = 1 - self.ShootTimer / self.ShootReload;
+	love.graphics.rectangle("fill", self.x , self.y + self.h, self.w * percent, self.h * 0.1)
+
 end
 
 function Player:update(dt, Keys)

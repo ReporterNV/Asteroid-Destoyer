@@ -6,14 +6,16 @@
 --[ ] add spectre bullet? destroy random asteroid
 --[ ] make windows looks better
 --[ ] add ally fallen ships which one we should not destroy bcz pilots inside still alive
---[ ] add reload bar
+--[x] add reload bar
 --[ ] rename Windows in WindowList; add function for init them
 --[ ] add special interation when hold fire
 --[ ] add shield if dont fire?
+--[ ] add settings save
 --[x] fix double enter for WindowManager
 --[x] add option for back to prev window;
 --[x] add build for windows and linux
 --[ ] add this object type ? like type == "asteroid"
+--[ ] move editable vars by menu in separate table?
 --]]
 
 _G.love = love;
