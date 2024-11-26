@@ -45,9 +45,12 @@ function EventManager:update(dt)
 
 	for i, asteroid in ipairs(Asteroids) do
 		asteroid:update(dt);
-		if asteroid:checkCollisionObj(Player)
-		or asteroid.y > SCREEN_H then
+		if asteroid:checkCollisionObj(Player) then
 			GameOver();
+		end
+
+		if asteroid.y > SCREEN_H then
+			table.remove(Asteroids, i);
 		end
 
 		if asteroid.speedY ~= 0 then
@@ -60,6 +63,7 @@ function EventManager:update(dt)
 						frameW = 96,
 						frameH = 96,
 						framesColumns='2-8',
+						durations = 0.08,
 						x = asteroid.x,
 						y = asteroid.y,
 						offsetx = 29,
