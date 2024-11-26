@@ -6,7 +6,7 @@ local Bullet = require("classes.bullet")
 local EventManager = {};
 
 local AsteroidTimer = 1;
-local AsteroidInterval = 1;
+local AsteroidInterval = 0.01;
 Objects = {};
 Asteroids = {};
 Bullets = {};
@@ -46,7 +46,7 @@ function EventManager:update(dt)
 	for i, asteroid in ipairs(Asteroids) do
 		asteroid:update(dt);
 		if asteroid:checkCollisionObj(Player) then
-			GameOver();
+			--GameOver();
 		end
 
 		if asteroid.y > SCREEN_H then

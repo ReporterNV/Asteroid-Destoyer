@@ -3,15 +3,19 @@
 --[ ] setting + control sound
 --[ ] add event after reach end of background 
 --[ ] add progress in weapon
+--[ ] fix bullet remove early. only after they leave screen. not remove after top left screen.
 --[ ] add spectre bullet? destroy random asteroid
 --[ ] make windows looks better
 --[ ] add ally fallen ships which one we should not destroy bcz pilots inside still alive
 --[x] add reload bar
 --[ ] move relaod bar in other class for not recalc percent. just calc once and then step by step add delta?
+--[ ] Need rewrite animation for rows. bcz need takes args in (...) format.
 --[ ] rename Windows in WindowList; add function for init them
 --[ ] add special interation when hold fire
 --[ ] add shield if dont fire?
 --[ ] add settings save
+--[ ] fix reload bar if reload time is small
+--[ ] check fps problem
 --[x] fix double enter for WindowManager
 --[x] add option for back to prev window;
 --[x] add build for windows and linux
@@ -28,6 +32,9 @@ function love.load()
 	--local startTimer = os.clock();
 	love.window.setTitle("Asteroid destroyer");
 	love.window.setMode(SCREEN_W, SCREEN_H);
+	--love.window.vsync = false;
+	--love.window.fullscreen = true;
+	love.window.setVSync(false);
 
 	Keys = {};
 	OnceKey = {};
@@ -114,6 +121,7 @@ function love.draw()
 	WindowManager:draw();
 
 	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10);
+	print(love.timer.getFPS())
 	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
 
 	--[[

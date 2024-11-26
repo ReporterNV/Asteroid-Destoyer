@@ -14,7 +14,7 @@ function Animation:new(args)
 	ChildObj.h = args.h or 0;
 	--why i remove speedX and speedY for anim? Now all objects should have inv other obj?
 
-	ChildObj.img = args.img or nil;--change it for exception. need error on Love2d lv
+	ChildObj.img = args.img or nil;--change it for exception. need error on Love2d lv --U mean change nil and if not set give error?
 	ChildObj.frameW = args.frameW or nil;
 	ChildObj.frameH = args.frameH or nil; --looks like i need rewrite it.
 	ChildObj.grid = args.grid or anim8.newGrid(ChildObj.frameW, ChildObj.frameH,
@@ -27,11 +27,36 @@ function Animation:new(args)
 	ChildObj.animation = args.animation or anim8.newAnimation(ChildObj.grid(ChildObj.framesColumns, ChildObj.framesRow), ChildObj.durations, ChildObj.onLoop);
 	ChildObj.offsetx = args.offsetx or 0;
 	ChildObj.offsety = args.offsety or 0;
+	ChildObj.scalex = args.scalex or 1;
+	ChildObj.scaley = args.scaley or 1;
 	ChildObj.collision = false;
 	ChildObj.followedObject = args.followedObject or nil;
 	self.__index = self;
 	return setmetatable(ChildObj, self);
 end
+
+function Animation:setWHfromFrameWithScale()
+	if self.frameW ~= nil then
+		self.w = self.frameW * self.scalex;
+	end
+
+	if self.frameH ~= nil then
+		self.h = self.frameH * self.scaley;
+	end
+
+end
+
+
+function Animation:setOffsetCenterObject(FollowedObject)
+	if self.w ~= nil then
+		self.offsetx = (self.w - FollowedObject.w) / 2 / self.scalex;
+	end
+
+	if self.h ~= nil then
+		self.offsety = (self.h - FollowedObject.h) / 2 / self.scaley;
+	end
+end
+
 
 function Animation:update(dt)
 	self.animation:update(dt);
@@ -43,7 +68,7 @@ end
 
 
 function Animation:draw()
-	self.animation:draw(self.img, self.x, self.y, nil, 1,1, self.offsetx, self.offsety);
+	self.animation:draw(self.img, self.x, self.y, nil, self.scalex,self.scaley, self.offsetx, self.offsety);
 end
 
 return Animation
