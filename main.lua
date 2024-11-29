@@ -15,7 +15,8 @@
 --[ ] add shield if dont fire?
 --[ ] add settings save
 --[ ] fix reload bar if reload time is small
---[ ] check fps problem
+--[ ] check fps problem; UPD: looks like mem problem; maybe dont remove animation?
+--[ ] Now if spawnrate lower then update game will spawn asteroid with spawnrate. Need fix it?
 --[x] fix double enter for WindowManager
 --[x] add option for back to prev window;
 --[x] add build for windows and linux
@@ -32,9 +33,7 @@ function love.load()
 	--local startTimer = os.clock();
 	love.window.setTitle("Asteroid destroyer");
 	love.window.setMode(SCREEN_W, SCREEN_H);
-	--love.window.vsync = false;
-	--love.window.fullscreen = true;
-	love.window.setVSync(false);
+	love.window.setVSync(0);
 
 	Keys = {};
 	OnceKey = {};
@@ -114,6 +113,7 @@ function love.draw()
 		asteroid:draw()
 	end
 
+
 	if Pause:IsOnPause() then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
 	end
@@ -121,7 +121,8 @@ function love.draw()
 	WindowManager:draw();
 
 	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10);
-	print(love.timer.getFPS())
+	--uncomment if need dbg. ADD DBG MODE?
+	--love.graphics.print("MEM: " .. collectgarbage("count") .. "KB", 10, 40);
 	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
 
 	--[[

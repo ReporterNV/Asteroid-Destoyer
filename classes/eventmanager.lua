@@ -6,7 +6,7 @@ local Bullet = require("classes.bullet")
 local EventManager = {};
 
 local AsteroidTimer = 1;
-local AsteroidInterval = 0.01;
+local AsteroidInterval = 1;
 Objects = {};
 Asteroids = {};
 Bullets = {};
@@ -40,6 +40,9 @@ function EventManager:update(dt)
 	end
 
 	for _, animation in ipairs(Animations) do
+		if animation.animation.status == "paused" then
+			table.remove(Animations, _)
+		end
 		animation:update(dt);
 	end
 
@@ -68,6 +71,7 @@ function EventManager:update(dt)
 						y = asteroid.y,
 						offsetx = 29,
 						offsety = 32,
+						onLoop = "pauseAtEnd",
 					})
 					table.insert(Animations, DestroyAnimation)
 					table.remove(Asteroids, i);
