@@ -17,7 +17,7 @@ Player = Object:new({
 Player:setWHfromImage();
 Player.shield = love.graphics.newImage(ImageShield)
 Player.ShootTimer = 0;
-Player.ShootReload = 0.01;
+Player.ShootReload = 0.6;
 
 --[ [
 ShieldDown =  Animation:new({

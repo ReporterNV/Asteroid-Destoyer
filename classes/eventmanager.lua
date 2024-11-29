@@ -49,7 +49,7 @@ function EventManager:update(dt)
 	for i, asteroid in ipairs(Asteroids) do
 		asteroid:update(dt);
 		if asteroid:checkCollisionObj(Player) then
-			--GameOver();
+			GameOver();
 		end
 
 		if asteroid.y > SCREEN_H then
@@ -83,7 +83,7 @@ function EventManager:update(dt)
 
 	for i, bullet in ipairs(Bullets) do
 		bullet.y = bullet.y + bullet.speedY*dt;
-		if bullet.y < 0 then
+		if bullet.y + bullet.h < 0 then
 			table.remove(Bullets, i);
 		end
 	end

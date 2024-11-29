@@ -3,7 +3,7 @@
 --[ ] setting + control sound
 --[ ] add event after reach end of background 
 --[ ] add progress in weapon
---[ ] fix bullet remove early. only after they leave screen. not remove after top left screen.
+--[x] fix bullet remove early. only after they leave screen. not remove after top left screen.
 --[ ] add spectre bullet? destroy random asteroid
 --[ ] make windows looks better
 --[ ] add ally fallen ships which one we should not destroy bcz pilots inside still alive
