@@ -52,20 +52,19 @@ function WindowManager:update(dt, Keys)
 			ActiveWindow.selectedOption = 1;
 		end
 
-		if ActiveWindow.options[ActiveWindow.selectedOption].style == "slider" then
-			if ActiveWindow:checkSliderArgs() then
-				if Keys["left"] and prevButton ~= "left" then
-					prevButton = "left"
-					ActiveWindow:sliderL();
-					if ActiveWindow.options[ActiveWindow.selectedOption].callbackL ~= nil then
-						ActiveWindow.options[ActiveWindow.selectedOption].callbackL();
-					end
-				elseif Keys["right"] and prevButton ~= "right" then
-					prevButton = "right"
-					ActiveWindow:sliderR();
-					if ActiveWindow.options[ActiveWindow.selectedOption].callbackR ~= nil then
-						ActiveWindow.options[ActiveWindow.selectedOption].callbackR();
-					end
+		if ActiveWindow.options[ActiveWindow.selectedOption].style == "slider" and
+			ActiveWindow:checkSliderArgs() then
+			if Keys["left"] and prevButton == "" then
+				prevButton = "left"
+				ActiveWindow:sliderL();
+				if ActiveWindow.options[ActiveWindow.selectedOption].callbackL ~= nil then
+					ActiveWindow.options[ActiveWindow.selectedOption].callbackL();
+				end
+			elseif Keys["right"] and prevButton == "" then
+				prevButton = "right"
+				ActiveWindow:sliderR();
+				if ActiveWindow.options[ActiveWindow.selectedOption].callbackR ~= nil then
+					ActiveWindow.options[ActiveWindow.selectedOption].callbackR();
 				end
 			end
 		end
