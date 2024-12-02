@@ -4,7 +4,7 @@ require("vars")
 local eventmanager = require("classes.eventmanager")
 
 Player = Object:new({
-	x = 200,
+	x = SCREEN_W / 2,
 	y = 500,
 	a = 1,
 	speedX = 200,
@@ -15,7 +15,9 @@ Player = Object:new({
 });
 
 Player:setWHfromImage();
+Player.x = SCREEN_W / 2 - Player.w/2
 Player.shield = love.graphics.newImage(ImageShield)
+Player.Shield = 0;
 Player.ShootTimer = 0;
 Player.ShootReload = 0.6;
 
@@ -60,12 +62,18 @@ ShieldUp =  Animation:new({
 })
 --]]
 
+function Player:takeHit()
+	if self.Shield < 1 then
+		GameOver();
+	else
+		self.Shield = self.Shield - 1;
+	end
+end
+
+
 function Player:draw()
-
 	love.graphics.draw(Player.img, Player.x, Player.y);
-
 	ShieldUp:draw();
-
 	--reload bar
 	love.graphics.rectangle("line", self.x , self.y + self.h, self.w, self.h * 0.1)
 	local percent = 1 - self.ShootTimer / self.ShootReload;
@@ -74,10 +82,6 @@ function Player:draw()
 end
 
 function Player:update(dt, Keys)
-	ShieldUp:setWHfromFrameWithScale()
-	ShieldUp:setOffsetCenterObject(Player)
-
-	ShieldUp:update(dt);
 	if Keys["left"] == true or Keys["a"] == true then
 		if Player.x - Player.speedX*dt < 0 then
 			Player.x = 0;
@@ -117,6 +121,11 @@ function Player:update(dt, Keys)
 			eventmanager:playerShoot();
 		end
 	end
+
+	ShieldUp:setWHfromFrameWithScale()
+	ShieldUp:setOffsetCenterObject(Player)
+
+	ShieldUp:update(dt);
 end
 
 return Player

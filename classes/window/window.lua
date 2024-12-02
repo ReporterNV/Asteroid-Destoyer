@@ -77,7 +77,7 @@ function Window:sliderL() --copy-paste not good
 			_G[args.variable] = _G[args.variable] - args.step;
 		end
 	end
-	if _G[args.variable] - 0.000001 < 0 then -- i don't llike this solution
+	if _G[args.variable] - args.step * 0.1 < 0 then
 		_G[args.variable] = 0;
 	end
 end
@@ -91,7 +91,7 @@ function Window:sliderR() --copy-paste not good
 			_G[CurrentOption.args.variable] = _G[CurrentOption.args.variable] + CurrentOption.args.step;
 		end
 	end
-	if _G[CurrentOption.args.variable] - 0.000001 < 0 then --just i want be sure
+	if _G[CurrentOption.args.variable] - CurrentOption.args.step * 0.1  < 0 then --just i want be sure
 		_G[CurrentOption.args.variable] = 0;
 	end
 end

@@ -125,6 +125,7 @@ function love.draw()
 	--uncomment if need dbg. ADD DBG MODE?
 	--love.graphics.print("MEM: " .. collectgarbage("count") .. "KB", 10, 40);
 	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
+	love.graphics.printf("Shield: " .. tostring(Player.Shield), 10, 40, 60, "left");
 
 	--[[
 	if UserPause or AFKPause then

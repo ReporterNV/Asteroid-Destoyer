@@ -49,7 +49,22 @@ function EventManager:update(dt)
 	for i, asteroid in ipairs(Asteroids) do
 		asteroid:update(dt);
 		if asteroid:checkCollisionObj(Player) then
-			GameOver();
+			Player:takeHit();
+			table.remove(Asteroids, i);
+			DestroyAnimation = Animation:new({
+				img = love.graphics.newImage(ImageAsteroidDestroy),
+				frameW = 96,
+				frameH = 96,
+				framesColumns='2-8',
+				durations = 0.08,
+				x = asteroid.x,
+				y = asteroid.y,
+				offsetx = 29,
+				offsety = 32,
+				onLoop = "pauseAtEnd",
+			})
+
+			table.insert(Animations, DestroyAnimation)
 		end
 
 		if asteroid.y > SCREEN_H then
@@ -60,6 +75,7 @@ function EventManager:update(dt)
 			for j, bullet in ipairs(Bullets) do
 				if asteroid:checkCollisionObj(bullet) then
 					Score = Score + 1;
+					Player.Shield = Player.Shield + 1;
 					asteroid.destroySound:play();
 					DestroyAnimation = Animation:new({
 						img = love.graphics.newImage(ImageAsteroidDestroy),
