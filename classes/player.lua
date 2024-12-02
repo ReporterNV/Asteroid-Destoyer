@@ -26,12 +26,8 @@ ShieldDown =  Animation:new({
 	img = love.graphics.newImage(ImageShield),
 	frameW = 480,
 	frameH = 480,
-	framesColumns='1-5',
-	framesRow ='1-4',
-	onLoop = function ()
-		ShieldDown.animation:getDimensions();
-		ShieldDown.animation:resume();
-	end;
+	frames = {'1-5', '1-4'},
+	onLoop = function () end,
 	durations = 0.08,
 	x = Player.x,
 	y = Player.y,
@@ -49,8 +45,7 @@ ShieldUp =  Animation:new({
 	img = love.graphics.newImage(ImageShield),
 	frameW = 480,
 	frameH = 480,
-	framesColumns='1-5', '1-3',
-	framesRow ='1-4',
+	frames = {'1-5', '1-4'},
 	onLoop = function ()
 		ShieldUp.animation:getDimensions();
 		ShieldUp.animation:resume();

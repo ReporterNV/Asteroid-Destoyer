@@ -1,6 +1,9 @@
 require("vars")
 local anim8 = require("anim8.anim8")
 local Object = require("classes.object")
+if table.unpack then
+	unpack = table.unpack
+end
 
 Animation = Object:new()
 function Animation:new(args)
@@ -19,12 +22,11 @@ function Animation:new(args)
 	ChildObj.frameH = args.frameH or nil; --looks like i need rewrite it.
 	ChildObj.grid = args.grid or anim8.newGrid(ChildObj.frameW, ChildObj.frameH,
 				ChildObj.img:getWidth(), ChildObj.img:getHeight());
-
-	ChildObj.framesColumns = args.framesColumns or 1;
-	ChildObj.framesRow = args.framesRow or 1;
-	ChildObj.durations = args.durations or 0.1;
+	ChildObj.frames = args.frames or {1,1};
+	local a, b = unpack(ChildObj.frames)
+	print(type(a).."\n"..type(b));
 	ChildObj.onLoop = args.onLoop or "pauseAtEnd";
-	ChildObj.animation = args.animation or anim8.newAnimation(ChildObj.grid(ChildObj.framesColumns, ChildObj.framesRow), ChildObj.durations, ChildObj.onLoop);
+	ChildObj.animation = args.animation or anim8.newAnimation(ChildObj.grid(1, 1), ChildObj.durations, ChildObj.onLoop);
 	ChildObj.offsetx = args.offsetx or 0;
 	ChildObj.offsety = args.offsety or 0;
 	ChildObj.scalex = args.scalex or 1;
