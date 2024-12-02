@@ -35,9 +35,15 @@ function WindowManager:update(dt, Keys)
 		if Keys["up"] and prevButton ~= "up" then
 			ActiveWindow.selectedOption = ActiveWindow.selectedOption - 1
 			prevButton = "up"
+		elseif Keys["w"] and prevButton ~= "w" then
+			ActiveWindow.selectedOption = ActiveWindow.selectedOption - 1
+			prevButton = "w"
 		elseif Keys["down"] and prevButton ~= "down" then
 			ActiveWindow.selectedOption = ActiveWindow.selectedOption + 1
 			prevButton = "down"
+		elseif Keys["s"] and prevButton ~= "s" then
+			ActiveWindow.selectedOption = ActiveWindow.selectedOption + 1
+			prevButton = "s"
 		end
 
 		if ActiveWindow.selectedOption > #ActiveWindow.options then
