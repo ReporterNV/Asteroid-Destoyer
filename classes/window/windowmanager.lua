@@ -32,16 +32,16 @@ function WindowManager:update(dt, Keys)
 	ActiveWindow = WindowManager.ActiveWindow;
 	if ActiveWindow ~= nil then
 
-		if Keys["up"] and prevButton ~= "up" then
+		if Keys["up"] and prevButton == "" then
 			ActiveWindow.selectedOption = ActiveWindow.selectedOption - 1
 			prevButton = "up"
-		elseif Keys["w"] and prevButton ~= "w" then
+		elseif Keys["w"] and prevButton == "" then
 			ActiveWindow.selectedOption = ActiveWindow.selectedOption - 1
 			prevButton = "w"
-		elseif Keys["down"] and prevButton ~= "down" then
+		elseif Keys["down"] and prevButton == "" then
 			ActiveWindow.selectedOption = ActiveWindow.selectedOption + 1
 			prevButton = "down"
-		elseif Keys["s"] and prevButton ~= "s" then
+		elseif Keys["s"] and prevButton == "" then
 			ActiveWindow.selectedOption = ActiveWindow.selectedOption + 1
 			prevButton = "s"
 		end
