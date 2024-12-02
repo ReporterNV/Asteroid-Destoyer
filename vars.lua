@@ -1,5 +1,6 @@
 SCREEN_H = 600
 SCREEN_W = 400
+Vsync = 1
 
 CanPressPause = true;
 --UserPause = true;

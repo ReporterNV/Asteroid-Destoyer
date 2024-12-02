@@ -29,12 +29,13 @@ function option.slider()
 	WindowManager:slider();
 end
 
+function option.setVsync()
+	love.window.setVSync(Vsync);
+end
 
 function option.updateVolume()
 	love.audio.setVolume(MasterSoundLV);
 end
-
-
 
 function option.OpenWindow(args)
 	if args.window == nil then

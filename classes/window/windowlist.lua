@@ -12,6 +12,12 @@ Windows.Settings = Window:new({
 		{name = "Continue", callback = option.Resume},
 		{name = "BGM", style = "slider", callbackL = option.updateVolume, callbackR = option.updateVolume, args = {variable = "MasterSoundLV", max=1, min=0, step = 0.1}},
 		{name = "Sounds", callback = option.OpenPreviousWindow},
+		{name = "Vsync",
+			style = "slider",
+			callbackL = option.setVsync,
+			callbackR = option.setVsync,
+			args = {variable = "Vsync", max = 1, min = 0, step = 1},
+		},
 		{name = "Back", callback = option.OpenPreviousWindow},
 	}
 })

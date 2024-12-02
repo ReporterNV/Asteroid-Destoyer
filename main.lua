@@ -8,6 +8,7 @@
 --[ ] make windows looks better
 --[ ] add ally fallen ships which one we should not destroy bcz pilots inside still alive
 --[x] add reload bar
+--[ ] add asteroids rotated on 90 and 180 ^0?
 --[ ] move relaod bar in other class for not recalc percent. just calc once and then step by step add delta?
 --[ ] Need rewrite animation for rows. bcz need takes args in (...) format.
 --[ ] rename Windows in WindowList; add function for init them
@@ -33,7 +34,7 @@ function love.load()
 	--local startTimer = os.clock();
 	love.window.setTitle("Asteroid destroyer");
 	love.window.setMode(SCREEN_W, SCREEN_H);
-	love.window.setVSync(0);
+	love.window.setVSync(Vsync);
 
 	Keys = {};
 	OnceKey = {};
