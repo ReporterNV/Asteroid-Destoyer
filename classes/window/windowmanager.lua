@@ -24,7 +24,7 @@ end
 
 
 
-local prevButton = "up";
+local prevButton = "";
 local CanPressEnter = true;
 
 function WindowManager:update(dt, Keys)
