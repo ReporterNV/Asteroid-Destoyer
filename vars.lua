@@ -7,12 +7,19 @@ CanPressPause = true;
 --AFKPause = false;
 
 ImagesDir = "images/"
-ImagePlayer = ImagesDir.."spaceship.png"
-ImageBullet = ImagesDir.."bullet.png"
-ImageAsteroid = ImagesDir.."asteroid.png"
-ImageAsteroidDestroy = ImagesDir.."asteroidDestroy.png"--make separate dir for anim?
-ImageBackground = ImagesDir.."background.png"
-ImageShield = ImagesDir.."shield.png"
+PathPlayer = ImagesDir.."spaceship.png"
+PathBullet = ImagesDir.."bullet.png"
+PathAsteroid = ImagesDir.."asteroid.png"
+PathAsteroidDestroy = ImagesDir.."asteroidDestroy.png"--make separate dir for anim?
+PathBackground = ImagesDir.."background.png"
+PathShield = ImagesDir.."shield.png"
+
+ImagePlayer = love.graphics.newImage(PathPlayer)
+ImageBullet = love.graphics.newImage(PathBullet)
+ImageAsteroid = love.graphics.newImage(PathAsteroid)
+ImageAsteroidDestroy = love.graphics.newImage(PathAsteroidDestroy) --animation separate dir?
+ImageBackground = love.graphics.newImage(PathBackground)
+ImageShield = love.graphics.newImage(PathShield)
 
 SoundsDir = "sounds/"
 SndDestoyAsteroidPath = SoundsDir.."destroy.wav"

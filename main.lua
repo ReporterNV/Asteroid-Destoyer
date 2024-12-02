@@ -91,7 +91,7 @@ function love.update(dt)
 		EventManager:update(dt)
 		Background:update(dt)
 	end
-
+	collectgarbage("collect");
 	--UpdateTimer = os.clock() - startTimer;
 end
 
@@ -114,7 +114,6 @@ function love.draw()
 		asteroid:draw()
 	end
 
-
 	if Pause:IsOnPause() then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
 	end
@@ -123,9 +122,9 @@ function love.draw()
 
 	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10);
 	--uncomment if need dbg. ADD DBG MODE?
-	--love.graphics.print("MEM: " .. collectgarbage("count") .. "KB", 10, 40);
+	love.graphics.print("MEM: " .. collectgarbage("count") .. "KB", 10, 40);
 	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
-	love.graphics.printf("Shield: " .. tostring(Player.Shield), 10, 40, 60, "left");
+	--love.graphics.printf("Shield: " .. tostring(Player.Shield), 10, 40, 60, "left");
 
 	--[[
 	if UserPause or AFKPause then

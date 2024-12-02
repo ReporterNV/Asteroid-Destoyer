@@ -17,16 +17,19 @@ function Animation:new(args)
 	ChildObj.h = args.h or 0;
 	--why i remove speedX and speedY for anim? Now all objects should have inv other obj?
 
-	ChildObj.img = args.img or nil;--change it for exception. need error on Love2d lv --U mean change nil and if not set give error?
+	ChildObj.img = args.img or error("Animation: arg img not valid!")
 	ChildObj.frameW = args.frameW or nil;
 	ChildObj.frameH = args.frameH or nil; --looks like i need rewrite it.
 	ChildObj.grid = args.grid or anim8.newGrid(ChildObj.frameW, ChildObj.frameH,
 				ChildObj.img:getWidth(), ChildObj.img:getHeight());
 	ChildObj.frames = args.frames or {1,1};
-	local a, b = unpack(ChildObj.frames)
-	print(type(a).."\n"..type(b));
 	ChildObj.onLoop = args.onLoop or "pauseAtEnd";
-	ChildObj.animation = args.animation or anim8.newAnimation(ChildObj.grid(1, 1), ChildObj.durations, ChildObj.onLoop);
+	ChildObj.durations = args.durations or 1;
+	ChildObj.animation = args.animation or anim8.newAnimation(
+		ChildObj.grid(unpack(ChildObj.frames)),
+		ChildObj.durations,
+		ChildObj.onLoop
+	);
 	ChildObj.offsetx = args.offsetx or 0;
 	ChildObj.offsety = args.offsety or 0;
 	ChildObj.scalex = args.scalex or 1;

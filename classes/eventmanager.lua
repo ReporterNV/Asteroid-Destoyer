@@ -6,7 +6,7 @@ local Bullet = require("classes.bullet")
 local EventManager = {};
 
 local AsteroidTimer = 1;
-local AsteroidInterval = 1;
+local AsteroidInterval = 0.1;
 Objects = {};
 Asteroids = {};
 Bullets = {};
@@ -52,7 +52,7 @@ function EventManager:update(dt)
 			Player:takeHit();
 			table.remove(Asteroids, i);
 			DestroyAnimation = Animation:new({
-				img = love.graphics.newImage(ImageAsteroidDestroy),
+				img = ImageAsteroidDestroy,
 				frameW = 96,
 				frameH = 96,
 				frames = {'2-8', 1},
@@ -78,7 +78,7 @@ function EventManager:update(dt)
 					Player.Shield = Player.Shield + 1;
 					asteroid.destroySound:play();
 					DestroyAnimation = Animation:new({
-						img = love.graphics.newImage(ImageAsteroidDestroy),
+						img = ImageAsteroidDestroy,
 						frameW = 96,
 						frameH = 96,
 						frames = {'2-8', 1},

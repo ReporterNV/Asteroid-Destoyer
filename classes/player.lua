@@ -11,19 +11,19 @@ Player = Object:new({
 	speedY = 100,
 	ShootTimer = 2,
 	ShootReload = 0.5,
-	img = love.graphics.newImage(ImagePlayer),
+	img = ImagePlayer,
 });
 
 Player:setWHfromImage();
 Player.x = SCREEN_W / 2 - Player.w/2
-Player.shield = love.graphics.newImage(ImageShield)
-Player.Shield = 0;
+Player.shield = ImageShield;
+Player.Shield = 1000;
 Player.ShootTimer = 0;
 Player.ShootReload = 0.6;
 
 --[ [
 ShieldDown =  Animation:new({
-	img = love.graphics.newImage(ImageShield),
+	img = ImageShield,
 	frameW = 480,
 	frameH = 480,
 	frames = {'1-5', '1-4'},
@@ -42,7 +42,7 @@ ShieldDown =  Animation:new({
 
 --[ [
 ShieldUp =  Animation:new({
-	img = love.graphics.newImage(ImageShield),
+	img = ImageShield,
 	frameW = 480,
 	frameH = 480,
 	frames = {'1-5', '1-4'},

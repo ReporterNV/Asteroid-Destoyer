@@ -13,7 +13,7 @@ function Bullet:new(args)
 	ChildObj.h = args.h or 0;
 	ChildObj.speedX = 0;
 	ChildObj.speedY = args.speedY or -500;
-	ChildObj.img = love.graphics.newImage(ImageBullet);
+	ChildObj.img = ImageBullet;
 	ChildObj.spawnSound = love.audio.newSource(SndAttackPath, "static");
 	ChildObj.callback = nil;
 	self.__index = self;

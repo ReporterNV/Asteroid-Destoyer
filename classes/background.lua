@@ -2,7 +2,7 @@ local Object = require("classes.object")
 require("vars")
 
 local background = Object:new({
-	img = love.graphics.newImage(ImageBackground);
+	img = ImageBackground,
 	x = 0,
 	y = 0,
 	speedY = 10,
