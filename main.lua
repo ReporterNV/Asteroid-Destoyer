@@ -6,6 +6,7 @@
 --[x] fix bullet remove early. only after they leave screen. not remove after top left screen.
 --[ ] add spectre bullet? destroy random asteroid
 --[ ] make windows looks better
+--[ ] fix asteroid destroy method
 --[ ] add ally fallen ships which one we should not destroy bcz pilots inside still alive
 --[x] add reload bar
 --[ ] add asteroids rotated on 90 and 180 ^0?

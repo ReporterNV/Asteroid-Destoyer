@@ -7,26 +7,32 @@ CanPressPause = true;
 --AFKPause = false;
 
 ImagesDir = "images/"
-PathPlayer = ImagesDir.."spaceship.png"
-PathBullet = ImagesDir.."bullet.png"
-PathAsteroid = ImagesDir.."asteroid.png"
-PathAsteroidDestroy = ImagesDir.."asteroidDestroy.png"--make separate dir for anim?
-PathBackground = ImagesDir.."background.png"
-PathShield = ImagesDir.."shield.png"
+PathPlayer          = ImagesDir .. "spaceship.png"
+PathBullet          = ImagesDir .. "bullet.png"
+PathAsteroid        = ImagesDir .. "asteroid.png"
+PathAsteroidDestroy = ImagesDir .. "asteroidDestroy.png"--make separate dir for anim?
+PathBackground      = ImagesDir .. "background.png"
+PathShield          = ImagesDir .. "shield.png"
 
-ImagePlayer = love.graphics.newImage(PathPlayer)
-ImageBullet = love.graphics.newImage(PathBullet)
-ImageAsteroid = love.graphics.newImage(PathAsteroid)
+ImagePlayer          = love.graphics.newImage(PathPlayer)
+ImageBullet          = love.graphics.newImage(PathBullet)
+ImageAsteroid        = love.graphics.newImage(PathAsteroid)
 ImageAsteroidDestroy = love.graphics.newImage(PathAsteroidDestroy) --animation separate dir?
-ImageBackground = love.graphics.newImage(PathBackground)
-ImageShield = love.graphics.newImage(PathShield)
+ImageBackground      = love.graphics.newImage(PathBackground)
+ImageShield          = love.graphics.newImage(PathShield)
 
 SoundsDir = "sounds/"
-SndDestoyAsteroidPath = SoundsDir.."destroy.wav"
-SndAttackPath = SoundsDir.."attack.wav"
-SndBackgroundMusic = SoundsDir.."The Story Continues.ogg"
+PathDestoyAsteroid  = SoundsDir .. "destroy.wav"
+PathAttack          = SoundsDir .. "attack.wav"
+PathBackgroundMusic = SoundsDir .. "The Story Continues.ogg"
+
+SndDestoyAsteroidPath = love.audio.newSource(PathDestoyAsteroid, "static");
+SndAttackPath         = love.audio.newSource(PathAttack, "static");
+SndBackgroundMusic    = love.audio.newSource(PathBackgroundMusic, "static");
+
+
+
 MasterSoundLV = 0
 BGM = 0
 SoundsLv = 0
 love.audio.setVolume(MasterSoundLV);
-SndDestroy = love.audio.newSource(SndDestoyAsteroidPath, "static");
