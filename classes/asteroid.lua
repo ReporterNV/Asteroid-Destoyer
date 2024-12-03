@@ -10,12 +10,12 @@ function Asteroid:new(args)
 	end
 	ChildObj.x = args.x or 0;
 	ChildObj.y = args.y or 0;
-	ChildObj.w = args.w or 0;
-	ChildObj.h = args.h or 0;
+	ChildObj.w = args.w or 38;
+	ChildObj.h = args.h or 33;
 	ChildObj.speedX = 0;
 	ChildObj.speedY = args.speedY or 0;
-	ChildObj.img = ImageAsteroid;
-	ChildObj.destroySound = SndDestoyAsteroid;
+	--ChildObj.img = ImageAsteroid;
+	--ChildObj.destroySound = SndDestoyAsteroid;
 	ChildObj.callback = nil;
 	self.__index = self;
 	return setmetatable(ChildObj, self);
@@ -41,8 +41,10 @@ end
 
 
 function Asteroid:draw()
-	love.graphics.draw(self.img, self.x, self.y);
-	--love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+	if self.img ~= nil then
+		love.graphics.draw(self.img, self.x, self.y);
+	end
+	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 end
 
 return Asteroid

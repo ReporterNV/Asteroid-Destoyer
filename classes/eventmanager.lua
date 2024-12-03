@@ -76,7 +76,9 @@ function EventManager:update(dt)
 				if asteroid:checkCollisionObj(bullet) then
 					Score = Score + 1;
 					Player.Shield = Player.Shield + 1;
-					asteroid.destroySound:play();
+					if asteroid.destroySound ~= nil then
+						asteroid.destroySound:play();
+					end
 					DestroyAnimation = Animation:new({
 						img = ImageAsteroidDestroy,
 						frameW = 96,
