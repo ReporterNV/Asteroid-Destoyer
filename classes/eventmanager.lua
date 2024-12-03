@@ -51,7 +51,6 @@ function EventManager:update(dt)
 		if asteroid:checkCollisionObj(Player) then
 			Player:takeHit();
 			table.remove(Asteroids, i);
-			i = i - 1; -- need it bcz after remove next element will have current index
 			DestroyAnimation = Animation:new({
 				img = ImageAsteroidDestroy,
 				frameW = 96,
@@ -70,7 +69,6 @@ function EventManager:update(dt)
 
 		if asteroid.y > SCREEN_H then
 			table.remove(Asteroids, i);
-			i = i - 1;
 		end
 
 		if asteroid.speedY ~= 0 then
@@ -93,9 +91,7 @@ function EventManager:update(dt)
 					})
 					table.insert(Animations, DestroyAnimation)
 					table.remove(Asteroids, i);
-					j = j - 1;
 					table.remove(Bullets, j);
-					i = i - 1;
 				end
 			end
 		end
