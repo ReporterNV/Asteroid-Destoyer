@@ -6,7 +6,7 @@ local Bullet = require("classes.bullet")
 local EventManager = {};
 
 local AsteroidTimer = 1;
-local AsteroidInterval = 0.1;
+local AsteroidInterval = 1;
 Objects = {};
 Asteroids = {};
 Bullets = {};
@@ -36,7 +36,7 @@ function EventManager:update(dt)
 
 	if AsteroidTimer > AsteroidInterval then
 		AsteroidTimer = 0;
-		Asteroid:spawn();
+		--Asteroid:spawn();
 	end
 
 	for _, animation in ipairs(Animations) do

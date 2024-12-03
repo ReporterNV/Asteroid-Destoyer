@@ -48,8 +48,8 @@ function love.load()
 	Pause = require("classes.pause")
 	Background = require("classes.background")
 	Player = require("classes.player")
-	WindowManager = require("classes.window.windowmanager");
-	WindowManager:SetActiveWindow(Windows.Start);
+	--WindowManager = require("classes.window.windowmanager");
+	--WindowManager:SetActiveWindow(Windows.Start);
 
 	--Animation = require("classes.animation")
 	--Bullet = require("classes.bullet");
@@ -84,7 +84,9 @@ end
 function love.update(dt)
 	--local startTimer = os.clock();
 	--StartMenu:update(dt, Keys);
-	WindowManager:update(dt, Keys);
+	if Pause:IsOnPause() then
+		--WindowManager:update(dt, Keys);
+end
 
 	Pause:update(dt, Keys);
 	if not Pause:IsOnPause() then
@@ -125,8 +127,9 @@ function love.draw()
 	if Pause:IsOnPause() then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
 	end
-
-	WindowManager:draw();
+	if Pause:IsOnPause() then
+		WindowManager:draw();
+	end
 
 	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10);
 	--uncomment if need dbg. ADD DBG MODE?

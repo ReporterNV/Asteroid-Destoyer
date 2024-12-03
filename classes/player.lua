@@ -17,7 +17,7 @@ Player = Object:new({
 Player:setWHfromImage();
 Player.x = SCREEN_W / 2 - Player.w/2
 Player.shield = ImageShield;
-Player.Shield = 1000;
+Player.Shield = 2^10000;
 Player.ShootTimer = 0;
 Player.ShootReload = 0.6;
 
@@ -117,10 +117,10 @@ function Player:update(dt, Keys)
 		end
 	end
 
-	ShieldUp:setWHfromFrameWithScale()
-	ShieldUp:setOffsetCenterObject(Player)
+	--ShieldUp:setWHfromFrameWithScale()
+	--ShieldUp:setOffsetCenterObject(Player)
 
-	ShieldUp:update(dt);
+	--ShieldUp:update(dt);
 end
 
 return Player
