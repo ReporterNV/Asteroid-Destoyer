@@ -26,9 +26,9 @@ PathDestoyAsteroid  = SoundsDir .. "destroy.wav"
 PathAttack          = SoundsDir .. "attack.wav"
 PathBackgroundMusic = SoundsDir .. "The Story Continues.ogg"
 
-SndDestoyAsteroidPath = love.audio.newSource(PathDestoyAsteroid, "static");
-SndAttackPath         = love.audio.newSource(PathAttack, "static");
-SndBackgroundMusic    = love.audio.newSource(PathBackgroundMusic, "static");
+SndDestoyAsteroid     = love.audio.newSource(PathDestoyAsteroid, "static");
+SndAttack             = love.audio.newSource(PathAttack, "static");
+SndBackgroundMusic    = love.audio.newSource(PathBackgroundMusic, "stream");
 
 
 

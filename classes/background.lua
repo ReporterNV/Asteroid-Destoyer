@@ -10,7 +10,7 @@ local background = Object:new({
 
 function background:init()
 	background:setWHfromImage();
-	background.Music = love.audio.newSource(SndBackgroundMusic, "stream");
+	background.Music = SndBackgroundMusic;
 end
 function background:pause()
 	background.Music:pause();

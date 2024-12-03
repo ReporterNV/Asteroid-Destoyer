@@ -14,7 +14,7 @@ function Bullet:new(args)
 	ChildObj.speedX = 0;
 	ChildObj.speedY = args.speedY or -500;
 	ChildObj.img = ImageBullet;
-	ChildObj.spawnSound = love.audio.newSource(SndAttackPath, "static");
+	ChildObj.spawnSound = SndAttack;
 	ChildObj.callback = nil;
 	self.__index = self;
 	return setmetatable(ChildObj, self);

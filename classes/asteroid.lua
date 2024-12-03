@@ -14,8 +14,8 @@ function Asteroid:new(args)
 	ChildObj.h = args.h or 0;
 	ChildObj.speedX = 0;
 	ChildObj.speedY = args.speedY or 0;
-	ChildObj.img = ImageAsteroid
-	ChildObj.destroySound = love.audio.newSource(SndDestoyAsteroidPath, "static");
+	ChildObj.img = ImageAsteroid;
+	ChildObj.destroySound = SndDestoyAsteroid;
 	ChildObj.callback = nil;
 	self.__index = self;
 	return setmetatable(ChildObj, self);

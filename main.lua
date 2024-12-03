@@ -103,18 +103,25 @@ function love.draw()
 
 	Player:draw();
 
+	local countA = 0
 	for _, animation in ipairs(Animations) do
+		countA = countA + 1;
 		animation:draw();
 	end
 
+	local countB = 0
 	for _, bullet in ipairs(Bullets) do
+		countB = countB + 1;
 		bullet:draw();
 	end
 
+	local countC = 0
 	for _, asteroid in ipairs(Asteroids) do
 		asteroid:draw()
+		countC = countC + 1;
 	end
 
+	print(countA.." ".. countB.." ".. countC)
 	if Pause:IsOnPause() then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
 	end
