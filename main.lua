@@ -48,8 +48,8 @@ function love.load()
 	Pause = require("classes.pause")
 	Background = require("classes.background")
 	Player = require("classes.player")
-	--WindowManager = require("classes.window.windowmanager");
-	--WindowManager:SetActiveWindow(Windows.Start);
+	WindowManager = require("classes.window.windowmanager");
+	WindowManager:SetActiveWindow(Windows.Start);
 
 	--Animation = require("classes.animation")
 	--Bullet = require("classes.bullet");
@@ -84,9 +84,7 @@ end
 function love.update(dt)
 	--local startTimer = os.clock();
 	--StartMenu:update(dt, Keys);
-	if Pause:IsOnPause() then
-		--WindowManager:update(dt, Keys);
-end
+	WindowManager:update(dt, Keys);
 
 	Pause:update(dt, Keys);
 	if not Pause:IsOnPause() then
@@ -105,25 +103,20 @@ function love.draw()
 
 	Player:draw();
 
-	local countA = 0
 	for _, animation in ipairs(Animations) do
-		countA = countA + 1;
 		animation:draw();
 	end
 
-	local countB = 0
 	for _, bullet in ipairs(Bullets) do
-		countB = countB + 1;
 		bullet:draw();
 	end
+	print("Bullets: "..#Bullets)
 
-	local countC = 0
 	for _, asteroid in ipairs(Asteroids) do
 		asteroid:draw()
-		countC = countC + 1;
 	end
 
-	print(countA.." ".. countB.." ".. countC)
+	--print(countA.." ".. countB.." ".. countC)
 	if Pause:IsOnPause() then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
 	end
@@ -135,6 +128,8 @@ function love.draw()
 	--uncomment if need dbg. ADD DBG MODE?
 	love.graphics.print("MEM: " .. collectgarbage("count") .. "KB", 10, 40);
 	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
+	local stats = love.graphics.getStats();
+	love.graphics.print("Texture MEM: " ..  stats.texturememory / 1024 .. "KB", 10, 60);
 	--love.graphics.printf("Shield: " .. tostring(Player.Shield), 10, 40, 60, "left");
 
 	--[[

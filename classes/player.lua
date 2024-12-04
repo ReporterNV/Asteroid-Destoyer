@@ -9,8 +9,8 @@ Player = Object:new({
 	a = 1,
 	speedX = 200,
 	speedY = 100,
-	ShootTimer = 2,
-	ShootReload = 0.5,
+	--ShootTimer = 0,
+	--ShootReload = 0.1,
 	img = ImagePlayer,
 });
 
@@ -18,8 +18,10 @@ Player:setWHfromImage();
 Player.x = SCREEN_W / 2 - Player.w/2
 Player.shield = ImageShield;
 Player.Shield = 2^10000;
+Player.ShootReload = 0.01^2;
 Player.ShootTimer = 0;
-Player.ShootReload = 0.6;
+Player.ShootOverflow = 0;
+Player.ShootExtra= 0;
 
 --[ [
 ShieldDown =  Animation:new({
@@ -67,7 +69,7 @@ end
 
 
 function Player:draw()
-	love.graphics.draw(Player.img, Player.x, Player.y);
+	love.graphics.draw(self.img, self.x, self.y);
 	ShieldUp:draw();
 	--reload bar
 	love.graphics.rectangle("line", self.x , self.y + self.h, self.w, self.h * 0.1)
@@ -78,44 +80,72 @@ end
 
 function Player:update(dt, Keys)
 	if Keys["left"] == true or Keys["a"] == true then
-		if Player.x - Player.speedX*dt < 0 then
-			Player.x = 0;
+		if self.x - self.speedX*dt < 0 then
+			self.x = 0;
 		else
-			Player.x = Player.x - Player.speedX*dt;
+			self.x = self.x - self.speedX*dt;
 		end
 	end
 
 	if Keys["right"] == true or Keys["d"] == true then
-		if Player.x + Player.speedX*dt > SCREEN_W - Player.w then
-			Player.x = SCREEN_W - Player.w;
+		if self.x + self.speedX*dt > SCREEN_W - self.w then
+			self.x = SCREEN_W - self.w;
 		else
-			Player.x = Player.x + Player.speedX*dt;
+			self.x = self.x + self.speedX*dt;
 		end
 	end
 
 	if Keys["up"] == true or Keys["w"] == true then
-		if Player.y - Player.speedY*dt < 0 then
-			Player.y = 0;
+		if self.y - self.speedY*dt < 0 then
+			self.y = 0;
 		else
-			Player.y = Player.y - Player.speedY*dt;
+			self.y = self.y - self.speedY*dt;
 		end
 	end
 
 	if Keys["down"] == true or Keys["s"] == true then
-		if Player.y + Player.speedY*dt + Player.h > SCREEN_H then
-			Player.y = SCREEN_H - Player.h;
+		if self.y + self.speedY*dt + self.h > SCREEN_H then
+			self.y = SCREEN_H - self.h;
 		else
-			Player.y = Player.y + Player.speedY*dt;
+			self.y = self.y + self.speedY*dt;
 		end
 	end
-	if Player.ShootTimer > 0 then
-		self.ShootTimer = self.ShootTimer - dt;
-	else
-		if Keys["space"] == true then
-			self.ShootTimer = self.ShootReload;
+
+
+	print("dt: "..dt)
+	print("ShootTimer: "..Player.ShootTimer)
+	print("ShootReload: "..Player.ShootReload)
+	print("ShootOverflow: "..Player.ShootOverflow)
+	print("ShootOverflow: "..Player.ShootExtra)
+
+	self.ShootTimer = self.ShootTimer + dt;
+	if self.ShootTimer > self.ShootReload then
+		while self.ShootTimer < 0 do
+			self.ShootTimer = self.ShootTimer - self.ShootReload;
+			self.ShootExtra = self.ShootExtra + 1;
+		end
+		eventmanager:playerShoot();
+	end
+
+	--[[
+	if self.ShootTimer > 0 then
+		self.ShootTimer = self.ShootTimer - dt; --what to do with other part if we hold space?
+		while  self.ShootTimer + self.ShootReload < 0 do
+			self.ShootReload = self.ShootTimer + self.ShootReload
+			self.ShootExtra = self.ShootExtra + 1;
+		end
+		self.ShootOverflow = self.ShootTimer;
+		self.ShootTimer = 0;
+	elseif Keys["space"] == true then
+		self.ShootTimer = self.ShootReload - self.ShootOverflow;
+		eventmanager:playerShoot();
+		for _ = 1, self.ShootExtra do
 			eventmanager:playerShoot();
 		end
+	elseif self.ShootTimer == 0 then
+		self.ShootOverflow = 0;
 	end
+	--]]
 
 	--ShieldUp:setWHfromFrameWithScale()
 	--ShieldUp:setOffsetCenterObject(Player)
