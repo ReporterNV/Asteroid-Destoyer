@@ -17,13 +17,16 @@
 --[ ] add shield if dont fire?
 --[ ] add settings save
 --[ ] fix reload bar if reload time is small
---[ ] check fps problem; UPD: looks like mem problem; maybe dont remove animation?
---[ ] Now if spawnrate lower then update game will spawn asteroid with spawnrate. Need fix it?
+--[ ] REMAKE TODO LIST 
+--[ ] FIX ASTEROID OBJECT. Dont need keep link for image inside every object. Bcz need keep coord and other diff attr.
+--[x] check fps problem; UPD: looks like mem problem; maybe dont remove animation?
+--[x] Now if spawnrate lower then update game will spawn asteroid with spawnrate. Need fix it?
 --[x] fix double enter for WindowManager
 --[x] add option for back to prev window;
 --[x] add build for windows and linux
 --[ ] add this object type ? like type == "asteroid"
 --[ ] move editable vars by menu in separate table?
+--[ ] CLEAN CODE!!!!! 
 --]]
 
 _G.love = love;

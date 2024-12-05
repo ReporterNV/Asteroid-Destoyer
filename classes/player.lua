@@ -136,9 +136,7 @@ function Player:update(dt, Keys)
 			eventmanager:playerShoot();
 		end
 	else
-		if self.ShootTimer > self.ShootReload then
-			self.ShootTimer = self.ShootReload;
-		end
+		self.ShootTimer = math.min(self.ShootTimer, self.ShootReload)
 	end
 
 	--ShieldUp:setWHfromFrameWithScale()
