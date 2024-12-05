@@ -18,7 +18,7 @@ Player:setWHfromImage();
 Player.x = SCREEN_W / 2 - Player.w/2
 Player.shield = ImageShield;
 Player.Shield = 2^10000;
-Player.ShootReload = 1;
+Player.ShootReload = 1/10;
 Player.ShootTimer = 0;
 Player.ShootOverflow = 0;
 Player.ShootExtra= 0;
@@ -128,41 +128,18 @@ function Player:update(dt, Keys)
 	end
 	--]]
 
-	print("dt: "..dt)
-	print("ShootTimer: "..Player.ShootTimer)
-	print("ShootReload: "..Player.ShootReload)
-	print("ShootOverflow: "..Player.ShootOverflow)
-	print("ShootOverflow: "..Player.ShootExtra)
 
 	self.ShootTimer = self.ShootTimer + dt;
-	if self.ShootTimer > self.ShootReload then
-		while self.ShootTimer < 0 do
+	if Keys["space"] == true then
+		while self.ShootTimer >= self.ShootReload do
 			self.ShootTimer = self.ShootTimer - self.ShootReload;
-			self.ShootExtra = self.ShootExtra + 1;
-		end
-
-		eventmanager:playerShoot();
-	end
-
-	--[[
-	if self.ShootTimer > 0 then
-		self.ShootTimer = self.ShootTimer - dt; --what to do with other part if we hold space?
-		while  self.ShootTimer + self.ShootReload < 0 do
-			self.ShootReload = self.ShootTimer + self.ShootReload
-			self.ShootExtra = self.ShootExtra + 1;
-		end
-		self.ShootOverflow = self.ShootTimer;
-		self.ShootTimer = 0;
-	elseif Keys["space"] == true then
-		self.ShootTimer = self.ShootReload - self.ShootOverflow;
-		eventmanager:playerShoot();
-		for _ = 1, self.ShootExtra do
 			eventmanager:playerShoot();
 		end
-	elseif self.ShootTimer == 0 then
-		self.ShootOverflow = 0;
+	else
+		if self.ShootTimer > self.ShootReload then
+			self.ShootTimer = self.ShootReload;
+		end
 	end
-	--]]
 
 	--ShieldUp:setWHfromFrameWithScale()
 	--ShieldUp:setOffsetCenterObject(Player)
