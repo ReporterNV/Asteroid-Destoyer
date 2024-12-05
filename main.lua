@@ -101,8 +101,6 @@ function love.draw()
 	--local startTimer = os.time();
 	Background:draw();
 
-	Player:draw();
-
 	for _, animation in ipairs(Animations) do
 		animation:draw();
 	end
@@ -115,6 +113,8 @@ function love.draw()
 	for _, asteroid in ipairs(Asteroids) do
 		asteroid:draw()
 	end
+
+	Player:draw();
 
 	--print(countA.." ".. countB.." ".. countC)
 	if Pause:IsOnPause() then

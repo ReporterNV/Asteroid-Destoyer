@@ -16,7 +16,7 @@ Windows.Settings = Window:new({
 			style = "slider",
 			callbackL = option.setVsync,
 			callbackR = option.setVsync,
-			args = {variable = "Vsync", max = 1, min = 0, step = 1},
+			args = {variable = "Vsync", max = 4, min = 0, step = 1},
 		},
 		{name = "Back", callback = option.OpenPreviousWindow},
 	}

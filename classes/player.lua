@@ -18,7 +18,7 @@ Player:setWHfromImage();
 Player.x = SCREEN_W / 2 - Player.w/2
 Player.shield = ImageShield;
 Player.Shield = 2^10000;
-Player.ShootReload = 0.01^2;
+Player.ShootReload = 1;
 Player.ShootTimer = 0;
 Player.ShootOverflow = 0;
 Player.ShootExtra= 0;
@@ -112,6 +112,22 @@ function Player:update(dt, Keys)
 	end
 
 
+	-- WORKED SOLUTION --
+	--[[
+	ShootTimer = ShootTimer + dt;
+	if Keys["space"] == true then
+		while ShootTimer >= ShootReload do
+			ShootTimer = ShootTimer - ShootReload;
+			Shoot();
+		end
+	else
+		if ShootTimer > ShootReload then
+			ShootTimer = ShootReload;
+		end
+		--ShootTimer = 0;
+	end
+	--]]
+
 	print("dt: "..dt)
 	print("ShootTimer: "..Player.ShootTimer)
 	print("ShootReload: "..Player.ShootReload)
@@ -124,6 +140,7 @@ function Player:update(dt, Keys)
 			self.ShootTimer = self.ShootTimer - self.ShootReload;
 			self.ShootExtra = self.ShootExtra + 1;
 		end
+
 		eventmanager:playerShoot();
 	end
 
