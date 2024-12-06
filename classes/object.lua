@@ -10,10 +10,10 @@ Object = {
 }
 
 function Object:new(args)
-	local ChildObj = {}
-	if args == nil then
-		args = {}
-	end
+	local ChildObj = {};
+	args = args or {};
+	self.__index = self;
+	ChildObj = setmetatable(ChildObj, self);
 	ChildObj.x = args.x or 0;
 	ChildObj.y = args.y or 0;
 	ChildObj.w = args.w or 0;
@@ -21,9 +21,8 @@ function Object:new(args)
 	ChildObj.speedX = args.speedX or 0;
 	ChildObj.speedY = args.speedY or 0;
 	ChildObj.img = args.img or nil;
-	ChildObj.collision = true;
-	self.__index = self;
-	return setmetatable(ChildObj, self);
+	ChildObj.collision = args.collision or true;
+	return ChildObj;
 end
 
 function Object:setWHfromImage()
@@ -44,17 +43,22 @@ end
 
 function Object:checkCollisionObj(Obj2)
 	if self == nil then
-		print("func checkCollision _self is nil? HOW?")
-	end
-	local Obj1 = self
-	if Obj2 == nil then
-		print("func checkCollision Obj2 is nil")
+		print("func checkCollision _self is nil? HOW?");
+		return;
 	end
 
-	return self.collision and
-	self.checkCollision(
-	Obj1.x, Obj1.y, Obj1.w, Obj1.h,
-	Obj2.x, Obj2.y, Obj2.w, Obj2.h
+	local Obj1 = self;
+
+	if Obj2 == nil then
+		print("func checkCollision Obj2 is nil")
+		return; --change to assert
+	end
+
+	--Object should in init set x, y, w, h;
+	return self.collision  and
+	self:checkCollision(
+		Obj1.x, Obj1.y, Obj1.w, Obj1.h,
+		Obj2.x, Obj2.y, Obj2.w, Obj2.h
 	);
 end
 

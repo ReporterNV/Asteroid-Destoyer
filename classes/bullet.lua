@@ -20,8 +20,8 @@ function Bullet:new(args)
 	return setmetatable(ChildObj, self);
 end
 
+Bullet:setWHfromImage();
 function Bullet:init()
-	Bullet:setWHfromImage();
 end
 
 function Bullet:spawn()
@@ -34,7 +34,7 @@ end
 
 function Bullet:draw()
 	love.graphics.draw(self.img, self.x, self.y);
-	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+	--love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 end
 
 return Bullet

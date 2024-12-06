@@ -83,6 +83,7 @@ function EventManager:update(dt)
 	for i = #Bullets, 1, -1 do
 		local bullet = Bullets[i];
 		bullet.y = bullet.y + bullet.speedY*dt;
+
 		if bullet.y + bullet.h < 0 then
 			table.remove(Bullets, i);
 		end
