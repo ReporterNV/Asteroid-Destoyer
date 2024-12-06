@@ -79,6 +79,12 @@ function EventManager:update(dt)
 	end
 
 	for i, bullet in ipairs(Bullets) do
+
+		bullet.y = bullet.y + bullet.speedY*dt;
+		if bullet.y + bullet.h < 0 then
+			table.remove(Bullets, i);
+		end
+
 		for j, asteroid in ipairs(Asteroids) do
 			if asteroid:checkCollisionObj(bullet) then
 				Score = Score + 1;
@@ -105,13 +111,7 @@ function EventManager:update(dt)
 				break;
 			end
 		end
-		bullet.y = bullet.y + bullet.speedY*dt;
-		if bullet.y + bullet.h < 0 then
-			table.remove(Bullets, i);
-		end
-		end
-	for i, bullet in ipairs(Bullets) do
-end
+	end
 end
 
 return EventManager;
