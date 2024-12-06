@@ -20,9 +20,12 @@ function Bullet:new(args)
 	return setmetatable(ChildObj, self);
 end
 
+function Bullet:init()
+	Bullet:setWHfromImage();
+end
+
 function Bullet:spawn()
 	local bullet = Bullet:new()
-	bullet:setWHfromImage();
 	bullet.x = Player.x + Player.w/2 - bullet.w/2;
 	bullet.y = Player.y
 	bullet.spawnSound:play();
@@ -31,6 +34,7 @@ end
 
 function Bullet:draw()
 	love.graphics.draw(self.img, self.x, self.y);
+	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 end
 
 return Bullet

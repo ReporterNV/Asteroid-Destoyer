@@ -44,7 +44,7 @@ function Asteroid:draw()
 	if self.img ~= nil then
 		love.graphics.draw(self.img, self.x, self.y);
 	end
-	--love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 end
 
 return Asteroid

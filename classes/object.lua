@@ -35,7 +35,7 @@ function Object:setWHfromImage()
 	end
 end
 
-function checkCollision(x1,y1,w1,h1, x2,y2,w2,h2)
+function Object:checkCollision(x1,y1,w1,h1, x2,y2,w2,h2)
 	return x1 < x2+w2 and
 	x2 < x1+w1 and
 	y1 < y2+h2 and
@@ -50,7 +50,9 @@ function Object:checkCollisionObj(Obj2)
 	if Obj2 == nil then
 		print("func checkCollision Obj2 is nil")
 	end
-	return self.collision and checkCollision(
+
+	return self.collision and
+	self.checkCollision(
 	Obj1.x, Obj1.y, Obj1.w, Obj1.h,
 	Obj2.x, Obj2.y, Obj2.w, Obj2.h
 	);

@@ -40,6 +40,7 @@ function EventManager:update(dt)
 	AsteroidTimer = AsteroidTimer + dt;
 
 	if AsteroidTimer > AsteroidInterval then
+		--Spawn depend on FPS. Should i fix it?
 		AsteroidTimer = 0;
 		Asteroid:spawn();
 	end
@@ -50,11 +51,12 @@ function EventManager:update(dt)
 		end
 		animation:update(dt);
 	end
-
+	--avg fps 400
 	--for i, asteroid in ipairs(Asteroids) do
 	for i = #Asteroids, 1, -1 do
 		local asteroid = Asteroids[i]
 		asteroid:update(dt);
+
 		if asteroid:checkCollisionObj(Player) then
 			Player:takeHit();
 			table.remove(Asteroids, i);
@@ -71,15 +73,15 @@ function EventManager:update(dt)
 				onLoop = "pauseAtEnd",
 			})
 			table.insert(Animations, DestroyAnimation)
-		end
-
-		if asteroid.y > SCREEN_H then
+		elseif asteroid.y > SCREEN_H then
 			table.remove(Asteroids, i);
 		end
 	end
 
-	for i, bullet in ipairs(Bullets) do
+	--for i, bullet in ipairs(Bullets) do
 
+	for i = #Bullets, 1, -1 do
+		local bullet = Bullets[i];
 		bullet.y = bullet.y + bullet.speedY*dt;
 		if bullet.y + bullet.h < 0 then
 			table.remove(Bullets, i);
@@ -107,7 +109,6 @@ function EventManager:update(dt)
 				table.insert(Animations, DestroyAnimation)
 				table.remove(Asteroids, j)
 				table.remove(Bullets, i)
-				i = i - 1;
 				break;
 			end
 		end

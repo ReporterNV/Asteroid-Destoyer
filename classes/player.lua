@@ -111,24 +111,6 @@ function Player:update(dt, Keys)
 		end
 	end
 
-
-	-- WORKED SOLUTION --
-	--[[
-	ShootTimer = ShootTimer + dt;
-	if Keys["space"] == true then
-		while ShootTimer >= ShootReload do
-			ShootTimer = ShootTimer - ShootReload;
-			Shoot();
-		end
-	else
-		if ShootTimer > ShootReload then
-			ShootTimer = ShootReload;
-		end
-		--ShootTimer = 0;
-	end
-	--]]
-
-
 	self.ShootTimer = self.ShootTimer + dt;
 	if Keys["space"] == true then
 		while self.ShootTimer >= self.ShootReload do

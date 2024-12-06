@@ -25,7 +25,7 @@
 --]]
 
 _G.love = love;
-local DEBUG = false;
+local DEBUG = true; --Texture memory: 20172KB
 require("vars")
 local LoadTimer, UpdateTimer, DrawTimer;
 
