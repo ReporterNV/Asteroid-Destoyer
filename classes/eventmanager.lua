@@ -6,7 +6,7 @@ local Bullet = require("classes.bullet")
 local EventManager = {};
 
 local AsteroidTimer = 1;
-local AsteroidInterval = 1;
+local AsteroidInterval = 0.0001;
 
 Objects = {};
 Asteroids = {};
@@ -51,7 +51,9 @@ function EventManager:update(dt)
 		animation:update(dt);
 	end
 
-	for i, asteroid in ipairs(Asteroids) do
+	--for i, asteroid in ipairs(Asteroids) do
+	for i = #Asteroids, 1, -1 do
+		local asteroid = Asteroids[i]
 		asteroid:update(dt);
 		if asteroid:checkCollisionObj(Player) then
 			Player:takeHit();
@@ -68,49 +70,48 @@ function EventManager:update(dt)
 				offsety = 32,
 				onLoop = "pauseAtEnd",
 			})
-
 			table.insert(Animations, DestroyAnimation)
 		end
 
 		if asteroid.y > SCREEN_H then
 			table.remove(Asteroids, i);
 		end
-
-		if asteroid.speedY ~= 0 then
-			for j, bullet in ipairs(Bullets) do
-				if asteroid:checkCollisionObj(bullet) then
-					Score = Score + 1;
-					Player.Shield = Player.Shield + 1;
-					if asteroid.destroySound ~= nil then
-						asteroid.destroySound:play();
-					end
-					DestroyAnimation = Animation:new({
-						img = ImageAsteroidDestroy,
-						frameW = 96,
-						frameH = 96,
-						frames = {'2-8', 1},
-						durations = 0.08,
-						x = asteroid.x,
-						y = asteroid.y,
-						offsetx = 29,
-						offsety = 32,
-						onLoop = "pauseAtEnd",
-					})
-					table.insert(Animations, DestroyAnimation)
-					table.remove(Asteroids, i);
-					table.remove(Bullets, j);
-				end
-			end
-		end
 	end
 
 	for i, bullet in ipairs(Bullets) do
+		for j, asteroid in ipairs(Asteroids) do
+			if asteroid:checkCollisionObj(bullet) then
+				Score = Score + 1;
+				Player.Shield = Player.Shield + 1;
+				if asteroid.destroySound ~= nil then
+					asteroid.destroySound:play();
+				end
+				local DestroyAnimation = Animation:new({
+					img = ImageAsteroidDestroy,
+					frameW = 96,
+					frameH = 96,
+					frames = {'2-8', 1},
+					durations = 0.08,
+					x = asteroid.x,
+					y = asteroid.y,
+					offsetx = 29,
+					offsety = 32,
+					onLoop = "pauseAtEnd",
+				})
+				table.insert(Animations, DestroyAnimation)
+				table.remove(Asteroids, j)
+				table.remove(Bullets, i)
+				i = i - 1;
+				break;
+			end
+		end
 		bullet.y = bullet.y + bullet.speedY*dt;
 		if bullet.y + bullet.h < 0 then
 			table.remove(Bullets, i);
 		end
-	end
+		end
+	for i, bullet in ipairs(Bullets) do
 end
-
+end
 
 return EventManager;

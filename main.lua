@@ -4,6 +4,7 @@
 --[ ] fix SCORE count multiple times when player shoot fast
 --[ ] add event after reach end of background 
 --[ ] add progress in weapon
+--[ ] unbreakable asteroid(but for shield they will be add as reward if player find it)
 --[ ] add spectre bullet? destroy random asteroid
 --[ ] make windows looks better
 --[ ] fix asteroid destroy method
@@ -118,6 +119,11 @@ function love.draw()
 
 	for _, asteroid in ipairs(Asteroids) do
 		asteroid:draw()
+	end
+
+
+	if not Pause:IsOnPause() then
+		print("Asteroids: "..#Asteroids)
 	end
 
 	Player:draw();

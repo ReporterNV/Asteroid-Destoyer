@@ -24,7 +24,7 @@ end
 function Asteroid:spawn()
 	local asteroid = Asteroid:new()
 	asteroid:setWHfromImage();
-	asteroid.x = math.random(110, SCREEN_W - (asteroid.w or 0))
+	asteroid.x = math.random(Player.w, SCREEN_W - (asteroid.w or 0))
 	asteroid.y = -asteroid.h;
 	asteroid.speedY = math.random(50, 200)
 	table.insert(Asteroids, asteroid)
