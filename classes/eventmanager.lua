@@ -7,15 +7,20 @@ local EventManager = {};
 
 local AsteroidTimer = 1;
 local AsteroidInterval = 1;
+
 Objects = {};
 Asteroids = {};
 Bullets = {};
 Animations = {};
 
 function EventManager:init(args)
-	if args == nil then
-		args = {};
-	end
+	args = args or {};
+	--[[
+	Bullets = args.Bullets or Bullets;
+	Asteroids = args.Asteroids or Asteroids;
+	Animations = args.Animations or Animations;
+	Objects = args.Objects or Objects;
+	--]]
 end
 
 function SpawnAsteroid()

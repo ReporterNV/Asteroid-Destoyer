@@ -1,14 +1,13 @@
 --[[
 --TODO:
 --[ ] setting + control sound
+--[ ] fix SCORE count multiple times when player shoot fast
 --[ ] add event after reach end of background 
 --[ ] add progress in weapon
---[x] fix bullet remove early. only after they leave screen. not remove after top left screen.
 --[ ] add spectre bullet? destroy random asteroid
 --[ ] make windows looks better
 --[ ] fix asteroid destroy method
 --[ ] add ally fallen ships which one we should not destroy bcz pilots inside still alive
---[x] add reload bar
 --[ ] add asteroids rotated on 90 and 180 ^0?
 --[ ] move relaod bar in other class for not recalc percent. just calc once and then step by step add delta?
 --[ ] Need rewrite animation for rows. bcz need takes args in (...) format.
@@ -19,23 +18,21 @@
 --[ ] fix reload bar if reload time is small
 --[ ] REMAKE TODO LIST 
 --[ ] FIX ASTEROID OBJECT. Dont need keep link for image inside every object. Bcz need keep coord and other diff attr.
---[x] check fps problem; UPD: looks like mem problem; maybe dont remove animation?
---[x] Now if spawnrate lower then update game will spawn asteroid with spawnrate. Need fix it?
---[x] fix double enter for WindowManager
---[x] add option for back to prev window;
---[x] add build for windows and linux
 --[ ] add this object type ? like type == "asteroid"
 --[ ] move editable vars by menu in separate table?
 --[ ] CLEAN CODE!!!!! 
 --]]
 
 _G.love = love;
+local DEBUG = false;
 require("vars")
 local LoadTimer, UpdateTimer, DrawTimer;
 
 
 function love.load()
-	--local startTimer = os.clock();
+	if DEBUG == true then
+		StartTimer = os.clock();
+	end
 	love.window.setTitle("Asteroid destroyer");
 	love.window.setMode(SCREEN_W, SCREEN_H);
 	love.window.setVSync(Vsync);
@@ -68,7 +65,9 @@ function love.load()
 	Background:init();
 
 	Score = 0;
-	--LoadTimer = os.clock() - startTimer;
+	if DEBUG == true then
+		LoadTimer = os.clock() - StartTimer;
+	end
 end
 
 function love.keypressed(key)
@@ -85,8 +84,9 @@ function love.quit()
 end
 
 function love.update(dt)
-	--local startTimer = os.clock();
-	--StartMenu:update(dt, Keys);
+	if DEBUG == true then
+		StartTimer = os.clock();
+	end
 	WindowManager:update(dt, Keys);
 
 	Pause:update(dt, Keys);
@@ -95,13 +95,17 @@ function love.update(dt)
 		EventManager:update(dt)
 		Background:update(dt)
 	end
-	collectgarbage("collect");
-	--UpdateTimer = os.clock() - startTimer;
+	--collectgarbage("collect");
+	if DEBUG ==true then
+		UpdateTimer = os.clock() - StartTimer;
+	end
 end
 
 --local NeedPrintDBG = true;
 function love.draw()
-	--local startTimer = os.time();
+	if DEBUG == true then
+		StartTimer = os.time();
+	end
 	Background:draw();
 
 	for _, animation in ipairs(Animations) do
@@ -111,7 +115,6 @@ function love.draw()
 	for _, bullet in ipairs(Bullets) do
 		bullet:draw();
 	end
-	print("Bullets: "..#Bullets)
 
 	for _, asteroid in ipairs(Asteroids) do
 		asteroid:draw()
@@ -119,7 +122,6 @@ function love.draw()
 
 	Player:draw();
 
-	--print(countA.." ".. countB.." ".. countC)
 	if Pause:IsOnPause() then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
 	end
@@ -128,31 +130,19 @@ function love.draw()
 	end
 
 	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10);
+
 	--uncomment if need dbg. ADD DBG MODE?
-	love.graphics.print("MEM: " .. collectgarbage("count") .. "KB", 10, 40);
 	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
 	local stats = love.graphics.getStats();
-	love.graphics.print("Texture MEM: " ..  stats.texturememory / 1024 .. "KB", 10, 60);
-	--love.graphics.printf("Shield: " .. tostring(Player.Shield), 10, 40, 60, "left");
-
-	--[[
-	if UserPause or AFKPause then
-		if NeedPrintDBG == true then
-			for i, asteroid in ipairs(Asteroids) do
-				print("id:"..i.." X:"..asteroid.x.." Y:"..asteroid.y.." SPEED:".. asteroid.speedY )
-			end
-			NeedPrintDBG = false
-			print("");
-		end
+	love.graphics.printf("Shield: " .. tostring(Player.Shield), 10, 40, 60, "left");
+	--
+	if DEBUG == true then
+		love.graphics.print("MEM: " .. collectgarbage("count") .. "KB", 10, 140);
+		love.graphics.print("Texture MEM: " ..  stats.texturememory / 1024 .. "KB", 10, 160);
+		DrawTimer = os.time() - StartTimer;
+		love.graphics.printf("LoadTimer: " .. tostring(LoadTimer), 10, 25, 90, "left");
+		love.graphics.printf("UpdateTimer: " .. tostring(UpdateTimer), 10, 55, 90, "left");
+		love.graphics.printf("DrawTimer: " .. tostring(DrawTimer), 10, 95, 90, "left");
 	end
-	if not (UserPause or AFKPause) then
-		NeedPrintDBG = true;
-		--os.execute("clear")
-	end
-	DrawTimer = os.time() - startTimer;
-	love.graphics.printf("LoadTimer: " .. tostring(LoadTimer), 10, 25, 90, "left");
-	love.graphics.printf("UpdateTimer: " .. tostring(UpdateTimer), 10, 55, 90, "left");
-	love.graphics.printf("DrawTimer: " .. tostring(DrawTimer), 10, 95, 90, "left");
-	--]]
 end
 

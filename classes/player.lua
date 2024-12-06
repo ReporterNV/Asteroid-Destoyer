@@ -17,8 +17,8 @@ Player = Object:new({
 Player:setWHfromImage();
 Player.x = SCREEN_W / 2 - Player.w/2
 Player.shield = ImageShield;
-Player.Shield = 2^10000;
-Player.ShootReload = 1/10;
+Player.Shield = 0;
+Player.ShootReload = 0.00006;
 Player.ShootTimer = 0;
 Player.ShootOverflow = 0;
 Player.ShootExtra= 0;
@@ -73,7 +73,7 @@ function Player:draw()
 	ShieldUp:draw();
 	--reload bar
 	love.graphics.rectangle("line", self.x , self.y + self.h, self.w, self.h * 0.1)
-	local percent = 1 - self.ShootTimer / self.ShootReload;
+	local percent = self.ShootTimer / self.ShootReload;
 	love.graphics.rectangle("fill", self.x , self.y + self.h, self.w * percent, self.h * 0.1)
 
 end
