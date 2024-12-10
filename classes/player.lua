@@ -3,7 +3,7 @@ local Animation = require("classes.animation")
 require("vars")
 local eventmanager = require("classes.eventmanager")
 
-Player = Object:new({
+local Player = Object:new({
 	x = SCREEN_W / 2,
 	y = 500,
 	a = 1,
@@ -17,7 +17,7 @@ Player = Object:new({
 Player:setWHfromImage();
 Player.x = SCREEN_W / 2 - Player.w/2
 Player.shield = ImageShield;
-Player.Shield = 0;
+Player.Shield = 110;
 Player.ShootReload = 0.006;
 Player.ShootTimer = 0;
 Player.ShootOverflow = 0;

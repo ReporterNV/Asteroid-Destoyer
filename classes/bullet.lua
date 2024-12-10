@@ -1,7 +1,8 @@
 require("vars")
-require("classes.object")
+local Object = require("classes.object")
 
-Bullet = Object:new();
+local Bullet = Object:new();
+
 function Bullet:new(args)
 	local ChildObj = {};
 	if args == nil then

@@ -1,4 +1,4 @@
-Object = {
+local Object = {
 	x = 0,
 	y = 0,
 	w = 0,
@@ -10,27 +10,27 @@ Object = {
 }
 
 function Object:new(args)
-	local ChildObj = {};
+	local NewObj = {};
 	args = args or {};
 	self.__index = self;
-	ChildObj = setmetatable(ChildObj, self);
-	ChildObj.x = args.x or 0;
-	ChildObj.y = args.y or 0;
-	ChildObj.w = args.w or 0;
-	ChildObj.h = args.h or 0;
-	ChildObj.speedX = args.speedX or 0;
-	ChildObj.speedY = args.speedY or 0;
-	ChildObj.img = args.img or nil;
-	ChildObj.collision = args.collision or true;
-	return ChildObj;
+	setmetatable(NewObj, self);
+	for key, value in pairs(args) do
+		NewObj[key] = value
+	end
+	if type(NewObj.callback) == "function" then
+		NewObj:callback();
+	end
+	return NewObj;
 end
 
 function Object:setWHfromImage()
-	if self.img ~= nil then
+	if self.img == nil then
+		print("Warn: image not set for setWHfromImage! Now set 0");
+		self.h = 0;
+		self.w = 0;
+	else
 		self.h = self.img:getHeight();
 		self.w = self.img:getWidth();
-	else
-		print("image not set");
 	end
 end
 
@@ -50,12 +50,12 @@ function Object:checkCollisionObj(Obj2)
 	local Obj1 = self;
 
 	if Obj2 == nil then
-		print("func checkCollision Obj2 is nil")
-		return; --change to assert
+		print("Warn: checkCollisionObj second Object is nil. Check code!")
+		return; --change to assert --Maybe not. just warn about it 
 	end
 
 	--Object should in init set x, y, w, h;
-	return self.collision  and
+	return self.collision  and --yes. need set collision = true. And this not happend by default.
 	self:checkCollision(
 		Obj1.x, Obj1.y, Obj1.w, Obj1.h,
 		Obj2.x, Obj2.y, Obj2.w, Obj2.h
