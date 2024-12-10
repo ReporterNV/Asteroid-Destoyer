@@ -1,21 +1,16 @@
 local Object = {
-	x = 0,
-	y = 0,
-	w = 0,
-	h = 0,
-	speedX = 0,
-	speedY = 0,
-	img = nil,
 	collision = true;
 }
 
 function Object:new(args)
-	local NewObj = {};
-	args = args or {};
+	local NewObj = setmetatable({}, self);
 	self.__index = self;
-	setmetatable(NewObj, self);
+	args = args or {};
 	for key, value in pairs(args) do
 		NewObj[key] = value
+	end
+	if self.img ~= nil then
+		self:setWHfromImage();
 	end
 	if type(NewObj.callback) == "function" then
 		NewObj:callback();
@@ -50,15 +45,15 @@ function Object:checkCollisionObj(Obj2)
 	local Obj1 = self;
 
 	if Obj2 == nil then
-		print("Warn: checkCollisionObj second Object is nil. Check code!")
+		print("Warn: checkCollisionObj second Object is nil. Check code!") -- rewrite to selfwrited func ?like log?
 		return; --change to assert --Maybe not. just warn about it 
 	end
 
 	--Object should in init set x, y, w, h;
-	return self.collision  and --yes. need set collision = true. And this not happend by default.
+	return self.collision and Obj2.collision and --yes. need set collision = true. And this not happend by default.
 	self:checkCollision(
-		Obj1.x, Obj1.y, Obj1.w, Obj1.h,
-		Obj2.x, Obj2.y, Obj2.w, Obj2.h
+	Obj1.x, Obj1.y, Obj1.w, Obj1.h,
+	Obj2.x, Obj2.y, Obj2.w, Obj2.h
 	);
 end
 

@@ -2,6 +2,7 @@
 --TODO:
 --[ ] setting + control sound
 --[ ] fix SCORE count multiple times when player shoot fast
+--[ ] add bullet type like mine?
 --[ ] add event after reach end of background 
 --[ ] add progress in weapon
 --[ ] unbreakable asteroid(but for shield they will be add as reward if player find it)
