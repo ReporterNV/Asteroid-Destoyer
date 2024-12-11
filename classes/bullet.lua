@@ -17,9 +17,9 @@ local Bullet = Object:new(BulletList["default"]);
 function Bullet:init()
 end
 
-function Bullet:spawn(type)
+function Bullet:spawn(BulletType)
 	local bullet;
-	if BulletList[type] == "table" then
+	if type(BulletList[BulletType]) == "table" then
 		bullet = Bullet:new(BulletList[type]);
 	else
 		bullet = Bullet:new(BulletList["default"]);

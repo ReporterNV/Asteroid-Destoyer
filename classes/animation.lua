@@ -4,8 +4,22 @@ local Object = require("classes.object")
 if table.unpack then
 	unpack = table.unpack
 end
+local AnimationList= {};
+local AnimationDescription = {
+	["AsteroidDestroy"] = {
+			img = ImageAsteroidDestroy,
+			frameW = 96,
+			frameH = 96,
+			frames = {'2-8', 1},
+			durations = 0.08,
+			offsetx = 29,
+			offsety = 32,
+			onLoop = "pauseAtEnd",
+	}
+}
 
-Animation = Object:new()
+local Animation = Object:new({})
+--[[
 function Animation:new(args)
 	if args == nil then
 		args = {}
@@ -39,6 +53,30 @@ function Animation:new(args)
 	self.__index = self;
 	return setmetatable(ChildObj, self);
 end
+--]]
+
+function Animation:spawn(args)
+	args = args or error("Animation spawn args is nil!")
+	if (args.x == nil and args.y == nil) or args.followedObject == nil then
+		error("x and y or followed object not set");
+		return
+	end
+	local desc = AnimationDescription[args.type];
+
+	if type(desc) == "table" then
+		error("Need set animation in AnimationDescription before call it")
+	end
+	local grid = anim8.newGrid(desc.frameW, desc.frameH, desc.img:getWidth(), desc.img:getHeight()) --rewrite it on already exist table
+	local animation = anim8.newAnimation(grid(unpack(desc.frames)), desc.durations, desc.onLoop)
+	return {
+		img = desc.img,
+		animation = animation,
+		offsetx = desc.offsetx or 0,
+		offsety = desc.offsety or 0,
+		scalex = 1,
+		scaley = 1,
+	}
+end
 
 function Animation:setWHfromFrameWithScale()
 	if self.frameW ~= nil then
@@ -64,7 +102,9 @@ end
 
 
 function Animation:update(dt)
-	self.animation:update(dt);
+	if self.animation then
+		self.animation:update(dt);
+	end
 	if self.followedObject ~= nil then
 		self.x = self.followedObject.x;
 		self.y = self.followedObject.y;
@@ -73,7 +113,9 @@ end
 
 
 function Animation:draw()
-	self.animation:draw(self.img, self.x, self.y, nil, self.scalex,self.scaley, self.offsetx, self.offsety);
+	if self.animation then
+		self.animation:draw(self.img, self.x, self.y, nil, self.scalex,self.scaley, self.offsetx, self.offsety);
+	end
 end
 
 return Animation

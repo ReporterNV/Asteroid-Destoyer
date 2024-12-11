@@ -1,6 +1,7 @@
 --[[
 --TODO:
 --[ ] setting + control sound
+--[ ] Try fix animatio
 --[ ] fix SCORE count multiple times when player shoot fast
 --[ ] add bullet type like mine?
 --[ ] add event after reach end of background 
@@ -12,7 +13,7 @@
 --[ ] add ally fallen ships which one we should not destroy bcz pilots inside still alive
 --[ ] add asteroids rotated on 90 and 180 ^0?
 --[ ] move relaod bar in other class for not recalc percent. just calc once and then step by step add delta?
---[ ] Need rewrite animation for rows. bcz need takes args in (...) format.
+--[x] Need rewrite animation for rows. bcz need takes args in (...) format.
 --[ ] rename Windows in WindowList; add function for init them
 --[ ] add special interation when hold fire
 --[ ] add shield if dont fire?
@@ -97,7 +98,7 @@ function love.update(dt)
 		EventManager:update(dt)
 		Background:update(dt)
 	end
-	--collectgarbage("collect");
+	collectgarbage("collect");
 	if DEBUG ==true then
 		UpdateTimer = os.clock() - StartTimer;
 	end
