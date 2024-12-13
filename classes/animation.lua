@@ -54,28 +54,46 @@ function Animation:new(args)
 	return setmetatable(ChildObj, self);
 end
 --]]
+function Animation:fromDescriptionToAnimation(AnimationType)
+	local desc = AnimationDescription[AnimationType]
+	if type(desc) ~= "table" then
+		error("Need set animation in AnimationDescription before call it")
+		return;
+	end
+	local grid = anim8.newGrid(desc.frameW, desc.frameH, desc.img:getWidth(), desc.img:getHeight()) --rewrite it on already exist table
+	local animation = anim8.newAnimation(grid(unpack(desc.frames)), desc.durations, desc.onLoop);
+	AnimationList[AnimationType] = animation;
+end
 
 function Animation:spawn(args)
 	args = args or error("Animation spawn args is nil!")
-	if (args.x == nil and args.y == nil) or args.followedObject == nil then
+
+	if (args.x == nil or args.y == nil) and args.followedObject == nil then
 		error("x and y or followed object not set");
 		return
 	end
-	local desc = AnimationDescription[args.type];
 
-	if type(desc) == "table" then
-		error("Need set animation in AnimationDescription before call it")
+	--print("type: "..args.type);
+	if type(AnimationList[args.type]) ~= "table" then
+		Animation:fromDescriptionToAnimation(args.type);
 	end
+
+	local desc = AnimationDescription[args.type];
+--[[
 	local grid = anim8.newGrid(desc.frameW, desc.frameH, desc.img:getWidth(), desc.img:getHeight()) --rewrite it on already exist table
 	local animation = anim8.newAnimation(grid(unpack(desc.frames)), desc.durations, desc.onLoop)
-	return {
+--]]
+	local ret = {
 		img = desc.img,
-		animation = animation,
+		x = args.x,
+		y = args.y,
+		animation = AnimationList[args.type]:clone(),
 		offsetx = desc.offsetx or 0,
 		offsety = desc.offsety or 0,
 		scalex = 1,
 		scaley = 1,
-	}
+	};
+	return Animation:new(ret);
 end
 
 function Animation:setWHfromFrameWithScale()
@@ -102,12 +120,13 @@ end
 
 
 function Animation:update(dt)
-	if self.animation then
-		self.animation:update(dt);
-	end
 	if self.followedObject ~= nil then
 		self.x = self.followedObject.x;
 		self.y = self.followedObject.y;
+	end
+
+	if self.animation then
+		self.animation:update(dt);
 	end
 end
 

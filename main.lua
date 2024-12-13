@@ -123,7 +123,6 @@ function love.draw()
 		asteroid:draw()
 	end
 
-
 	if not Pause:IsOnPause() then
 		print("Asteroids: "..#Asteroids)
 	end
