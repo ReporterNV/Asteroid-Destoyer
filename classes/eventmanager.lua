@@ -46,11 +46,6 @@ function EventManager:update(dt)
 	end
 
 	for _, animation in ipairs(Animations) do
-		for key, value in pairs(animation) do
-			print(key)
-			print(value)
-		end
-
 		if animation.animation.status == "paused" then
 			table.remove(Animations, _)
 		end
@@ -65,22 +60,8 @@ function EventManager:update(dt)
 		if asteroid:checkCollisionObj(Player) then
 			Player:takeHit();
 			table.remove(Asteroids, i);
-			--[[
-			DestroyAnimation = Animation:new({
-				img = ImageAsteroidDestroy,
-				frameW = 96,
-				frameH = 96,
-				frames = {'2-8', 1},
-				durations = 0.08,
-				x = asteroid.x,
-				y = asteroid.y,
-				offsetx = 29,
-				offsety = 32,
-				onLoop = "pauseAtEnd",
-			})
-			--]]
-			--table.insert(Animations, DestroyAnimation)
 			table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}))
+			table.insert(Animations, Animation:spawn({type = "ShieldUp", followedObject = Player}))
 		elseif asteroid.y > SCREEN_H then
 			table.remove(Asteroids, i);
 		end

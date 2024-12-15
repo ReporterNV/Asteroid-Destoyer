@@ -123,10 +123,7 @@ function love.draw()
 		asteroid:draw()
 	end
 
-	if not Pause:IsOnPause() then
-		print("Asteroids: "..#Asteroids)
-	end
-
+	print("Animation: "..#Animations);
 	Player:draw();
 
 	if Pause:IsOnPause() then
