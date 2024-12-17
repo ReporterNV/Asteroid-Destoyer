@@ -52,7 +52,7 @@ function love.load()
 	Background = require("classes.background")
 	Player = require("classes.player")
 	Animation = require("classes.animation");
-	Animation:init();
+	--Animation:init();
 	WindowManager = require("classes.window.windowmanager");
 	WindowManager:SetActiveWindow(Windows.Start);
 
@@ -112,7 +112,7 @@ function love.draw()
 		StartTimer = os.time();
 	end
 	Background:draw();
-
+	Player:draw();
 	for _, animation in ipairs(Animations) do
 		animation:draw();
 	end
@@ -125,8 +125,7 @@ function love.draw()
 		asteroid:draw()
 	end
 
-	print("Animation: "..#Animations);
-	Player:draw();
+	--print("Animation: "..#Animations);
 
 	if Pause:IsOnPause() then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");

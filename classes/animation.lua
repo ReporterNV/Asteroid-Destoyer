@@ -29,8 +29,8 @@ local AnimationDescription = {
 		scaley = 0.1,
 		onLoop = "pauseAtEnd",
 		callbacks = {
-			{"setOffsetCenterObject", Player},
-			{"setWHfromFrameWithScale"}
+			{"setOffsetCenterObject", {w = ImagePlayer:getWidth(), h = ImagePlayer:getHeight()}},
+			--{"setOffsetCenterObject", Player},
 		}
 	}
 }
@@ -38,7 +38,6 @@ local AnimationDescription = {
 local Animation = Object:new({})
 
 function Animation:init() --should be called after object for follow
-
 	for key, value in pairs(AnimationDescription) do
 		local grid = anim8.newGrid(value.frameW, value.frameH, value.img:getWidth(), value.img:getHeight())
 		local animation = anim8.newAnimation(grid(unpack(value.frames)), value.durations, value.onLoop);
@@ -59,19 +58,41 @@ function Animation:init() --should be called after object for follow
 		end
 
 	end
-
-
 end
 
-function Animation:fromDescriptionToAnimation(AnimationType)
+local function FromDescriptionToAnimation(AnimationType)
 	local desc = AnimationDescription[AnimationType]
-	if type(desc) ~= "table" then
+	if type(desc) ~= "table" then --add check other attr
 		error("Need set animation in AnimationDescription before call it")
-		return;
+		return; --why i use return here?
 	end
 	local grid = anim8.newGrid(desc.frameW, desc.frameH, desc.img:getWidth(), desc.img:getHeight()) --rewrite it on already exist table
 	local animation = anim8.newAnimation(grid(unpack(desc.frames)), desc.durations, desc.onLoop);
-	AnimationList[AnimationType] = animation;
+	local NewAnimation = Animation:new({
+		img = desc.img,
+		frameW = desc.frameW,
+		frameH = desc.frameH,
+		animation = animation,
+		scalex = desc.scalex or 1,
+		scaley = desc.scaley or 1,
+		offsetx = desc.offsetx or 0,
+		offsety = desc.offsety or 0,
+	})
+	NewAnimation:setWHfromFrameWithScale();
+	print("Try check if callbacks is table")
+	if type(desc.callbacks) == "table" then
+		print("FoundCallback")
+		for _, callback in ipairs(desc.callbacks)
+			do
+				print("Try call function: "..callback[1]);
+				print("args: ")
+				print(callback[2]);
+				--print(unpack(callback, 2));
+				NewAnimation[callback[1]](NewAnimation, callback[2])
+			end
+	end
+	--NewAnimation:setOffsetCenterObject()
+	AnimationList[AnimationType] = NewAnimation;
 	return AnimationList[AnimationType];
 end
 
@@ -84,11 +105,11 @@ function Animation:spawn(args)
 	end
 
 	if type(AnimationList[args.type]) ~= "table" then
-		print("Anaimtion not exist!");
-		Animation:fromDescriptionToAnimation(args.type); --rewrite with using preset without use description?
+		print("Animatio not exist!");
+		FromDescriptionToAnimation(args.type); --rewrite with using preset without use description?
 	end
 
-	local desc = AnimationDescription[args.type];
+	--[[local desc = AnimationDescription[args.type];
 	local ret = {
 		img = desc.img,
 		x = args.x,
@@ -100,6 +121,20 @@ function Animation:spawn(args)
 		scalex = desc.scalex or 1,
 		scaley = desc.scaley or 1,
 	};
+	--]]
+	local ret = AnimationList[args.type];
+	--print(AnimationList[args.type].offsetx);
+	--print("offsetx: "..ret.offsetx);
+	--print("offsety: "..ret.offsety);
+	if args.followedObject ~= nil then
+		ret.x = args.followedObject.x;
+		ret.y = args.followedObject.y;
+		ret.followedObject = args.followedObject;
+	else
+		ret.x = args.x;
+		ret.y = args.y;
+	end
+	ret.animation = AnimationList[args.type].animation:clone();
 	return Animation:new(ret);
 end
 
@@ -116,13 +151,13 @@ end
 
 
 function Animation:setOffsetCenterObject(FollowedObject)
+	FollowedObject = FollowedObject or self.followedObject
 	if FollowedObject == nil then
-		if Animation.followedObject ~= nil then
-			FollowedObject = self.followedObject;
-		else
-			error("Animation:setOffsetCenterObject Object for Center is nil");
-		end
+		error("Animation:setOffsetCenterObject Object for Center is nil");
 	end
+
+	print("Try set offsetx")
+	print("self.w = "..self.w)
 	if self.w ~= nil then
 		self.offsetx = (self.w - FollowedObject.w) / 2 / self.scalex;
 	end
@@ -147,6 +182,7 @@ end
 
 function Animation:draw()
 	if self.animation then
+		--print(self.offsetx)
 		self.animation:draw(self.img, self.x, self.y, nil, self.scalex,self.scaley, self.offsetx, self.offsety);
 	end
 end

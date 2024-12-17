@@ -60,7 +60,7 @@ function EventManager:update(dt)
 		if asteroid:checkCollisionObj(Player) then
 			Player:takeHit();
 			table.remove(Asteroids, i);
-			table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}))
+			--table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}))
 			table.insert(Animations, Animation:spawn({type = "ShieldUp", followedObject = Player}))
 		elseif asteroid.y > SCREEN_H then
 			table.remove(Asteroids, i);
