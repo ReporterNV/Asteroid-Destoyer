@@ -18,7 +18,7 @@ local AnimationDescription = {
 		scalex = 1,
 		scaley = 1,
 		onLoop = "pauseAtEnd",
-	},
+	}, -- i WANT REWRITE THIS AAGAIN!!!!!
 	["ShieldUp"] =  {
 		img = ImageShield,
 		frameW = 480,
@@ -28,7 +28,10 @@ local AnimationDescription = {
 		scalex = 0.1,
 		scaley = 0.1,
 		onLoop = "pauseAtEnd",
-		callbacks = {"setOffsetCenterObject","setWHfromFrameWithScale"};
+		callbacks = {
+			{"setOffsetCenterObject", Player},
+			{"setWHfromFrameWithScale"}
+		}
 	}
 }
 
@@ -42,13 +45,17 @@ function Animation:init() --should be called after object for follow
 		AnimationList[key] = {
 			img = value.img,
 			animation = animation,
+			frameW = value.frameW,
+			frameH = value.frameH,
 			offsetx = value.offsetx or 0,
 			offsety = value.offsety or 0,
 			scalex = value.scalex or 1,
 			scaley = value.scaley or 1,
 		}
 		if value.callbacks ~= nil then
-			
+			for _, callbackName in ipairs(value.callbacks) do
+				Animation[callbackName[1]](AnimationList[key],unpack(value.callbacks[2]))
+			end
 		end
 
 	end

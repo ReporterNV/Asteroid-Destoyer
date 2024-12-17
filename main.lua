@@ -51,6 +51,8 @@ function love.load()
 	Pause = require("classes.pause")
 	Background = require("classes.background")
 	Player = require("classes.player")
+	Animation = require("classes.animation");
+	Animation:init();
 	WindowManager = require("classes.window.windowmanager");
 	WindowManager:SetActiveWindow(Windows.Start);
 
