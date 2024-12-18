@@ -12,7 +12,7 @@ local AnimationDescription = {
 		frameW = 96,
 		frameH = 96,
 		frames = {'2-8', 1},
-		durations = 0.08,
+		durations = {0.08},
 		offsetx = 29,
 		offsety = 32,
 		scalex = 1,
@@ -23,11 +23,15 @@ local AnimationDescription = {
 		img = ImageShield,
 		frameW = 480,
 		frameH = 480,
-		frames = {'1-5', '1-4'},
-		durations = 0.08,
+		frames = {'1-5', '1-2', '1-2', 3},
+		durations = {0.1},
 		scalex = 0.1,
 		scaley = 0.1,
-		onLoop = "pauseAtEnd",
+		onLoop = function (self)
+			self.position = #self.frames
+			self.timer = self.totalDuration
+			self.status = "stoped"
+		end,
 		callbacks = {
 			{"setOffsetCenterObject", {w = ImagePlayer:getWidth(), h = ImagePlayer:getHeight()}},
 			--{"setOffsetCenterObject", Player},
@@ -40,7 +44,7 @@ local Animation = Object:new({})
 function Animation:init() --should be called after object for follow
 	for key, value in pairs(AnimationDescription) do
 		local grid = anim8.newGrid(value.frameW, value.frameH, value.img:getWidth(), value.img:getHeight())
-		local animation = anim8.newAnimation(grid(unpack(value.frames)), value.durations, value.onLoop);
+		local animation = anim8.newAnimation(grid(unpack(value.frames)), unpack(value.durations), value.onLoop);
 		AnimationList[key] = {
 			img = value.img,
 			animation = animation,
@@ -67,7 +71,7 @@ local function FromDescriptionToAnimation(AnimationType)
 		return; --why i use return here?
 	end
 	local grid = anim8.newGrid(desc.frameW, desc.frameH, desc.img:getWidth(), desc.img:getHeight()) --rewrite it on already exist table
-	local animation = anim8.newAnimation(grid(unpack(desc.frames)), desc.durations, desc.onLoop);
+	local animation = anim8.newAnimation(grid(unpack(desc.frames)), unpack(desc.durations), desc.onLoop);
 	local NewAnimation = Animation:new({
 		img = desc.img,
 		frameW = desc.frameW,
@@ -178,7 +182,6 @@ function Animation:update(dt)
 		self.animation:update(dt);
 	end
 end
-
 
 function Animation:draw()
 	if self.animation then
