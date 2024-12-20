@@ -33,6 +33,13 @@ windows: $(LOVE_FILES) $(BUILD_DIR)/$(GAME_NAME).love love-win64/love.exe
 	cat love-win64/love.exe $(BUILD_DIR)/$(GAME_NAME).love > $(BUILD_DIR)/windows/$(GAME_NAME).exe
 	chmod +x $(BUILD_DIR)/windows/$(GAME_NAME).exe
 
+web: 
+	#check https://github.com/Davidobot/love.js
+	#
+	#npx -c love.js Asteroid-Destroyer.love ./
+	#For test python -m SimpleHTTPServer 8000
+	#
+
 $(BUILD_DIR)/$(GAME_NAME).love: $(BUILD_DIR) $(GAME_FILES)
 	zip -9 -r $(BUILD_DIR)/$(GAME_NAME).love $(GAME_FILES)
 

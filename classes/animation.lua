@@ -25,8 +25,8 @@ local AnimationDescription = {
 		frameH = 480,
 		frames = {'1-5', '1-2', '1-2', 3},
 		durations = {0.1},
-		scalex = 0.1,
-		scaley = 0.1,
+		scalex = 0.11,
+		scaley = 0.11,
 		onLoop = function (self)
 			self.position = #self.frames
 			self.timer = self.totalDuration
@@ -186,7 +186,11 @@ end
 function Animation:draw()
 	if self.animation then
 		--print(self.offsetx)
+		love.graphics.setColor(1, 1, 1, 0.7)
+		--love.drawmode()
 		self.animation:draw(self.img, self.x, self.y, nil, self.scalex,self.scaley, self.offsetx, self.offsety);
+		love.graphics.setColor(1, 1, 1, 5)
+
 	end
 end
 
