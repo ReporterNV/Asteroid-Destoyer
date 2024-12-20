@@ -36,7 +36,7 @@ windows: $(LOVE_FILES) $(BUILD_DIR)/$(GAME_NAME).love love-win64/love.exe
 web: 
 	#check https://github.com/Davidobot/love.js
 	#
-	#npx -c love.js Asteroid-Destroyer.love ./
+	#npx love.js -c Asteroid-Destroyer.love ./
 	#For test python -m SimpleHTTPServer 8000
 	#
 
