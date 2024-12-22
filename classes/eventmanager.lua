@@ -31,6 +31,12 @@ function GameOver()
 	love.event.quit();
 end
 
+function EventManager:generateShield()
+	print("Call generateShield");
+	table.insert(Animations, Animation:spawn({type = "ShieldUp", followedObject = Player}))
+
+end
+
 function EventManager:playerShoot()
 	NewBullet = Bullet:spawn();
 	table.insert(Bullets, NewBullet)
@@ -61,7 +67,6 @@ function EventManager:update(dt)
 			Player:takeHit();
 			table.remove(Asteroids, i);
 			--table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}))
-			table.insert(Animations, Animation:spawn({type = "ShieldUp", followedObject = Player}))
 		elseif asteroid.y > SCREEN_H then
 			table.remove(Asteroids, i);
 		end

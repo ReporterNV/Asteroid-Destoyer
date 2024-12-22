@@ -18,7 +18,9 @@
 --[ ] add special interation when hold fire
 --[ ] add shield if dont fire?
 --[ ] add settings save
+--[ ] rewrite vars
 --[ ] fix reload bar if reload time is small
+--[ ] Fix coord in separate table and use it as link on table for followed object
 --[ ] REMAKE TODO LIST 
 --[ ] FIX ASTEROID OBJECT. Dont need keep link for image inside every object. Bcz need keep coord and other diff attr.
 --[ ] add this object type ? like type == "asteroid"

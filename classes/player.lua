@@ -19,15 +19,13 @@ Player.x = SCREEN_W / 2 - Player.w/2
 Player.ShootReload = 0.006;
 Player.ShootTimer = 0;
 Player.ShootOverflow = 0;
-Player.ShootExtra= 0;
+Player.ShootExtra = 0;
 
 Player.ShieldImg = ImageShield;
 Player.Shield = 0;
 Player.ShieldMax = 10;
 Player.ShieldTimer = 0;
 Player.ShieldReload = 1;
-
-
 
 --[[
 ShieldDown =  Animation:new({
@@ -76,7 +74,6 @@ end
 
 function Player:draw()
 	love.graphics.draw(self.img, self.x, self.y);
-	--ShieldUp:draw();
 	--reload bar
 	love.graphics.rectangle("line", self.x , self.y + self.h, self.w, self.h * 0.1)
 	local percent = self.ShootTimer / self.ShootReload;
@@ -127,14 +124,11 @@ function Player:update(dt, Keys)
 		self.ShootTimer = math.min(self.ShootTimer, self.ShootReload)
 	end
 
-	if self.Shield < self.ShieldMax then
-		if self.ShieldTimer < self.ShootReload then
-			self.ShieldTimer = self.ShieldTimer + dt;
-		else
-			self.Shield = self.Shield + 1;
-			self.ShieldTimer = 0;
-		end
-	end
+
+	--ShieldUp:setWHfromFrameWithScale()
+	--ShieldUp:setOffsetCenterObject(Player)
+
+	--ShieldUp:update(dt);
 	--[[
 	Img = love.graphics.newImage("Shield.png")
 	q = love.graphics.newQuad(480, 480*2, 480, 480, Img:getWidth(), Img:getHeight());
@@ -142,11 +136,14 @@ function Player:update(dt, Keys)
 	love.graphics.rectangle("line", 10 ,10, 480, 480);
 
 	--]]
-
-	--ShieldUp:setWHfromFrameWithScale()
-	--ShieldUp:setOffsetCenterObject(Player)
-
-	--ShieldUp:update(dt);
+	if self.Shield < self.ShieldMax  then --need rewrite
+		self.ShieldTimer = self.ShieldTimer + dt;
+		if self.ShieldTimer >= self.ShieldReload then
+			self.Shield = self.Shield + 1;
+			eventmanager:generateShield();
+			self.ShieldTimer = 0;
+		end
+	end
 end
 
 return Player

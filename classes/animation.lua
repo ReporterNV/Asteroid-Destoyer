@@ -21,7 +21,7 @@ local AnimationDescription = {
 	}, -- i WANT REWRITE THIS AAGAIN!!!!!
 	["ShieldUp"] =  {
 		img = ImageShield,
-		imgAlpha = 0.7,
+		imgAlpha = 0.6,
 		frameW = 480,
 		frameH = 480,
 		frames = {'1-5', '1-2', '1-2', 3},
@@ -84,6 +84,7 @@ local function FromDescriptionToAnimation(AnimationType)
 		offsetx = desc.offsetx or 0,
 		offsety = desc.offsety or 0,
 	})
+
 	NewAnimation:setWHfromFrameWithScale();
 	if type(desc.callbacks) == "table" then
 		for _, callback in ipairs(desc.callbacks)
@@ -100,11 +101,11 @@ function Animation:spawn(args)
 
 	if (args.x == nil or args.y == nil) and args.followedObject == nil then
 		error("x and y or followed object not set");
-		return
+		return --why i use return here?
 	end
 
 	if type(AnimationList[args.type]) ~= "table" then
-		print("Animation not exist!");
+		print("Warning: Animation not exist!");
 		FromDescriptionToAnimation(args.type); --rewrite with using preset without use description?
 	end
 
@@ -145,7 +146,6 @@ function Animation:setWHfromFrameWithScale()
 	if self.frameH ~= nil then
 		self.h = self.frameH * self.scaley;
 	end
-
 end
 
 
@@ -155,8 +155,6 @@ function Animation:setOffsetCenterObject(FollowedObject)
 		error("Animation:setOffsetCenterObject Object for Center is nil");
 	end
 
-	print("Try set offsetx")
-	print("self.w = "..self.w)
 	if self.w ~= nil then
 		self.offsetx = (self.w - FollowedObject.w) / 2 / self.scalex;
 	end
