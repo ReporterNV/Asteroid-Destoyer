@@ -16,14 +16,20 @@ local Player = Object:new({
 
 Player:setWHfromImage();
 Player.x = SCREEN_W / 2 - Player.w/2
-Player.shield = ImageShield;
-Player.Shield = 110;
 Player.ShootReload = 0.006;
 Player.ShootTimer = 0;
 Player.ShootOverflow = 0;
 Player.ShootExtra= 0;
 
---[ [
+Player.ShieldImg = ImageShield;
+Player.Shield = 0;
+Player.ShieldMax = 10;
+Player.ShieldTimer = 0;
+Player.ShieldReload = 1;
+
+
+
+--[[
 ShieldDown =  Animation:new({
 	img = ImageShield,
 	frameW = 480,
@@ -42,7 +48,7 @@ ShieldDown =  Animation:new({
 --]]
 
 
---[ [
+--[[
 ShieldUp =  Animation:new({
 	img = ImageShield,
 	frameW = 480,
@@ -60,7 +66,7 @@ ShieldUp =  Animation:new({
 --]]
 
 function Player:takeHit()
-	if self.Shield < 1 then
+	if self.Shield == 0 then
 		GameOver();
 	else
 		self.Shield = self.Shield - 1;
@@ -70,7 +76,7 @@ end
 
 function Player:draw()
 	love.graphics.draw(self.img, self.x, self.y);
-	ShieldUp:draw();
+	--ShieldUp:draw();
 	--reload bar
 	love.graphics.rectangle("line", self.x , self.y + self.h, self.w, self.h * 0.1)
 	local percent = self.ShootTimer / self.ShootReload;
@@ -120,6 +126,22 @@ function Player:update(dt, Keys)
 	else
 		self.ShootTimer = math.min(self.ShootTimer, self.ShootReload)
 	end
+
+	if self.Shield < self.ShieldMax then
+		if self.ShieldTimer < self.ShootReload then
+			self.ShieldTimer = self.ShieldTimer + dt;
+		else
+			self.Shield = self.Shield + 1;
+			self.ShieldTimer = 0;
+		end
+	end
+	--[[
+	Img = love.graphics.newImage("Shield.png")
+	q = love.graphics.newQuad(480, 480*2, 480, 480, Img:getWidth(), Img:getHeight());
+	love.graphics.draw(Img, q, 10, 10);
+	love.graphics.rectangle("line", 10 ,10, 480, 480);
+
+	--]]
 
 	--ShieldUp:setWHfromFrameWithScale()
 	--ShieldUp:setOffsetCenterObject(Player)

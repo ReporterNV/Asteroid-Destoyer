@@ -21,6 +21,7 @@ local AnimationDescription = {
 	}, -- i WANT REWRITE THIS AAGAIN!!!!!
 	["ShieldUp"] =  {
 		img = ImageShield,
+		imgAlpha = 0.7,
 		frameW = 480,
 		frameH = 480,
 		frames = {'1-5', '1-2', '1-2', 3},
@@ -74,6 +75,7 @@ local function FromDescriptionToAnimation(AnimationType)
 	local animation = anim8.newAnimation(grid(unpack(desc.frames)), unpack(desc.durations), desc.onLoop);
 	local NewAnimation = Animation:new({
 		img = desc.img,
+		imgAlpha = desc.imgAlpha or nil,
 		frameW = desc.frameW,
 		frameH = desc.frameH,
 		animation = animation,
@@ -83,19 +85,12 @@ local function FromDescriptionToAnimation(AnimationType)
 		offsety = desc.offsety or 0,
 	})
 	NewAnimation:setWHfromFrameWithScale();
-	print("Try check if callbacks is table")
 	if type(desc.callbacks) == "table" then
-		print("FoundCallback")
 		for _, callback in ipairs(desc.callbacks)
 			do
-				print("Try call function: "..callback[1]);
-				print("args: ")
-				print(callback[2]);
-				--print(unpack(callback, 2));
-				NewAnimation[callback[1]](NewAnimation, callback[2])
+				NewAnimation[callback[1]](NewAnimation, unpack(callback, 2))
 			end
 	end
-	--NewAnimation:setOffsetCenterObject()
 	AnimationList[AnimationType] = NewAnimation;
 	return AnimationList[AnimationType];
 end
@@ -109,7 +104,7 @@ function Animation:spawn(args)
 	end
 
 	if type(AnimationList[args.type]) ~= "table" then
-		print("Animatio not exist!");
+		print("Animation not exist!");
 		FromDescriptionToAnimation(args.type); --rewrite with using preset without use description?
 	end
 
@@ -185,12 +180,14 @@ end
 
 function Animation:draw()
 	if self.animation then
-		--print(self.offsetx)
-		love.graphics.setColor(1, 1, 1, 0.7)
 		--love.drawmode()
-		self.animation:draw(self.img, self.x, self.y, nil, self.scalex,self.scaley, self.offsetx, self.offsety);
-		love.graphics.setColor(1, 1, 1, 5)
-
+		if self.imgAlpha ~= nil then --bcz idk how much time need for love.graphics.setColor so better do it once
+			love.graphics.setColor(1, 1, 1, self.imgAlpha)
+			self.animation:draw(self.img, self.x, self.y, nil, self.scalex,self.scaley, self.offsetx, self.offsety);
+			love.graphics.setColor(1, 1, 1, 5)
+		else
+			self.animation:draw(self.img, self.x, self.y, nil, self.scalex,self.scaley, self.offsetx, self.offsety);
+		end
 	end
 end
 

@@ -100,7 +100,7 @@ function love.update(dt)
 		EventManager:update(dt)
 		Background:update(dt)
 	end
-	collectgarbage("collect");
+	--collectgarbage("collect");
 	if DEBUG ==true then
 		UpdateTimer = os.clock() - StartTimer;
 	end
