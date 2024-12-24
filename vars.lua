@@ -6,6 +6,23 @@ CanPressPause = true;
 --UserPause = true;
 --AFKPause = false;
 
+function Print_func_name()
+	local info = debug.getinfo(2,"n")
+	if info and info.name then
+		--print(info.name);
+		return(info.name);
+	end
+end
+
+function Print_table_name(table)
+	for name, pointer in pairs(_G) do
+		if pointer == table then
+			--print(name);
+			return name;
+		end
+	end
+end
+
 ImagesDir = "images/"
 PathPlayer          = ImagesDir .. "spaceship.png"
 PathBullet          = ImagesDir .. "bullet.png"

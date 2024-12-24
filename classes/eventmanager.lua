@@ -43,6 +43,8 @@ function EventManager:playerShoot()
 end
 
 function EventManager:update(dt)
+	local name = Print_table_name(self);
+	print(name..":"..Print_func_name())
 	AsteroidTimer = AsteroidTimer + dt;
 
 	if AsteroidTimer > AsteroidInterval then
@@ -85,22 +87,9 @@ function EventManager:update(dt)
 		for j, asteroid in ipairs(Asteroids) do
 			if asteroid:checkCollisionObj(bullet) then
 				Score = Score + 1;
-				Player.Shield = Player.Shield + 1;
 				if asteroid.destroySound ~= nil then
 					asteroid.destroySound:play();
 				end
-				local DestroyAnimation = Animation:new({
-					img = ImageAsteroidDestroy,
-					frameW = 96,
-					frameH = 96,
-					frames = {'2-8', 1},
-					durations = 0.08,
-					x = asteroid.x,
-					y = asteroid.y,
-					offsetx = 29,
-					offsety = 32,
-					onLoop = "pauseAtEnd",
-				})
 				local anim = Animation:spawn({
 					type = "AsteroidDestroy",
 					x = asteroid.x,
@@ -108,7 +97,6 @@ function EventManager:update(dt)
 				})
 
 				table.insert(Animations, anim);
-				--table.insert(Animations, DestroyAnimation);
 				table.remove(Asteroids, j)
 				table.remove(Bullets, i)
 				break;

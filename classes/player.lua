@@ -25,7 +25,7 @@ Player.ShieldImg = ImageShield;
 Player.Shield = 0;
 Player.ShieldMax = 10;
 Player.ShieldTimer = 0;
-Player.ShieldReload = 1;
+Player.ShieldReload = 5;
 
 --[[
 ShieldDown =  Animation:new({
@@ -141,7 +141,7 @@ function Player:update(dt, Keys)
 		if self.ShieldTimer >= self.ShieldReload then
 			self.Shield = self.Shield + 1;
 			eventmanager:generateShield();
-			self.ShieldTimer = 0;
+			self.ShieldTimer = self.ShieldTimer - self.ShieldReload;
 		end
 	end
 end
