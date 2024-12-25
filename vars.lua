@@ -5,6 +5,27 @@ Vsync = 1
 CanPressPause = true;
 --UserPause = true;
 --AFKPause = false;
+--[[
+//gcc -shared -fPIC -o librdtsc.so rdtsc.c
+#include <stdint.h>
+uint64_t rdtsc() {
+    uint32_t lo, hi;
+    __asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
+    return ((uint64_t)hi << 32) | lo;
+}
+--]]
+local ffi = require("ffi")
+
+ffi.cdef[[
+    typedef uint64_t ticks;
+    ticks rdtsc();
+]]
+
+local librdtsc = ffi.load("./librdtsc.so")
+
+local function getCPUCycles()
+    return librdtsc.rdtsc()
+end
 
 function Print_func_name()
 	local info = debug.getinfo(2,"n")
