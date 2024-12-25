@@ -2,7 +2,6 @@ local Object = require("classes.object")
 local Animation = require("classes.animation")
 require("vars")
 local eventmanager = require("classes.eventmanager")
-
 local Player = Object:new({
 	x = SCREEN_W / 2,
 	y = 500,

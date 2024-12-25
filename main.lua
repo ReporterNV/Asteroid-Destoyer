@@ -30,14 +30,16 @@
 
 _G.love = love;
 local DEBUG = true; --Texture memory: 20172KB
+if DEBUG then
+	FUNC_TIME = {}
+	--local profile = require("./profile");
+	profile = require ("profile")
+end
 require("vars")
 local LoadTimer, UpdateTimer, DrawTimer;
 
 
 function love.load()
-	if DEBUG == true then
-		StartTimer = os.clock();
-	end
 	love.window.setTitle("Asteroid destroyer");
 	love.window.setMode(SCREEN_W, SCREEN_H);
 	love.window.setVSync(Vsync);
@@ -72,9 +74,6 @@ function love.load()
 	Background:init();
 
 	Score = 0;
-	if DEBUG == true then
-		LoadTimer = os.clock() - StartTimer;
-	end
 end
 
 function love.keypressed(key)
@@ -91,9 +90,6 @@ function love.quit()
 end
 
 function love.update(dt)
-	if DEBUG == true then
-		StartTimer = os.clock();
-	end
 	WindowManager:update(dt, Keys);
 
 	Pause:update(dt, Keys);
@@ -103,16 +99,10 @@ function love.update(dt)
 		Background:update(dt)
 	end
 	--collectgarbage("collect");
-	if DEBUG ==true then
-		UpdateTimer = os.clock() - StartTimer;
-	end
 end
 
 --local NeedPrintDBG = true;
 function love.draw()
-	if DEBUG == true then
-		StartTimer = os.time();
-	end
 	Background:draw();
 	Player:draw();
 	for _, animation in ipairs(Animations) do
@@ -126,7 +116,6 @@ function love.draw()
 	for _, asteroid in ipairs(Asteroids) do
 		asteroid:draw()
 	end
-
 	--print("Animation: "..#Animations);
 
 	if Pause:IsOnPause() then
@@ -138,18 +127,12 @@ function love.draw()
 
 	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10);
 
-	--uncomment if need dbg. ADD DBG MODE?
 	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
 	local stats = love.graphics.getStats();
 	love.graphics.printf("Shield: " .. tostring(Player.Shield), 10, 40, 60, "left");
-	--
 	if DEBUG == true then
 		love.graphics.print("MEM: " .. collectgarbage("count") .. "KB", 10, 140);
 		love.graphics.print("Texture MEM: " ..  stats.texturememory / 1024 .. "KB", 10, 160);
-		DrawTimer = os.time() - StartTimer;
-		love.graphics.printf("LoadTimer: " .. tostring(LoadTimer), 10, 25, 90, "left");
-		love.graphics.printf("UpdateTimer: " .. tostring(UpdateTimer), 10, 55, 90, "left");
-		love.graphics.printf("DrawTimer: " .. tostring(DrawTimer), 10, 95, 90, "left");
 	end
 end
 

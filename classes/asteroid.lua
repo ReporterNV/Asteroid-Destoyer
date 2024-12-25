@@ -14,7 +14,7 @@ function Asteroid:new(args)
 	ChildObj.h = args.h or 1;
 	ChildObj.speedX = 0;
 	ChildObj.speedY = args.speedY or 0;
-	ChildObj.img = ImageAsteroid;
+	ChildObj.img = ImageAsteroid;--use quad instead
 	ChildObj.destroySound = SndDestoyAsteroid;
 	ChildObj.callback = nil;
 	self.__index = self;

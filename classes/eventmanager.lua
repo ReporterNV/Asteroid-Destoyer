@@ -43,8 +43,6 @@ function EventManager:playerShoot()
 end
 
 function EventManager:update(dt)
-	local name = Print_table_name(self);
-	print(name..":"..Print_func_name())
 	AsteroidTimer = AsteroidTimer + dt;
 
 	if AsteroidTimer > AsteroidInterval then
