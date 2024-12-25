@@ -23,6 +23,11 @@ function Print_table_name(table)
 	end
 end
 
+function Print_table_method(table)
+	local table_name = Print_table_name(table);
+	local func_name = Print_func_name();
+end
+
 ImagesDir = "images/"
 PathPlayer          = ImagesDir .. "spaceship.png"
 PathBullet          = ImagesDir .. "bullet.png"
