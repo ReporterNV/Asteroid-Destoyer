@@ -43,8 +43,8 @@ function EventManager:playerShoot()
 end
 
 function EventManager:update(dt)
-	local name = Print_table_name(self);
-	print(name..":"..Print_func_name())
+	local name = Print_table_method(self);
+	local start = GetCPUCycles();
 	AsteroidTimer = AsteroidTimer + dt;
 
 	if AsteroidTimer > AsteroidInterval then
@@ -103,6 +103,7 @@ function EventManager:update(dt)
 			end
 		end
 	end
+	FUNC_TIME[name] = Ticks_in_form(tostring( start - GetCPUCycles()));
 end
 
 return EventManager;

@@ -30,6 +30,9 @@
 
 _G.love = love;
 local DEBUG = true; --Texture memory: 20172KB
+if DEBUG then
+	FUNC_TIME = {}
+end
 require("vars")
 local LoadTimer, UpdateTimer, DrawTimer;
 
@@ -106,10 +109,16 @@ function love.update(dt)
 	if DEBUG ==true then
 		UpdateTimer = os.clock() - StartTimer;
 	end
+
+	for name, val in pairs(FUNC_TIME) do
+		print(name..": "..val);
+	end
 end
 
 --local NeedPrintDBG = true;
 function love.draw()
+	local start = GetCPUCycles();
+
 	if DEBUG == true then
 		StartTimer = os.time();
 	end
@@ -126,7 +135,6 @@ function love.draw()
 	for _, asteroid in ipairs(Asteroids) do
 		asteroid:draw()
 	end
-
 	--print("Animation: "..#Animations);
 
 	if Pause:IsOnPause() then
@@ -143,7 +151,7 @@ function love.draw()
 	local stats = love.graphics.getStats();
 	love.graphics.printf("Shield: " .. tostring(Player.Shield), 10, 40, 60, "left");
 	--
-	if DEBUG == true then
+	if DEBUG ~= true then
 		love.graphics.print("MEM: " .. collectgarbage("count") .. "KB", 10, 140);
 		love.graphics.print("Texture MEM: " ..  stats.texturememory / 1024 .. "KB", 10, 160);
 		DrawTimer = os.time() - StartTimer;
@@ -151,5 +159,7 @@ function love.draw()
 		love.graphics.printf("UpdateTimer: " .. tostring(UpdateTimer), 10, 55, 90, "left");
 		love.graphics.printf("DrawTimer: " .. tostring(DrawTimer), 10, 95, 90, "left");
 	end
+	local finish = GetCPUCycles();
+	print(Print_table_method()..": "..Ticks_in_form(tostring(finish - start)));
 end
 

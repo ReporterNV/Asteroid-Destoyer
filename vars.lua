@@ -23,7 +23,7 @@ ffi.cdef[[
 
 local librdtsc = ffi.load("./librdtsc.so")
 
-local function getCPUCycles()
+function GetCPUCycles()
     return librdtsc.rdtsc()
 end
 
@@ -46,7 +46,11 @@ end
 
 function Print_table_method(table)
 	local table_name = Print_table_name(table);
-	local func_name = Print_func_name();
+
+	local info = debug.getinfo(2,"n")
+
+	local func_name = info.name or "";
+	return (table_name or "") .. ":" .. func_name;
 end
 
 ImagesDir = "images/"
@@ -74,8 +78,18 @@ SndAttack             = love.audio.newSource(PathAttack, "static");
 SndBackgroundMusic    = love.audio.newSource(PathBackgroundMusic, "stream");
 
 
-
 MasterSoundLV = 0
 BGM = 0
 SoundsLv = 0
 love.audio.setVolume(MasterSoundLV);
+local start = GetCPUCycles();
+
+local finish = GetCPUCycles();
+function Ticks_in_form(number_str)
+	local format = number_str:reverse():gsub("(%d%d%d)", "%1 "):reverse();
+	return format:match("^%s*(.-)%s*$"):gsub("ULL$", "");
+end
+print("Load time: "..string.format(tostring(finish - start)));
+print("Load time: "..Ticks_in_form(string.format(tostring(finish - start))));
+
+
