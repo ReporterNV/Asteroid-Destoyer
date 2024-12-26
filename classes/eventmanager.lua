@@ -68,20 +68,30 @@ function EventManager:update(dt)
 		if asteroid:checkCollisionObj(Player) then
 			Player:takeHit();
 			table.remove(Asteroids, i);
-			--table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}))
+			table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}))
 		elseif asteroid.y > SCREEN_H then
 			table.remove(Asteroids, i);
 		end
 	end
 
 	--for i, bullet in ipairs(Bullets) do
-
-	for i = #Bullets, 1, -1 do
+	local Bullets_leng = #Bullets;
+	for i = Bullets_leng, 1, -1 do
 		local bullet = Bullets[i];
 		bullet.y = bullet.y + bullet.speedY*dt;
 
 		if bullet.y + bullet.h < 0 then
 			table.remove(Bullets, i);
+			--[[
+			if i == Bullets_leng then
+				Bullets[Bullets_leng] = nil;
+			else
+				Bullets[i] = Bullets[Bullets_leng];
+				Bullets[Bullets_leng] = nil;
+			end
+			Bullets_leng = Bullets_leng - 1;
+			--]]
+
 		end
 
 		for j, asteroid in ipairs(Asteroids) do
@@ -103,7 +113,7 @@ function EventManager:update(dt)
 			end
 		end
 	end
-	FUNC_TIME[name] = Ticks_in_form(tostring( start - GetCPUCycles()));
+	FUNC_TIME[name] = Ticks_in_form(tostring(GetCPUCycles() - start));
 end
 
 return EventManager;

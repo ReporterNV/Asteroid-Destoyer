@@ -22,10 +22,10 @@ Player.ShootOverflow = 0;
 Player.ShootExtra = 0;
 
 Player.ShieldImg = ImageShield;
-Player.Shield = 0;
-Player.ShieldMax = 10;
+Player.Shield = 1000000;
+Player.ShieldMax = 1000000
 Player.ShieldTimer = 0;
-Player.ShieldReload = 5;
+Player.ShieldReload = 1;
 
 --[[
 ShieldDown =  Animation:new({

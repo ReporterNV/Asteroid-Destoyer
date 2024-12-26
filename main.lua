@@ -104,21 +104,29 @@ function love.update(dt)
 		Player:update(dt, Keys)
 		EventManager:update(dt)
 		Background:update(dt)
+		--[[
+		local start_tick = GetCPUCycles();
+		local end_tick = GetCPUCycles();
+		-]]
+		--print("Load time: "..Ticks_in_form(string.format(tostring(end_tick - start_tick))));
 	end
-	--collectgarbage("collect");
+	collectgarbage("collect");
+	local start_tick = GetCPUCycles();
+	local end_tick = GetCPUCycles();
+	print("Load time: "..Ticks_in_form(string.format(tostring(end_tick - start_tick))));
+--[[
+		for name, val in pairs(FUNC_TIME) do
+			print(name..": "..val);
+		end
+--]]
 	if DEBUG ==true then
 		UpdateTimer = os.clock() - StartTimer;
 	end
 
-	for name, val in pairs(FUNC_TIME) do
-		print(name..": "..val);
-	end
 end
 
 --local NeedPrintDBG = true;
 function love.draw()
-	local start = GetCPUCycles();
-
 	if DEBUG == true then
 		StartTimer = os.time();
 	end
@@ -140,6 +148,7 @@ function love.draw()
 	if Pause:IsOnPause() then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
 	end
+
 	if Pause:IsOnPause() then
 		WindowManager:draw();
 	end
@@ -159,7 +168,5 @@ function love.draw()
 		love.graphics.printf("UpdateTimer: " .. tostring(UpdateTimer), 10, 55, 90, "left");
 		love.graphics.printf("DrawTimer: " .. tostring(DrawTimer), 10, 95, 90, "left");
 	end
-	local finish = GetCPUCycles();
-	print(Print_table_method()..": "..Ticks_in_form(tostring(finish - start)));
 end
 
