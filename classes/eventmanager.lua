@@ -78,11 +78,17 @@ function EventManager:update(dt)
 	local Bullets_leng = #Bullets;
 	for i = Bullets_leng, 1, -1 do
 		local bullet = Bullets[i];
+		if bullet == nil then
+			print("leng: "..Bullets_leng);
+			print("i: "..i)
+		else
 		bullet.y = bullet.y + bullet.speedY*dt;
 
 		if bullet.y + bullet.h < 0 then
-			table.remove(Bullets, i);
-			--[[
+
+
+			--table.remove(Bullets, i);
+			--[ [
 			if i == Bullets_leng then
 				Bullets[Bullets_leng] = nil;
 			else
@@ -91,29 +97,32 @@ function EventManager:update(dt)
 			end
 			Bullets_leng = Bullets_leng - 1;
 			--]]
+			--[[
+		else
+			for j, asteroid in ipairs(Asteroids) do
+				if asteroid:checkCollisionObj(bullet) then
+					Score = Score + 1;
+					if asteroid.destroySound ~= nil then
+						asteroid.destroySound:play();
+					end
+					local anim = Animation:spawn({
+						type = "AsteroidDestroy",
+						x = asteroid.x,
+						y = asteroid.y,
+					})
 
-		end
-
-		for j, asteroid in ipairs(Asteroids) do
-			if asteroid:checkCollisionObj(bullet) then
-				Score = Score + 1;
-				if asteroid.destroySound ~= nil then
-					asteroid.destroySound:play();
+					table.insert(Animations, anim);
+					table.remove(Asteroids, j)
+					table.remove(Bullets, i)
+					break;
 				end
-				local anim = Animation:spawn({
-					type = "AsteroidDestroy",
-					x = asteroid.x,
-					y = asteroid.y,
-				})
-
-				table.insert(Animations, anim);
-				table.remove(Asteroids, j)
-				table.remove(Bullets, i)
-				break;
 			end
 		end
+		--]]
 	end
-	FUNC_TIME[name] = Ticks_in_form(tostring(GetCPUCycles() - start));
+end
+end
+FUNC_TIME[name] = Ticks_in_form(tostring(GetCPUCycles() - start));
 end
 
 return EventManager;

@@ -113,7 +113,7 @@ function love.update(dt)
 	collectgarbage("collect");
 	local start_tick = GetCPUCycles();
 	local end_tick = GetCPUCycles();
-	print("Load time: "..Ticks_in_form(string.format(tostring(end_tick - start_tick))));
+	--print("Load time: "..Ticks_in_form(string.format(tostring(end_tick - start_tick))));
 --[[
 		for name, val in pairs(FUNC_TIME) do
 			print(name..": "..val);

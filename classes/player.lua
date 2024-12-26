@@ -16,7 +16,7 @@ local Player = Object:new({
 
 Player:setWHfromImage();
 Player.x = SCREEN_W / 2 - Player.w/2
-Player.ShootReload = 0.006;
+Player.ShootReload = 0.0006;
 Player.ShootTimer = 0;
 Player.ShootOverflow = 0;
 Player.ShootExtra = 0;
