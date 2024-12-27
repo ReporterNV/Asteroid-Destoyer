@@ -27,7 +27,8 @@ function Asteroid:spawn()
 	asteroid.x = math.random(Player.w, SCREEN_W - (asteroid.w or 0))
 	asteroid.y = -asteroid.h;
 	asteroid.speedY = math.random(50, 200)
-	table.insert(Asteroids, asteroid)
+	--table.insert(Asteroids, asteroid)
+	return asteroid
 end
 
 function Asteroid:destroy(numberObj)

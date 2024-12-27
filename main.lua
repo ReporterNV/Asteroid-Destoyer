@@ -65,11 +65,13 @@ function love.load()
 	--Bullet = require("classes.bullet");
 
 	EventManager:init({
-		Objects,
-		Asteroids,
-		Bullets,
-		Animations,
-		Player
+		["Objects"] = Objects,
+		["Asteroids"] = Asteroids,
+		["Bullets"] = Bullets,
+		["Animations"] = Animations,
+		["Player"] = Player,
+		--Bullets,
+		--Animations,
 	})
 
 	Background:init();
@@ -93,6 +95,7 @@ function love.quit()
 	print("SCORE: " .. tostring(Score));
 end
 
+	local res_max = 0;
 function love.update(dt)
 	if DEBUG == true then
 		StartTimer = os.clock();
@@ -102,18 +105,20 @@ function love.update(dt)
 	Pause:update(dt, Keys);
 	if not Pause:IsOnPause() then
 		Player:update(dt, Keys)
+		local start_tick = GetCPUCycles();
 		EventManager:update(dt)
+		local end_tick = GetCPUCycles();
+		local result = end_tick - start_tick;
+		print("Load time: "..Ticks_in_form(string.format(tostring(result))));
+		if result > (res_max or 0) then
+			res_max = result
+		end
+		print("Max: "..tostring(res_max));
 		Background:update(dt)
 		--[[
-		local start_tick = GetCPUCycles();
-		local end_tick = GetCPUCycles();
 		-]]
-		--print("Load time: "..Ticks_in_form(string.format(tostring(end_tick - start_tick))));
 	end
 	collectgarbage("collect");
-	local start_tick = GetCPUCycles();
-	local end_tick = GetCPUCycles();
-	--print("Load time: "..Ticks_in_form(string.format(tostring(end_tick - start_tick))));
 --[[
 		for name, val in pairs(FUNC_TIME) do
 			print(name..": "..val);

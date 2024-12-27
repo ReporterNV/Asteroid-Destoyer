@@ -28,7 +28,7 @@ function Bullet:spawn(BulletType)
 	bullet.x = Player.x + Player.w/2 - bullet.w/2;
 	bullet.y = Player.y
 
-	if bullet.spawnSound ~= nil then -- should i do it if spawn a lot?
+	if bullet.spawnSound ~= nil then -- should check if spawn a lot?
 		bullet.spawnSound:play();
 	end
 	return bullet;
