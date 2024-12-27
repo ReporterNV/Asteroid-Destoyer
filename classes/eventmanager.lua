@@ -44,8 +44,9 @@ function EventManager:generateShield()
 end
 
 function EventManager:playerShoot()
-	NewBullet = Bullet:spawn();
-	table.insert(Bullets, NewBullet)
+	local NewBullet = Bullet:spawn();
+	--table.insert(Bullets, NewBullet)
+	Bullets[BulletsL] = NewBullet;
 	BulletsL = BulletsL + 1;
 end
 
@@ -73,15 +74,24 @@ function EventManager:update(dt)
 		asteroid:update(dt);
 		if asteroid:checkCollisionObj(Player) then
 			Player:takeHit();
-			table.remove(Asteroids, i);
+			--table.remove(Asteroids, i);
+			if i ~= AsteroidsL then
+				Asteroids[i] = Asteroids[AsteroidsL];
+			end
+
+			Asteroids[AsteroidsL] = nil;
 			AsteroidsL = AsteroidsL - 1;
 
 			table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}))
 
 		elseif asteroid.y > SCREEN_H then
+			if i ~= AsteroidsL then
+				Asteroids[i] = Asteroids[AsteroidsL];
+			end
 
+			Asteroids[AsteroidsL] = nil;
 			AsteroidsL = AsteroidsL - 1;
-			table.remove(Asteroids, i);
+			--table.remove(Asteroids, i);
 		end
 	end
 
@@ -117,8 +127,15 @@ function EventManager:update(dt)
 						})
 
 						table.insert(Animations, anim);
-						AsteroidsL = AsteroidsL - 1;
-						table.remove(Asteroids, j)
+
+						if j ~= AsteroidsL then --not sure if need do it.
+							Asteroids[j] = Asteroids[AsteroidsL];
+						end
+
+						Asteroids[AsteroidsL] = nil;
+						AsteroidsL = AsteroidsL - 1;	
+						--table.remove(Asteroids, j)
+
 
 						--table.remove(Bullets, i) --sorry but i need profit
 						if i ~= BulletsL then
