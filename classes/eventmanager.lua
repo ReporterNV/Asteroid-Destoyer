@@ -9,24 +9,17 @@ local AsteroidTimer = 1;
 local AsteroidInterval = 0.0001;
 
 local Objects;
-local ObjectsL;
 local Asteroids;
-local AsteroidsL;
 local Bullets;
-local BulletsL;
 local Animations;
-local AnimationsL;
 local Player;
 
 function EventManager:init(args)
 	args = args or {};
 	Objects = args.Objects or {};
 	Asteroids = args.Asteroids or {};
-
 	Bullets = args.Bullets or {};
-
 	Animations = args.Animations or Animations;
-
 	Player = args.Player;
 end
 
@@ -48,22 +41,12 @@ function EventManager:playerShoot()
 end
 
 function EventManager:update(dt)
-	AsteroidTimer = AsteroidTimer + dt;
-
-	if AsteroidTimer >= AsteroidInterval then
-		--Spawn depend on FPS. Should i fix it?
-		AsteroidTimer = 0;
-		table.insert(Asteroids, Asteroid:spawn())
-	end
-
 	for _, animation in ipairs(Animations) do
 		if animation.animation.status == "paused" then
 			table.remove(Animations, _)
 		end
 		animation:update(dt);
 	end
-	--avg fps 400
-
 	for i = #Asteroids, 1, -1 do
 		local asteroid = Asteroids[i]
 		asteroid:update(dt);
@@ -97,12 +80,20 @@ function EventManager:update(dt)
 
 					table.insert(Animations, anim);
 					table.remove(Asteroids, j)
-					table.remove(Bullets, i) --sorry but i need profit
+					table.remove(Bullets, i)
 					break;
 				end
 			end
 		end
 	end
+	AsteroidTimer = AsteroidTimer + dt;
+
+	if AsteroidTimer >= AsteroidInterval then
+		--Spawn depend on FPS. Should i fix it?
+		AsteroidTimer = 0;
+		table.insert(Asteroids, Asteroid:spawn())
+	end
 end
+
 
 return EventManager;

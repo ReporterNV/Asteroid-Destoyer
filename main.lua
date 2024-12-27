@@ -136,18 +136,21 @@ function love.draw()
 		StartTimer = os.time();
 	end
 	Background:draw();
-	Player:draw();
-	for _, animation in ipairs(Animations) do
-		animation:draw();
-	end
 
 	for _, bullet in ipairs(Bullets) do
 		bullet:draw();
 	end
 
+	Player:draw();
+
+	for _, animation in ipairs(Animations) do
+		animation:draw();
+	end
+
 	for _, asteroid in ipairs(Asteroids) do
 		asteroid:draw()
 	end
+
 	--print("Animation: "..#Animations);
 
 	if Pause:IsOnPause() then
