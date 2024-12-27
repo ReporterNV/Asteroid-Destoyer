@@ -57,4 +57,21 @@ function Object:checkCollisionObj(Obj2)
 	);
 end
 
+function Object:insert(table)
+	local length = table[0] or #table;
+	length = length + 1;
+	table[length] = self;
+	table[0] = length;
+end
+
+function Object:remove(table, index)
+	local length = table[0] or #table;
+	if index ~= length then
+		table[index]= table[length];
+	end
+	table[length] = nil;
+	table[0] = length - 1;
+end
+
+
 return Object;
