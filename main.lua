@@ -1,42 +1,38 @@
---[[
---TODO:
---[ ] setting + control sound
---[ ] Try fix animatio
---[ ] fix SCORE count multiple times when player shoot fast
---[ ] add bullet type like mine?
---[ ] add event after reach end of background 
---[ ] add progress in weapon
---[ ] unbreakable asteroid(but for shield they will be add as reward if player find it)
---[ ] add spectre bullet? destroy random asteroid
---[ ] make windows looks better
---[ ] fix asteroid destroy method
---[ ] add ally fallen ships which one we should not destroy bcz pilots inside still alive
---[ ] add asteroids rotated on 90 and 180 ^0?
---[ ] move relaod bar in other class for not recalc percent. just calc once and then step by step add delta?
---[x] Need rewrite animation for rows. bcz need takes args in (...) format.
---[ ] rename Windows in WindowList; add function for init them
---[ ] add special interation when hold fire
---[ ] add shield if dont fire?
---[ ] add settings save
---[ ] rewrite vars
---[ ] fix reload bar if reload time is small
---[ ] Fix coord in separate table and use it as link on table for followed object
---[ ] REMAKE TODO LIST 
---[ ] FIX ASTEROID OBJECT. Dont need keep link for image inside every object. Bcz need keep coord and other diff attr.
---[ ] add this object type ? like type == "asteroid"
---[ ] move editable vars by menu in separate table?
---[ ] CLEAN CODE!!!!! 
+--[[ TODO:
+--General Features
+[ ] Sound settings and control
+[ ] Add settings saving
+[ ] Fix animation
+[ ] Fix asteroid destruction method
+[ ] Rewrite vars
+[ ] Store coordinates in a separate table and use them as references for objects that follow them. --not sure
+[ ] Refactor the asteroid object to remove the image link inside every object, keeping only the coordinates and other necessary attributes.
+[ ] Move editable variables to a separate table via the menu --not sure
+[ ] Clean the code
+
+Gameplay Features
+[ ] Add bullet types (e.g., mines)
+[ ] Add shield when not firing
+[ ] Add spectre bullets that destroy random asteroids
+[ ] Add unbreakable asteroids (with shield rewards) ????
+[ ] Add fallen ally ships that should not be destroyed
+[ ] Add event when reaching the end of the background
+[ ] Add weapon progression
+[ ] Add asteroids rotated at 90° and 180°
+[ ] Add special interaction when holding fire
+
+--UI
+[ ] Improve window appearance
+[ ] Rename "Windows" to "WindowList" and add initialization function
 --]]
 
 _G.love = love;
 local DEBUG = false; --Texture memory: 20172KB
 if DEBUG then
 	FUNC_TIME = {}
-	--local profile = require("./profile");
 	profile = require ("libs.profile")
 end
 require("vars")
-local LoadTimer, UpdateTimer, DrawTimer;
 
 
 function love.load()
