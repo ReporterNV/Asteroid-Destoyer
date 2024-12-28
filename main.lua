@@ -29,11 +29,11 @@
 --]]
 
 _G.love = love;
-local DEBUG = true; --Texture memory: 20172KB
+local DEBUG = false; --Texture memory: 20172KB
 if DEBUG then
 	FUNC_TIME = {}
 	--local profile = require("./profile");
-	profile = require ("profile")
+	profile = require ("libs.profile")
 end
 require("vars")
 local LoadTimer, UpdateTimer, DrawTimer;

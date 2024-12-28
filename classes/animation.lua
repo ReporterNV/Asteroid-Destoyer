@@ -1,5 +1,5 @@
 require("vars")
-local anim8 = require("anim8.anim8")
+local anim8 = require("libs.anim8.anim8")
 local Object = require("classes.object")
 if table.unpack then
 	unpack = table.unpack

@@ -1,7 +1,7 @@
 GAME_NAME = Asteroid-Destroyer
 BUILD_DIR = builds
 
-GAME_FILES = main.lua vars.lua anim8 classes images sounds
+GAME_FILES = main.lua vars.lua libs/anim8 classes images sounds
 
 LOVE_FILES_DIR = love-win64
 LOVE_REQUIRES = SDL2.dll \
