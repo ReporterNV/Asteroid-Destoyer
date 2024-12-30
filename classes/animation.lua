@@ -36,6 +36,13 @@ local AnimationDescription = {
 		callbacks = {
 			{"setOffsetCenterObject", {w = ImagePlayer:getWidth(), h = ImagePlayer:getHeight()}},
 			--{"setOffsetCenterObject", Player},
+		},
+		["ShieldDown"] = {
+			img = ImageShield,
+			imgAlpha = 0.6,
+			frameW = 480,
+			frameH = 480,
+			frames = {3, '1-2', '1-2', '1-5'},
 		}
 	}
 }

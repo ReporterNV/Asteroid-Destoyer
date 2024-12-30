@@ -1,5 +1,6 @@
 --[[ TODO:
 --General Features
+[ ] Fix makefile
 [ ] Sound settings and control
 [ ] Add settings saving
 [ ] Fix animation
@@ -9,7 +10,7 @@
 [ ] Refactor the asteroid object to remove the image link inside every object, keeping only the coordinates and other necessary attributes.
 [ ] Move editable variables to a separate table via the menu --not sure
 [ ] Clean the code
-
+[ ] Use quad for asteroid;
 Gameplay Features
 [ ] Add bullet types (e.g., mines)
 [ ] Add shield when not firing
