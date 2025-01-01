@@ -39,6 +39,7 @@ end
 
 function EventManager:playerShoot()
 	NewBullet = Bullet:spawn();
+	print("NewBullet"..NewBullet.speedY)
 	table.insert(Bullets, NewBullet)
 end
 

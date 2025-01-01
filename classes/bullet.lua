@@ -7,7 +7,7 @@ local BulletList = { --use it in future?
 		spawnSound = SndAttack;
 	},
 	["slow"] = {
-		speedY = -100;
+		speedY = -250;
 		img = ImageBullet;
 		spawnSound = SndAttack;
 	}
@@ -20,7 +20,7 @@ end
 function Bullet:spawn(BulletType)
 	local bullet;
 	if type(BulletList[BulletType]) == "table" then
-		bullet = Bullet:new(BulletList[type]);
+		bullet = Bullet:new(BulletList[BulletType]);
 	else
 		bullet = Bullet:new(BulletList["default"]);
 	end
@@ -28,7 +28,7 @@ function Bullet:spawn(BulletType)
 	bullet.x = Player.x + Player.w/2 - bullet.w/2;
 	bullet.y = Player.y
 
-	if bullet.spawnSound ~= nil then -- should i do it if spawn a lot?
+	if bullet.spawnSound then -- should i do it if spawn a lot?
 		bullet.spawnSound:play();
 	end
 	return bullet;
