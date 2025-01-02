@@ -12,7 +12,7 @@ Objects = {};
 Asteroids = {};
 Bullets = {};
 Animations = {};
-
+--use subscribe
 function EventManager:init(args)
 	args = args or {};
 	--[[
@@ -39,7 +39,6 @@ end
 
 function EventManager:playerShoot()
 	NewBullet = Bullet:spawn();
-	print("NewBullet"..NewBullet.speedY)
 	table.insert(Bullets, NewBullet)
 end
 
@@ -74,7 +73,6 @@ function EventManager:update(dt)
 	end
 
 	--for i, bullet in ipairs(Bullets) do
-
 	for i = #Bullets, 1, -1 do
 		local bullet = Bullets[i];
 		bullet.y = bullet.y + bullet.speedY*dt;
@@ -83,7 +81,9 @@ function EventManager:update(dt)
 			table.remove(Bullets, i);
 		end
 
-		for j, asteroid in ipairs(Asteroids) do
+		--for j, asteroid in ipairs(Asteroids) do
+		for j = #Asteroids, 1, -1 do
+			local asteroid = Asteroids[j];
 			if asteroid:checkCollisionObj(bullet) then
 				Score = Score + 1;
 				if asteroid.destroySound ~= nil then
