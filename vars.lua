@@ -17,6 +17,7 @@ ImagePlayer          = love.graphics.newImage(PathPlayer)
 ImageBullet          = love.graphics.newImage(PathBullet)
 ImageAsteroid        = love.graphics.newImage(PathAsteroid)
 ImageAsteroidDestroy = love.graphics.newImage(PathAsteroidDestroy) --animation separate dir?
+QuadAsteroid         = love.graphics.newQuad(0, 0, 96, 96, ImageAsteroidDestroy:getWidth(), ImageAsteroidDestroy:getHeight())
 ImageBackground      = love.graphics.newImage(PathBackground)
 ImageShield          = love.graphics.newImage(PathShield)
 

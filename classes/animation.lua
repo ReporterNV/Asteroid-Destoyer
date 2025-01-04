@@ -28,21 +28,45 @@ local AnimationDescription = {
 		durations = {0.1},
 		scalex = 0.11,
 		scaley = 0.11,
+		onLoop = "pauseAtEnd",
+		--[[
 		onLoop = function (self)
 			self.position = #self.frames
 			self.timer = self.totalDuration
 			self.status = "stoped"
 		end,
+		--]]
 		callbacks = {
 			{"setOffsetCenterObject", {w = ImagePlayer:getWidth(), h = ImagePlayer:getHeight()}},
-			--{"setOffsetCenterObject", Player},
-		},
-		["ShieldDown"] = {
-			img = ImageShield,
-			imgAlpha = 0.6,
-			frameW = 480,
-			frameH = 480,
-			frames = {3, '1-2', '1-2', '1-5'},
+		}
+		--{"setOffsetCenterObject", Player},
+	},
+	["ShieldBreak"] = {
+		img = ImageShield,
+		imgAlpha = 0.6,
+		frameW = 480,
+		frameH = 480,
+		frames = {'5-1', '2-1'},
+		durations = {0.065},
+		scalex = -0.11,
+		scaley = -0.11,
+		onLoop = "pauseAtEnd",
+		callbacks = {
+			{"setOffsetCenterObject", {w = ImagePlayer:getWidth(), h = ImagePlayer:getHeight()}},
+		}
+	},
+	["ShieldDown"] = {
+		img = ImageShield,
+		imgAlpha = 0.6,
+		frameW = 480,
+		frameH = 480,
+		frames = {'3-5', 3, '1-5', 4},
+		durations = {0.1},
+		scalex = 0.11,
+		scaley = 0.11,
+		onLoop = "pauseAtEnd",
+		callbacks = {
+			{"setOffsetCenterObject", {w = ImagePlayer:getWidth(), h = ImagePlayer:getHeight()}},
 		}
 	}
 }

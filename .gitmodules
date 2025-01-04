@@ -4,6 +4,3 @@
 [submodule "libs/anim8"]
 	path = libs/anim8
 	url = https://github.com/kikito/anim8.git
-[submodule "deps/love.js"]
-	path = deps/love.js
-	url = https://github.com/Davidobot/love.js.git
