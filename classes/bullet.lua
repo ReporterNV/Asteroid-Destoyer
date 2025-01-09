@@ -1,6 +1,6 @@
 require("vars")
 local Object = require("classes.object")
-local BulletList = { --use it in future?
+local BulletType = { --use it in future?
 	["default"] = {
 		speedY = -500;
 		img = ImageBullet;
@@ -12,17 +12,17 @@ local BulletList = { --use it in future?
 		spawnSound = SndAttack;
 	}
 }
-local Bullet = Object:new(BulletList["default"]);
+local Bullet = Object:new(BulletType["default"]);
 
 function Bullet:init()
 end
 
-function Bullet:spawn(BulletType)
+function Bullet:spawn(BulletTypeName)
 	local bullet;
-	if type(BulletList[BulletType]) == "table" then
-		bullet = Bullet:new(BulletList[BulletType]);
+	if type(BulletType[BulletTypeName]) == "table" then
+		bullet = Bullet:new(BulletType[BulletTypeName]);
 	else
-		bullet = Bullet:new(BulletList["default"]);
+		bullet = Bullet:new(BulletType["default"]);
 	end
 
 	bullet.x = Player.x + Player.w/2 - bullet.w/2;

@@ -28,15 +28,18 @@ Gameplay Features
 --]]
 
 _G.love = love;
-local DEBUG = false; --Texture memory: 20172KB
+local DEBUG = true; --Texture memory: 20172KB
+
 if DEBUG then
-	FUNC_TIME = {}
-	profile = require ("libs.profile")
+	love.profiler = require("libs.profile-2dengine")
+	love.frame = 0;
 end
+
 require("vars")
 
 
 function love.load()
+	love.profiler.start();
 	love.window.setTitle("Asteroid destroyer");
 	love.window.setMode(SCREEN_W, SCREEN_H);
 	love.window.setVSync(Vsync);
@@ -57,15 +60,12 @@ function love.load()
 	WindowManager = require("classes.window.windowmanager");
 	WindowManager:SetActiveWindow(Windows.Start);
 
-	--Animation = require("classes.animation")
-	--Bullet = require("classes.bullet");
-
-	EventManager:init({
-		Objects,
-		Asteroids,
-		Bullets,
-		Animations,
-		Player
+	EventManager:init({ --all this object global. Need to change it to local. Add draw manager?
+		Objects = Objects,
+		Asteroids = Asteroids,
+		Bullets = Bullets,
+		Animations = Animations,
+		Player = Player
 	})
 
 	Background:init();
@@ -87,6 +87,12 @@ function love.quit()
 end
 
 function love.update(dt)
+	love.frame = love.frame + 1
+	if love.frame%100 == 0 then
+		love.report = love.profiler.report(20)
+		love.profiler.reset()
+	end
+	--print(love.report or "Please wait...")
 	WindowManager:update(dt, Keys);
 
 	Pause:update(dt, Keys);
@@ -100,8 +106,21 @@ end
 
 --local NeedPrintDBG = true;
 function love.draw()
-	Background:draw();
+	--[[Попробовать
+	local spriteBatch = love.graphics.newSpriteBatch(asteroidImage, 1000)
+
+	function love.draw()
+		spriteBatch:clear()
+		for _, asteroid in ipairs(Asteroids) do
+			spriteBatch:add(asteroid.x, asteroid.y)
+		end
+		love.graphics.draw(spriteBatch)
+	end
+	--]]
+
+	Background:draw();--Узнать про canvas
 	Player:draw();
+
 	for _, animation in ipairs(Animations) do
 		animation:draw();
 	end
@@ -113,7 +132,8 @@ function love.draw()
 	for _, asteroid in ipairs(Asteroids) do
 		asteroid:draw()
 	end
-	--print("Animation: "..#Animations);
+
+	--print("Asteroids: "..#Asteroids);
 
 	if Pause:IsOnPause() then
 		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
@@ -127,7 +147,7 @@ function love.draw()
 	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
 	local stats = love.graphics.getStats();
 	love.graphics.printf("Shield: " .. tostring(Player.Shield), 10, 40, 60, "left");
-	if DEBUG == true then
+	if DEBUG then
 		love.graphics.print("MEM: " .. collectgarbage("count") .. "KB", 10, 140);
 		love.graphics.print("Texture MEM: " ..  stats.texturememory / 1024 .. "KB", 10, 160);
 	end

@@ -1,5 +1,4 @@
 local Object = require("classes.object")
-local Animation = require("classes.animation")
 require("vars")
 local eventmanager = require("classes.eventmanager")
 local Player = Object:new({
@@ -15,7 +14,7 @@ local Player = Object:new({
 
 Player:setWHfromImage();
 Player.x = SCREEN_W / 2 - Player.w/2
-Player.ShootReload = 0.006;
+Player.ShootReload = 0.06;
 Player.ShootTimer = 0;
 Player.ShootOverflow = 0;
 Player.ShootExtra = 0;
@@ -23,8 +22,8 @@ Player.ShootExtra = 0;
 Player.ShieldImg = ImageShield;
 Player.Shield = 0;
 Player.ShieldMax = 10;
-Player.ShieldTimer = 0;
-Player.ShieldReload = 5;
+Player.ShieldTimer = 1;
+Player.ShieldReload = 1;
 
 --[[
 ShieldDown =  Animation:new({
@@ -114,9 +113,11 @@ function Player:update(dt, Keys)
 	end
 
 	self.ShootTimer = self.ShootTimer + dt;
+
 	if Keys["space"] == true then
 		while self.ShootTimer >= self.ShootReload do
 			self.ShootTimer = self.ShootTimer - self.ShootReload;
+			--eventmanager:trigger("PlayerShoot");
 			eventmanager:playerShoot();
 		end
 	else
