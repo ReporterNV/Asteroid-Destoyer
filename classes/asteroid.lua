@@ -3,9 +3,13 @@ local Object = require("classes.object")
 local AsteroidType= {
 	["default"] = {
 		speedY = -500;
-		img = ImageAsteroid;
+		img = ImageAsteroidDestroy;
 		spawnSound = SndAttack;
 		destroySound = SndDestoyAsteroid;
+		scalex = 1;
+		scaley = 1;
+		offsetx = 29,
+		offsety = 32,
 	},
 	["strong"] = {
 		hp = 2;
@@ -16,6 +20,21 @@ local AsteroidType= {
 }
 local Asteroid = Object:new();
 
+function Asteroid:init() --THIS ALWAYS SHOULD BE CALLED BEFORE USING!
+	print("Call Asteroid:init");
+	for _, v in pairs(AsteroidType) do
+		for _, n in pairs(v) do
+			print(n);
+		end
+		print("Type: " .. v.img:type());
+		if v.img:type() == "Image" then
+			v.h = v.img:getHeight();
+			v.w = v.img:getWidth();
+		else
+			error("AsteroidType: img not exist!")
+		end
+	end
+end
 function Asteroid:spawn(AsteroidTypeName)
 	local asteroid;
 	if type(AsteroidType[AsteroidTypeName]) ~= "table" then
@@ -23,12 +42,6 @@ function Asteroid:spawn(AsteroidTypeName)
 	end
 
 	asteroid = Asteroid:new(AsteroidType[AsteroidTypeName]);
-
-	if asteroid.h == nil or asteroid.w == nil then
-		asteroid:setWHfromImage();
-		AsteroidType[AsteroidTypeName].h = asteroid.h;
-		AsteroidType[AsteroidTypeName].w = asteroid.w;
-	end
 
 	asteroid.x = math.random(Player.w, SCREEN_W - (asteroid.w or 0))
 	asteroid.y = -asteroid.h;
@@ -43,8 +56,11 @@ end
 
 function Asteroid:draw()
 	if self.img ~= nil then -- should check before allow to spawn
-		love.graphics.draw(self.img, self.x, self.y);
+		--love.graphics.draw(self.img, self.x, self.y);
 	end
+
+	--we will take exception on init phase if something not exist
+	love.graphics.draw(ImageAsteroidDestroy, QuadAsteroid, self.x, self.y, nil, self.scalex, self.scaley, self.offsetx, self.offsety);
 	--love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 end
 

@@ -20,6 +20,7 @@ function EventManager:init(args)
 	Asteroids = args.Asteroids or Asteroids;
 	Animations = args.Animations or Animations;
 	Objects = args.Objects or Objects;
+	Asteroid:init();
 end
 --Реализовать возможность подписки на события
 function SpawnAsteroid()
