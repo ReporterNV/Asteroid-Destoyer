@@ -73,7 +73,12 @@ function EventManager:update(dt)
 	AsteroidTimer = AsteroidTimer + dt;
 	while AsteroidTimer >= AsteroidInterval do --change it back?
 		AsteroidTimer = AsteroidTimer - AsteroidInterval;
-		table.insert(Asteroids, Asteroid:spawn())
+		if math.random(0, 1) == 1 then
+			table.insert(Asteroids, Asteroid:spawn("strong"))
+		else
+			table.insert(Asteroids, Asteroid:spawn())
+		end
+		--table.insert(Asteroids, Asteroid:spawn())
 	end
 
 	for i = #Animations, 1, -1 do
@@ -109,13 +114,13 @@ function EventManager:update(dt)
 				local asteroid = Asteroids[j];
 				if asteroid:checkCollisionObj(bullet) then
 					Score = Score + 1;
-					if asteroid.destroySound ~= nil then
-						asteroid.destroySound:play();
-					end
-					table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}));
-					table.remove(Asteroids, j)
-					table.remove(Bullets, i)
-					break;
+						if asteroid.destroySound ~= nil then
+							asteroid.destroySound:play();
+						end
+						table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}));
+						table.remove(Asteroids, j)
+						table.remove(Bullets, i)
+						break;
 				end
 			end
 		end

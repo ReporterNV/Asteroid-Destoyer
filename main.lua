@@ -10,7 +10,10 @@
 [ ] Refactor the asteroid object to remove the image link inside every object, keeping only the coordinates and other necessary attributes.
 [ ] Move editable variables to a separate table via the menu --not sure
 [ ] Clean the code
-[ ] Use quad for asteroid;
+[x] Use quad for asteroid;
+[ ] use TREE FOR REMOVE Asteroid
+[ ] use prepared table for Asteroids instead of change origin table;
+
 Gameplay Features
 [ ] Add bullet types (e.g., mines)
 [ ] Add shield when not firing
@@ -28,7 +31,9 @@ Gameplay Features
 --]]
 
 _G.love = love;
-local DEBUG = true; --Texture memory: 20172KB
+--Texture memory: 20172KB
+local DEBUG = true; --After use quad it reduced to 20167KB;
+
 
 if DEBUG then
 	love.profiler = require("libs.profile-2dengine")
