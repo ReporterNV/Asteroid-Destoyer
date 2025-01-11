@@ -1,8 +1,8 @@
 local Object = require("classes.object")
-require("vars")
+local vars = require("vars")
 
 local background = Object:new({
-	img = ImageBackground,
+	img = vars.image.Background,
 	x = 0,
 	y = 0,
 	speedY = 10,
@@ -10,7 +10,7 @@ local background = Object:new({
 
 function background:init()
 	background:setWHfromImage();
-	background.Music = SndBackgroundMusic;
+	background.Music = vars.audio.BackgroundMusic;
 end
 function background:pause()
 	background.Music:pause();
@@ -18,7 +18,7 @@ end
 
 function background:draw()
 	--love.graphics.draw(self.img, self.x, self.y);
-	love.graphics.draw(self.img, self.x, self.y, 0, 1, 1, (SCREEN_W-self.w)/2,SCREEN_H);
+	love.graphics.draw(self.img, self.x, self.y, 0, 1, 1, (vars.config.SCREEN_W-self.w)/2, vars.config.SCREEN_H);
 end
 
 
@@ -27,10 +27,10 @@ function background:update(dt)
 		background.Music:play();
 	end
 local NewY = self.y + self.speedY * dt;
-	if (background.h - SCREEN_H > NewY) then
+	if (background.h - vars.config.SCREEN_H > NewY) then
 		self.y = NewY;
 	else
-		self.y = background.h - SCREEN_H;
+		self.y = background.h - vars.config.SCREEN_H;
 	end
 end
 

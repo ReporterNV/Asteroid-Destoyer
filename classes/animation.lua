@@ -1,4 +1,4 @@
-require("vars")
+local vars = require("vars")
 local anim8 = require("libs.anim8.anim8")
 local Object = require("classes.object")
 if table.unpack then
@@ -8,7 +8,7 @@ end
 local AnimationList= {};
 local AnimationDescription = {
 	["AsteroidDestroy"] = {
-		img = ImageAsteroidDestroy,
+		img = vars.image.Asteroid,
 		frameW = 96,
 		frameH = 96,
 		frames = {'2-8', 1},
@@ -20,7 +20,7 @@ local AnimationDescription = {
 		onLoop = "pauseAtEnd",
 	}, -- i WANT REWRITE THIS AAGAIN!!!!!
 	["ShieldUp"] =  {
-		img = ImageShield,
+		img = vars.image.Shield,
 		imgAlpha = 0.6,
 		frameW = 480,
 		frameH = 480,
@@ -37,12 +37,12 @@ local AnimationDescription = {
 		end,
 		--]]
 		callbacks = {
-			{"setOffsetCenterObject", {w = ImagePlayer:getWidth(), h = ImagePlayer:getHeight()}},
+			{"setOffsetCenterObject", {w = vars.image.Player:getWidth(), h = vars.image.Player:getHeight()}},
 		}
 		--{"setOffsetCenterObject", Player},
 	},
 	["ShieldBreak"] = {
-		img = ImageShield,
+		img = vars.image.Shield,
 		imgAlpha = 0.6,
 		frameW = 480,
 		frameH = 480,
@@ -52,11 +52,11 @@ local AnimationDescription = {
 		scaley = -0.11,
 		onLoop = "pauseAtEnd",
 		callbacks = {
-			{"setOffsetCenterObject", {w = ImagePlayer:getWidth(), h = ImagePlayer:getHeight()}},
+			{"setOffsetCenterObject", {w = vars.image.Player:getWidth(), h = vars.image.Player:getHeight()}},
 		}
 	},
 	["ShieldDown"] = {
-		img = ImageShield,
+		img = vars.image.Shield,
 		imgAlpha = 0.6,
 		frameW = 480,
 		frameH = 480,
@@ -66,7 +66,7 @@ local AnimationDescription = {
 		scaley = 0.11,
 		onLoop = "pauseAtEnd",
 		callbacks = {
-			{"setOffsetCenterObject", {w = ImagePlayer:getWidth(), h = ImagePlayer:getHeight()}},
+			{"setOffsetCenterObject", {w = vars.image.Player:getWidth(), h = vars.image.Player:getHeight()}},
 		}
 	}
 }

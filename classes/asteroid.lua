@@ -1,19 +1,18 @@
-require("vars")
+local vars = require("vars")
 local Object = require("classes.object")
 local AsteroidType= {
 	["default"] = {
 		hp = 1;
 		speedY = -500;
-		img = ImageAsteroidDestroy;
+		img = vars.image.Asteroid;
 		quad = { -- for quad need set w, h by hand or it will use Dimensions of quad
 			x = 0;
 			y = 0;
 			w = 96;
-			h = 96;
-		};
+			h = 96; };
 		w = 38;
 		h = 33;
-		destroySound = SndDestoyAsteroid;
+		destroySound = vars.audio.AsteroidDestroy;
 		scalex = 1;
 		scaley = 1;
 		offsetx = 29,
@@ -24,15 +23,14 @@ local AsteroidType= {
 		speedY = -250;
 		scalex = 1;
 		scaley = -1;
-		img = ImageBullet;
-		spawnSound = SndAttack;
+		img = vars.image.Bullet;
+		spawnSound = vars.audio.AsteroidDestroy
 	}
 }
 local Asteroid = Object:new();
 
 function Asteroid:init() --THIS ALWAYS SHOULD BE CALLED BEFORE USING!
-	print("Call Asteroid:init");
-
+	--Also validate all data
 	for _, v in pairs(AsteroidType) do
 		if v.img:type() == "Image" then
 			if v.quad then
@@ -46,7 +44,6 @@ function Asteroid:init() --THIS ALWAYS SHOULD BE CALLED BEFORE USING!
 		else
 			error("AsteroidType: img not exist!")
 		end
-		print("AsteroidType: " .. v.h .. " " .. v.w);
 	end
 end
 
@@ -58,7 +55,7 @@ function Asteroid:spawn(AsteroidTypeName)
 
 	asteroid = Asteroid:new(AsteroidType[AsteroidTypeName]);
 
-	asteroid.x = math.random(Player.w, SCREEN_W - (asteroid.w or 0))
+	asteroid.x = math.random(Player.w, vars.config.SCREEN_W - (asteroid.w or 0))
 	asteroid.y = -asteroid.h;
 	asteroid.speedY = math.random(50, 200)
 	return asteroid;
@@ -76,11 +73,12 @@ function Asteroid:draw()
 
 	--we will take exception on init phase if something not exist
 	if self.quad then
-		love.graphics.draw(self.img, QuadAsteroid, self.x, self.y, nil, self.scalex, self.scaley, self.offsetx, self.offsety);
+		love.graphics.draw(self.img, self.quad, self.x, self.y, nil, self.scalex, self.scaley, self.offsetx, self.offsety);
 	else
 		love.graphics.draw(self.img, self.x, self.y, nil, self.scalex, self.scaley, self.offsetx, self.offsety);
 	end
-	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+	--Draw hitbox
+	--love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 end
 
 return Asteroid

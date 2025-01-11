@@ -1,15 +1,15 @@
-require("vars")
+local vars = require("vars")
 local Object = require("classes.object")
 local BulletType = { --use it in future?
 	["default"] = {
 		speedY = -500;
-		img = ImageBullet;
-		spawnSound = SndAttack;
+		img = vars.image.Bullet;
+		spawnSound = vars.audio.Attack;
 	},
 	["slow"] = {
 		speedY = -250;
-		img = ImageBullet;
-		spawnSound = SndAttack;
+		img = vars.image.Bullet;
+		spawnSound = vars.audio.Attack;
 	}
 }
 local Bullet = Object:new(BulletType["default"]);

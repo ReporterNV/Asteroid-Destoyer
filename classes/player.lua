@@ -1,25 +1,25 @@
 local Object = require("classes.object")
-require("vars")
+local vars = require("vars")
 local eventmanager = require("classes.eventmanager")
 local Player = Object:new({
-	x = SCREEN_W / 2,
+	x = vars.config.SCREEN_W / 2,
 	y = 500,
 	a = 1,
 	speedX = 200,
 	speedY = 100,
 	--ShootTimer = 0,
 	--ShootReload = 0.1,
-	img = ImagePlayer,
+	img = vars.image.Player,
 });
 
 Player:setWHfromImage();
-Player.x = SCREEN_W / 2 - Player.w/2
-Player.ShootReload = 0.06;
+Player.x = vars.config.SCREEN_W / 2 - Player.w/2
+Player.ShootReload = 0.6;
 Player.ShootTimer = 0;
 Player.ShootOverflow = 0;
 Player.ShootExtra = 0;
 
-Player.ShieldImg = ImageShield;
+Player.ShieldImg = vars.image.Shield;
 Player.Shield = 0;
 Player.ShieldMax = 10;
 Player.ShieldTimer = 1;
@@ -89,8 +89,8 @@ function Player:update(dt, Keys)
 	end
 
 	if Keys["right"] == true or Keys["d"] == true then
-		if self.x + self.speedX*dt > SCREEN_W - self.w then
-			self.x = SCREEN_W - self.w;
+		if self.x + self.speedX*dt > vars.config.SCREEN_W - self.w then
+			self.x = vars.config.SCREEN_W - self.w;
 		else
 			self.x = self.x + self.speedX*dt;
 		end
@@ -105,8 +105,8 @@ function Player:update(dt, Keys)
 	end
 
 	if Keys["down"] == true or Keys["s"] == true then
-		if self.y + self.speedY*dt + self.h > SCREEN_H then
-			self.y = SCREEN_H - self.h;
+		if self.y + self.speedY*dt + self.h > vars.config.SCREEN_H then
+			self.y = vars.config.SCREEN_H - self.h;
 		else
 			self.y = self.y + self.speedY*dt;
 		end

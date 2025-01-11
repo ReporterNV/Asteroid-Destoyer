@@ -1,9 +1,9 @@
-require("vars")
+local vars = require("vars")
 local Asteroid = require("classes.asteroid")
 local Animation = require("classes.animation")
 local Bullet = require("classes.bullet")
 local EventManager = {};
-local screen_h = SCREEN_H;
+local screen_h = vars.config.SCREEN_H;
 
 local AsteroidTimer = 1;
 local AsteroidInterval = 1/10;
