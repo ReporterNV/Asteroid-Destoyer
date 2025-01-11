@@ -22,6 +22,8 @@ local AsteroidType= {
 	["strong"] = {
 		hp = 2;
 		speedY = -250;
+		scalex = 1;
+		scaley = -1;
 		img = ImageBullet;
 		spawnSound = SndAttack;
 	}

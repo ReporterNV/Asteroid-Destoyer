@@ -1,16 +1,15 @@
 --[[ TODO:
 --General Features
-[ ] Fix makefile
 [ ] Sound settings and control
 [ ] Add settings saving
 [ ] Fix animation
 [ ] Fix asteroid destruction method
 [ ] Rewrite vars
+[ ] Do base shield mechanic
 [ ] Store coordinates in a separate table and use them as references for objects that follow them. --not sure
 [ ] Refactor the asteroid object to remove the image link inside every object, keeping only the coordinates and other necessary attributes.
 [ ] Move editable variables to a separate table via the menu --not sure
 [ ] Clean the code
-[x] Use quad for asteroid;
 [ ] use TREE FOR REMOVE Asteroid
 [ ] use prepared table for Asteroids instead of change origin table;
 
@@ -28,23 +27,27 @@ Gameplay Features
 --UI
 [ ] Improve window appearance
 [ ] Rename "Windows" to "WindowList" and add initialization function
+[ ] Add update window
 --]]
 
 _G.love = love;
 --Texture memory: 20172KB
-local DEBUG = true; --After use quad it reduced to 20167KB;
+local DEBUG = false; --After use quad it reduced to 20167KB;
 
 
 if DEBUG then
 	love.profiler = require("libs.profile-2dengine")
 	love.frame = 0;
+	love.profiler.start();
 end
 
 require("vars")
 
 
 function love.load()
-	love.profiler.start();
+	if DEBUG then
+		love.profiler.start();
+	end
 	love.window.setTitle("Asteroid destroyer");
 	love.window.setMode(SCREEN_W, SCREEN_H);
 	love.window.setVSync(Vsync);
@@ -60,8 +63,6 @@ function love.load()
 	Pause = require("classes.pause")
 	Background = require("classes.background")
 	Player = require("classes.player")
-	Animation = require("classes.animation");
-	--Animation:init();
 	WindowManager = require("classes.window.windowmanager");
 	WindowManager:SetActiveWindow(Windows.Start);
 
@@ -92,10 +93,13 @@ function love.quit()
 end
 
 function love.update(dt)
-	love.frame = love.frame + 1
-	if love.frame%100 == 0 then
-		love.report = love.profiler.report(20)
-		love.profiler.reset()
+	if DEBUG then
+		love.frame = love.frame + 1
+		if love.frame%100 == 0 then
+			love.report = love.profiler.report(20)
+			print(love.report)
+			love.profiler.reset()
+		end
 	end
 	--print(love.report or "Please wait...")
 	WindowManager:update(dt, Keys);
