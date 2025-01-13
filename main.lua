@@ -2,9 +2,8 @@
 --General Features
 [ ] Sound settings and control
 [ ] Add settings saving
-[ ] Fix animation
 [ ] Fix asteroid destruction method
-[ ] Rewrite vars
+[x] Rewrite vars
 [ ] Do base shield mechanic
 [ ] Store coordinates in a separate table and use them as references for objects that follow them. --not sure
 [ ] Refactor the asteroid object to remove the image link inside every object, keeping only the coordinates and other necessary attributes.
@@ -12,6 +11,7 @@
 [ ] Clean the code
 [ ] use TREE FOR REMOVE Asteroid
 [ ] use prepared table for Asteroids instead of change origin table;
+[ ] Add normal state instead pause;
 
 Gameplay Features
 [ ] Add bullet types (e.g., mines)
@@ -33,7 +33,7 @@ Gameplay Features
 _G.love = love;
 --Texture memory: 20172KB
 local DEBUG = false; --After use quad it reduced to 20167KB;
-
+local vars = require("vars");
 
 if DEBUG then
 	love.profiler = require("libs.profile-2dengine")
@@ -41,16 +41,16 @@ if DEBUG then
 	love.profiler.start();
 end
 
-require("vars")
 
 
 function love.load()
 	if DEBUG then
 		love.profiler.start();
 	end
+	vars:init();
 	love.window.setTitle("Asteroid destroyer");
-	love.window.setMode(SCREEN_W, SCREEN_H);
-	love.window.setVSync(Vsync);
+	love.window.setMode(vars.config.SCREEN_W, vars.config.SCREEN_H);
+	love.window.setVSync(vars.config.Vsync);
 
 	Keys = {};
 	OnceKey = {};
@@ -145,13 +145,13 @@ function love.draw()
 	--print("Asteroids: "..#Asteroids);
 
 	if Pause:IsOnPause() then
-		love.graphics.printf("PAUSE", SCREEN_W/2-20, SCREEN_H/2-50, 60, "left");
+		love.graphics.printf("PAUSE", vars.config.SCREEN_W/2-20, vars.config.SCREEN_H/2-50, 60, "left");
 	end
 	if Pause:IsOnPause() then
 		WindowManager:draw();
 	end
 
-	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_W - 60, 10);
+	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), vars.config.SCREEN_W - 60, 10);
 
 	love.graphics.printf("SCORE: " .. tostring(Score), 10, 10, 60, "left");
 	local stats = love.graphics.getStats();

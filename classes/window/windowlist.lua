@@ -1,11 +1,12 @@
 local Window = require("classes.window.window");
 local option = require("classes.window.windowoptions");
+local vars = require("vars");
 Windows = {}
 --order of windows right now is important. need fix it.
 Windows.Settings = Window:new({
-	x = SCREEN_W/3;
-	w = SCREEN_W/3;
-	h = SCREEN_H/2;
+	x = vars.config.SCREEN_W/3;
+	w = vars.config.SCREEN_W/3;
+	h = vars.config.SCREEN_H/2;
 	visible = true;
 	title = "Settings";
 	options = {
@@ -24,9 +25,9 @@ Windows.Settings = Window:new({
 --]]
 
 Windows.Pause = Window:new({
-	x = SCREEN_W/3;
-	w = SCREEN_W/3;
-	h = SCREEN_H/3;
+	x = vars.config.SCREEN_W/3;
+	w = vars.config.SCREEN_W/3;
+	h = vars.config.SCREEN_H/3;
 	visible = true;
 	title = "Pause";
 	options = {
@@ -37,10 +38,10 @@ Windows.Pause = Window:new({
 })
 
 Windows.Start = Window:new({
-	x = SCREEN_W/3;
-	y = SCREEN_H/5;
-	w = SCREEN_W/3;
-	h = SCREEN_H/3;
+	x = vars.config.SCREEN_W/3;
+	y = vars.config.SCREEN_H/5;
+	w = vars.config.SCREEN_W/3;
+	h = vars.config.SCREEN_H/3;
 	visible = true;
 	title = love.window.getTitle(),
 	options = {
