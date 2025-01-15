@@ -78,7 +78,7 @@ function Asteroid:draw()
 		love.graphics.draw(self.img, self.x, self.y, nil, self.scalex, self.scaley, self.offsetx, self.offsety);
 	end
 	--Draw hitbox
-	--love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 end
 
 return Asteroid

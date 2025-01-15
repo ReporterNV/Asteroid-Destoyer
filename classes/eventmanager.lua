@@ -4,6 +4,7 @@ local Animation = require("classes.animation")
 local Bullet = require("classes.bullet")
 local EventManager = {};
 local screen_h = vars.config.SCREEN_H;
+local screen_w = vars.config.SCREEN_W;
 
 local AsteroidTimer = 1;
 local AsteroidInterval = 1/10;
@@ -13,15 +14,24 @@ local Asteroids = {};
 local Bullets = {};
 local Animations = {};
 
+local N = 5;
+local function Asteroids_spliter(asteroids)
+	for i = 0, N do
+		asteroids[i] = {};
+	end
+end
+
 --use subscribe
 function EventManager:init(args)
 	args = args or {};
 	Bullets = args.Bullets or Bullets;
 	Asteroids = args.Asteroids or Asteroids;
+	Asteroids_spliter(Asteroids);
 	Animations = args.Animations or Animations;
 	Objects = args.Objects or Objects;
 	Asteroid:init();
 end
+
 --Реализовать возможность подписки на события
 function SpawnAsteroid()
 
@@ -73,11 +83,16 @@ function EventManager:update(dt)
 	AsteroidTimer = AsteroidTimer + dt;
 	while AsteroidTimer >= AsteroidInterval do --change it back?
 		AsteroidTimer = AsteroidTimer - AsteroidInterval;
+		local asteroid;
 		if math.random(0, 1) == 1 then
-			table.insert(Asteroids, Asteroid:spawn("strong"))
+ 			asteroid = Asteroid:spawn();
 		else
-			table.insert(Asteroids, Asteroid:spawn())
+ 			asteroid = Asteroid:spawn("strong");
 		end
+		local area_index = math.floor(asteroid.x / (screen_w / N));
+		print("asteroid.x: ", asteroid.x);
+		print("area_index: ", area_index);
+		table.insert(Asteroids[area_index], asteroid)
 		--table.insert(Asteroids, Asteroid:spawn())
 	end
 

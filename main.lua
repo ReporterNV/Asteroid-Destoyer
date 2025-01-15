@@ -138,8 +138,10 @@ function love.draw()
 		bullet:draw();
 	end
 
-	for _, asteroid in ipairs(Asteroids) do
-		asteroid:draw()
+	for _, asteroids in ipairs(Asteroids) do
+		for _, asteroid in ipairs(asteroids) do
+			asteroid:draw()
+		end
 	end
 
 	--print("Asteroids: "..#Asteroids);
