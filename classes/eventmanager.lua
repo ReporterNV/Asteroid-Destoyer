@@ -7,7 +7,7 @@ local screen_h = vars.config.SCREEN_H;
 local screen_w = vars.config.SCREEN_W;
 
 local AsteroidTimer = 1;
-local AsteroidInterval = 1/10;
+local AsteroidInterval = 1/1000;
 
 local Objects = {};
 local Asteroids = {};
