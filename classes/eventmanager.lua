@@ -7,17 +7,21 @@ local screen_h = vars.config.SCREEN_H;
 local screen_w = vars.config.SCREEN_W;
 
 local AsteroidTimer = 1;
-local AsteroidInterval = 1/1000;
+local AsteroidInterval = 1/10000;
 
 local Objects = {};
 local Asteroids = {};
 local Bullets = {};
 local Animations = {};
 
-local N = 5;
+local N = 8; --rename var
 local function Asteroids_spliter(asteroids)
+	--[[
+	How this works. Split screen to N sectors. 
+	The bigger objet should be fully sized in one sector.
+	If not make sector bigger. or update it separately.
+	--]]
 	for i = 0, N do
-		print("Create area: ".. i);
 		asteroids[i] = {};
 	end
 end
@@ -85,14 +89,14 @@ function EventManager:update(dt)
 	while AsteroidTimer >= AsteroidInterval do --change it back?
 		AsteroidTimer = AsteroidTimer - AsteroidInterval;
 		local asteroid;
-		if math.random(0, 1) == 1 then
+		if math.random(1, 1) == 1 then
  			asteroid = Asteroid:spawn();
 		else
  			asteroid = Asteroid:spawn("strong");
 		end
 		local area_index = math.floor(asteroid.x / (screen_w / N));
-		print("asteroid.x: ", asteroid.x);
-		print("area_index: ", area_index);
+		--print("asteroid.x: ", asteroid.x);
+		--print("area_index: ", area_index);
 		table.insert(Asteroids[area_index], asteroid)
 		--table.insert(Asteroids, Asteroid:spawn())
 	end
@@ -105,7 +109,9 @@ function EventManager:update(dt)
 		animation:update(dt);
 	end
 
-	for _, asteroid_area in ipairs(Asteroids) do
+	--for _, asteroid_area in ipairs(Asteroids) do
+	for i = 0, N do
+		local asteroid_area = Asteroids[i];
 		for i = #asteroid_area, 1, -1 do
 			local asteroid = asteroid_area[i]
 			asteroid:update(dt);

@@ -14,14 +14,14 @@ local Player = Object:new({
 
 Player:setWHfromImage();
 Player.x = vars.config.SCREEN_W / 2 - Player.w/2
-Player.ShootReload = 0.6;
+Player.ShootReload = 0.06;
 Player.ShootTimer = 0;
 Player.ShootOverflow = 0;
 Player.ShootExtra = 0;
 
 Player.ShieldImg = vars.image.Shield;
-Player.Shield = 0;
-Player.ShieldMax = 10;
+Player.Shield = 1000;
+Player.ShieldMax = 1000;
 Player.ShieldTimer = 1;
 Player.ShieldReload = 1;
 

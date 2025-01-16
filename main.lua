@@ -137,13 +137,17 @@ function love.draw()
 	for _, bullet in ipairs(Bullets) do
 		bullet:draw();
 	end
-
-	for _, asteroids in ipairs(Asteroids) do
+	local N = 8;
+	for i = 0, N do
+		local asteroids = Asteroids[i];
 		for _, asteroid in ipairs(asteroids) do
+			--local asteroid_area = Asteroids[i];
 			asteroid:draw()
 		end
 	end
-
+	for i = 0, N do
+		love.graphics.line(vars.config.SCREEN_W / N * i, 0, vars.config.SCREEN_W / N * i, vars.config.SCREEN_H);
+	end
 	--print("Asteroids: "..#Asteroids);
 
 	if Pause:IsOnPause() then
