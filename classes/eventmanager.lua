@@ -17,6 +17,7 @@ local Animations = {};
 local N = 5;
 local function Asteroids_spliter(asteroids)
 	for i = 0, N do
+		print("Create area: ".. i);
 		asteroids[i] = {};
 	end
 end
@@ -104,17 +105,19 @@ function EventManager:update(dt)
 		animation:update(dt);
 	end
 
-	for i = #Asteroids, 1, -1 do
-		local asteroid = Asteroids[i]
-		asteroid:update(dt);
-		if asteroid:checkCollisionObj(Player) then
-			Player:takeHit();
-			table.remove(Asteroids, i);
-			table.insert(Animations, Animation:spawn({type = "ShieldBreak", followedObject = Player}))
-			table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}))
-		elseif asteroid.y > screen_h then
-			table.remove(Asteroids, i); --reuse instead of remove
-			--set speedY = 0 and y = 0 - self.h
+	for _, asteroid_area in ipairs(Asteroids) do
+		for i = #asteroid_area, 1, -1 do
+			local asteroid = asteroid_area[i]
+			asteroid:update(dt);
+			if asteroid:checkCollisionObj(Player) then
+				Player:takeHit();
+				table.remove(asteroid_area, i);
+				table.insert(Animations, Animation:spawn({type = "ShieldBreak", followedObject = Player}))
+				table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}))
+			elseif asteroid.y > screen_h then
+				table.remove(asteroid_area, i); --reuse instead of remove
+				--set speedY = 0 and y = 0 - self.h
+			end
 		end
 	end
 
@@ -125,15 +128,17 @@ function EventManager:update(dt)
 		if bullet.y + bullet.h < 0 then
 			table.remove(Bullets, i);
 		else
-			for j = #Asteroids, 1, -1 do --looks like O(n^2) change it to ?collision tree? slice screen and calculate only in that area
-				local asteroid = Asteroids[j];
+			local area_index = math.floor(bullet.x / (screen_w / N));
+			local asteroids = Asteroids[area_index];
+			for j = #asteroids, 1, -1 do --looks like O(n^2) change it to ?collision tree? slice screen and calculate only in that area
+				local asteroid = asteroids[j];
 				if asteroid:checkCollisionObj(bullet) then
 					Score = Score + 1;
 						if asteroid.destroySound ~= nil then
 							asteroid.destroySound:play();
 						end
 						table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}));
-						table.remove(Asteroids, j)
+						table.remove(asteroids, j)
 						table.remove(Bullets, i)
 						break;
 				end
