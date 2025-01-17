@@ -18,11 +18,16 @@ local path = {
 };
 
 vars.config = {
+	SCREEN_H = 600;
+	SCREEN_W = 400;
+	Asteroids_split = 3;
+	Asteroids_split_max = 2000--20000
+}
+
+vars.editable = {
 	MasterSoundLV = 0;
 	BGM = 0;
 	SoundsLv = 0;
-	SCREEN_H = 600;
-	SCREEN_W = 400;
 	Vsync = 1;
 }
 
@@ -50,7 +55,7 @@ function vars:init()
 		Attack             = love.audio.newSource(path.audio.Attack, "static");
 		BackgroundMusic    = love.audio.newSource(path.audio.BackgroundMusic, "stream");
 	};
-	love.audio.setVolume(vars.config.MasterSoundLV);
+	love.audio.setVolume(vars.editable.MasterSoundLV);
 end
 
 return vars;

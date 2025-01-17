@@ -7,23 +7,44 @@ local screen_h = vars.config.SCREEN_H;
 local screen_w = vars.config.SCREEN_W;
 
 local AsteroidTimer = 1;
-local AsteroidInterval = 1/10000;
+local AsteroidInterval = 1/1000;
+--81 при 1000
+--8 при 10000
 
 local Objects = {};
 local Asteroids = {};
 local Bullets = {};
 local Animations = {};
 
-local N = 8; --rename var
-local function Asteroids_spliter(asteroids)
+local Asteroids_areas_number = vars.config.Asteroids_split;
+local Asteroids_area_max_elem = vars.config.Asteroids_split_max;
+local function Asteroids_spliter(Asteroids)
 	--[[
 	How this works. Split screen to N sectors. 
 	The bigger objet should be fully sized in one sector.
 	If not make sector bigger. or update it separately.
 	--]]
-	for i = 0, N do
-		asteroids[i] = {};
+	for i = 0, Asteroids_areas_number do
+		Asteroids[i] = {};
+		Asteroids[i][0] = 0;
+		for j = 1, Asteroids_areas_number do
+			Asteroids[i][j] = nil;
+		end
 	end
+end
+local function Asteroids_clear_table(area)
+	print("Asteroids_clear_table");
+	local NewTable = {};
+	local size = 0;
+	for i = 1, Asteroids_area_max_elem do
+		if area[i] ~= nil then
+			size = size + 1;
+			NewTable[size] = area[i];
+		end
+	end
+	print("size: ", size);
+	NewTable[0] = size;
+	return NewTable;
 end
 
 --use subscribe
@@ -74,6 +95,11 @@ function GameOver()
 end
 
 function EventManager:generateShield()
+	--[[
+	function EventManager:generateShield()
+		self:trigger("generateShield", {type = "ShieldUp", followedObject = Player})
+	end
+	--]]
 	print("Call generateShield");
  	--change it to subscribe and allow only one played animation?
 	table.insert(Animations, Animation:spawn({type = "ShieldUp", followedObject = Player}))
@@ -94,10 +120,19 @@ function EventManager:update(dt)
 		else
  			asteroid = Asteroid:spawn("strong");
 		end
-		local area_index = math.floor(asteroid.x / (screen_w / N));
+
+		local area_index = math.floor(asteroid.x / (screen_w / Asteroids_areas_number));
+		local area = Asteroids[area_index];
+		local area_size = area[0] + 1
+		area[0] = area_size;
+		area[area_size] = asteroid;
+		if area_size > Asteroids_area_max_elem then
+			area = Asteroids_clear_table(area);
+		end
+
 		--print("asteroid.x: ", asteroid.x);
 		--print("area_index: ", area_index);
-		table.insert(Asteroids[area_index], asteroid)
+		--table.insert(Asteroids[area_index], asteroid)
 		--table.insert(Asteroids, Asteroid:spawn())
 	end
 
@@ -110,19 +145,24 @@ function EventManager:update(dt)
 	end
 
 	--for _, asteroid_area in ipairs(Asteroids) do
-	for i = 0, N do
-		local asteroid_area = Asteroids[i];
-		for i = #asteroid_area, 1, -1 do
-			local asteroid = asteroid_area[i]
-			asteroid:update(dt);
-			if asteroid:checkCollisionObj(Player) then
-				Player:takeHit();
-				table.remove(asteroid_area, i);
-				table.insert(Animations, Animation:spawn({type = "ShieldBreak", followedObject = Player}))
-				table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}))
-			elseif asteroid.y > screen_h then
-				table.remove(asteroid_area, i); --reuse instead of remove
-				--set speedY = 0 and y = 0 - self.h
+	for i = 0, Asteroids_areas_number do
+		local area = Asteroids[i];
+		local area_size = area[0];
+		for j = area_size, 1, -1 do
+			local asteroid = area[j]
+			if asteroid ~= nil then
+				asteroid:update(dt);
+				if asteroid:checkCollisionObj(Player) then
+					Player:takeHit();
+					--table.remove(asteroid_area, i);
+					table.insert(Animations, Animation:spawn({type = "ShieldBreak", followedObject = Player}))
+					table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}))
+					area[j] = nil;
+				elseif asteroid.y > screen_h then
+					--table.remove(asteroid_area, i); --reuse instead of remove
+					area[j] = nil;
+					--set speedY = 0 and y = 0 - self.h
+				end
 			end
 		end
 	end
@@ -134,17 +174,19 @@ function EventManager:update(dt)
 		if bullet.y + bullet.h < 0 then
 			table.remove(Bullets, i);
 		else
-			local area_index = math.floor(bullet.x / (screen_w / N));
-			local asteroids = Asteroids[area_index];
-			for j = #asteroids, 1, -1 do --looks like O(n^2) change it to ?collision tree? slice screen and calculate only in that area
-				local asteroid = asteroids[j];
+			local area_index = math.floor(bullet.x / (screen_w / Asteroids_areas_number));
+			local area = Asteroids[area_index];
+			local area_size = area[0];
+			for j = area_size, 1, -1 do --looks like O(n^2) change it to ?collision tree? slice screen and calculate only in that area
+				local asteroid = area[j];
 				if asteroid:checkCollisionObj(bullet) then
 					Score = Score + 1;
 						if asteroid.destroySound ~= nil then
 							asteroid.destroySound:play();
 						end
 						table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}));
-						table.remove(asteroids, j)
+						--table.remove(asteroids, j)
+						asteroid = nil;
 						table.remove(Bullets, i)
 						break;
 				end

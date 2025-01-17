@@ -50,7 +50,7 @@ function love.load()
 	vars:init();
 	love.window.setTitle("Asteroid destroyer");
 	love.window.setMode(vars.config.SCREEN_W, vars.config.SCREEN_H);
-	love.window.setVSync(vars.config.Vsync);
+	love.window.setVSync(vars.editable.Vsync);
 
 	Keys = {};
 	OnceKey = {};
@@ -137,14 +137,19 @@ function love.draw()
 	for _, bullet in ipairs(Bullets) do
 		bullet:draw();
 	end
-	local N = 8;
+	local N = vars.config.Asteroids_split;
 	for i = 0, N do
-		local asteroids = Asteroids[i];
-		for _, asteroid in ipairs(asteroids) do
+		local area = Asteroids[i];
+		print(i.."Asteroids: ", area[0]);
+		--for _, asteroid in ipairs(area) do
+		for j = 1, area[0] do
 			--local asteroid_area = Asteroids[i];
+			local asteroid = area[j];
 			asteroid:draw()
 		end
 	end
+	print("");
+	print("");
 	for i = 0, N do
 		love.graphics.line(vars.config.SCREEN_W / N * i, 0, vars.config.SCREEN_W / N * i, vars.config.SCREEN_H);
 	end

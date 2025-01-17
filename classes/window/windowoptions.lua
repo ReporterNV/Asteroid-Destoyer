@@ -1,4 +1,5 @@
 local WindowManager = require("classes.window.windowmanager");
+local vars = require("vars");
 --local Pause = require("classes.pause");
 local option = {};
 
@@ -30,11 +31,11 @@ function option.slider()
 end
 
 function option.setVsync()
-	love.window.setVSync(Vsync);
+	love.window.setVSync(vars.editable.Vsync);
 end
 
 function option.updateVolume()
-	love.audio.setVolume(MasterSoundLV);
+	love.audio.setVolume(vars.editable.MasterSoundLV);
 end
 
 function option.OpenWindow(args)

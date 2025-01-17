@@ -1,3 +1,4 @@
+local vars = require("vars")
 Window = {}
 
 function Window:new(args)
@@ -71,28 +72,28 @@ function Window:sliderL() --copy-paste not good
 	local args = self.options[self.selectedOption].args;
 
 	if self:checkSliderArgs() then
-		if _G[args.variable] - args.step < args.min then
-			_G[args.variable] = args.min;
+		if vars.editable[args.variable] - args.step < args.min then
+			vars.editable[args.variable] = args.min;
 		else
-			_G[args.variable] = _G[args.variable] - args.step;
+			vars.editable[args.variable] = vars.editable[args.variable] - args.step;
 		end
 	end
-	if _G[args.variable] - args.step * 0.1 < 0 then
-		_G[args.variable] = 0;
+	if vars.editable[args.variable] - args.step * 0.1 < 0 then
+		vars.editable[args.variable] = 0;
 	end
 end
 
 function Window:sliderR() --copy-paste not good
 	local CurrentOption = self.options[self.selectedOption]
 	if self:checkSliderArgs() then
-		if _G[CurrentOption.args.variable] + CurrentOption.args.step > CurrentOption.args.max then
-			_G[CurrentOption.args.variable] = CurrentOption.args.max;
+		if vars.editable[CurrentOption.args.variable] + CurrentOption.args.step > CurrentOption.args.max then
+			vars.editable[CurrentOption.args.variable] = CurrentOption.args.max;
 		else
-			_G[CurrentOption.args.variable] = _G[CurrentOption.args.variable] + CurrentOption.args.step;
+			vars.editable[CurrentOption.args.variable] = vars.editable[CurrentOption.args.variable] + CurrentOption.args.step;
 		end
 	end
-	if _G[CurrentOption.args.variable] - CurrentOption.args.step * 0.1  < 0 then --just i want be sure
-		_G[CurrentOption.args.variable] = 0;
+	if vars.editable[CurrentOption.args.variable] - CurrentOption.args.step * 0.1  < 0 then --just i want be sure
+		vars.editable[CurrentOption.args.variable] = 0;
 	end
 end
 
@@ -113,7 +114,9 @@ function Window:draw()
 			if option.style == nil or option.style == "simple" then
 				love.graphics.printf(option.name, self.x, optionY, self.w, "center")
 			elseif option.style == "slider" then
-				love.graphics.printf(option.name..": ".._G[option.args.variable], self.x, optionY, self.w, "center")
+				print(option.args.variable)
+				print()
+				love.graphics.printf(option.name..": "..vars.editable[option.args.variable], self.x, optionY, self.w, "center")
 			end
 			love.graphics.setColor(1, 1, 1)
 		end
