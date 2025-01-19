@@ -7,7 +7,7 @@ local screen_h = vars.config.SCREEN_H;
 local screen_w = vars.config.SCREEN_W;
 
 local AsteroidTimer = 1;
-local AsteroidInterval = 1/1000;
+local AsteroidInterval = 1/4000;
 --81 при 1000
 --8 при 10000
 
@@ -127,7 +127,10 @@ function EventManager:update(dt)
 		area[0] = area_size;
 		area[area_size] = asteroid;
 		if area_size > Asteroids_area_max_elem then
-			area = Asteroids_clear_table(area);
+			local clear_table = Asteroids_clear_table(area);
+			area = nil;
+			Asteroids[area_index] = clear_table;
+			--print("new area_size: ", area[0]);
 		end
 
 		--print("asteroid.x: ", asteroid.x);
@@ -174,21 +177,23 @@ function EventManager:update(dt)
 		if bullet.y + bullet.h < 0 then
 			table.remove(Bullets, i);
 		else
-			local area_index = math.floor(bullet.x / (screen_w / Asteroids_areas_number));
-			local area = Asteroids[area_index];
+			--local area_index = math.floor(bullet.x / (screen_w / Asteroids_areas_number));
+			local area = Asteroids[bullet.area_index];
 			local area_size = area[0];
-			for j = area_size, 1, -1 do --looks like O(n^2) change it to ?collision tree? slice screen and calculate only in that area
+			for j = area_size, 1, -1 do
 				local asteroid = area[j];
-				if asteroid:checkCollisionObj(bullet) then
-					Score = Score + 1;
+				if asteroid ~= nil then
+					if asteroid:checkCollisionObj(bullet) then
+						Score = Score + 1;
 						if asteroid.destroySound ~= nil then
 							asteroid.destroySound:play();
 						end
 						table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}));
 						--table.remove(asteroids, j)
-						asteroid = nil;
+						area[j] = nil;
 						table.remove(Bullets, i)
 						break;
+					end
 				end
 			end
 		end

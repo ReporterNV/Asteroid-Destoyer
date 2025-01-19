@@ -57,7 +57,7 @@ function Asteroid:spawn(AsteroidTypeName)
 
 	asteroid.x = math.random(Player.w, vars.config.SCREEN_W - (asteroid.w or 0))
 	asteroid.y = -asteroid.h;
-	asteroid.speedY = math.random(50, 200)
+	asteroid.speedY = math.random(150, 200)
 	return asteroid;
 	--table.insert(Asteroids, asteroid)
 end
@@ -78,7 +78,7 @@ function Asteroid:draw()
 		love.graphics.draw(self.img, self.x, self.y, nil, self.scalex, self.scaley, self.offsetx, self.offsety);
 	end
 	--Draw hitbox
-	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+	--love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 end
 
 return Asteroid

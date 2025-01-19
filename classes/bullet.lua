@@ -27,6 +27,7 @@ function Bullet:spawn(BulletTypeName)
 
 	bullet.x = Player.x + Player.w/2 - bullet.w/2;
 	bullet.y = Player.y
+	bullet.area_index = math.floor(bullet.x / (vars.config.SCREEN_W / vars.config.Asteroids_split));
 
 	if bullet.spawnSound then -- should i do it if spawn a lot?
 		bullet.spawnSound:play();

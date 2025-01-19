@@ -145,7 +145,9 @@ function love.draw()
 		for j = 1, area[0] do
 			--local asteroid_area = Asteroids[i];
 			local asteroid = area[j];
-			asteroid:draw()
+			if asteroid ~= nil then
+				asteroid:draw()
+			end
 		end
 	end
 	print("");

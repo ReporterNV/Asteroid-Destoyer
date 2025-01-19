@@ -20,8 +20,8 @@ local path = {
 vars.config = {
 	SCREEN_H = 600;
 	SCREEN_W = 400;
-	Asteroids_split = 3;
-	Asteroids_split_max = 2000--20000
+	Asteroids_split = 9;
+	Asteroids_split_max = 10000--20000
 }
 
 vars.editable = {
@@ -36,7 +36,7 @@ CanPressPause = true;
 --UserPause = true;
 --AFKPause = false;
 function vars:init()
-	love.window.setMode(self.config.SCREEN_W, self.config.SCREEN_H, {vsync = Vsync});
+	love.window.setMode(self.config.SCREEN_W, self.config.SCREEN_H, {vsync = vars.editable.Vsync});
 	love.graphics.setDefaultFilter("nearest", "nearest");
 	love.mouse.setVisible(true);
 

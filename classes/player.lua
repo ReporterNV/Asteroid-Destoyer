@@ -14,16 +14,16 @@ local Player = Object:new({
 
 Player:setWHfromImage();
 Player.x = vars.config.SCREEN_W / 2 - Player.w/2
-Player.ShootReload = 0.06;
+Player.ShootReload = 1/1000--0.06;
 Player.ShootTimer = 0;
 Player.ShootOverflow = 0;
 Player.ShootExtra = 0;
 
 Player.ShieldImg = vars.image.Shield;
-Player.Shield = 1000;
-Player.ShieldMax = 1000;
+Player.Shield = 10000;
+Player.ShieldMax = 10000;
 Player.ShieldTimer = 1;
-Player.ShieldReload = 1;
+Player.ShieldReload = 0.01;
 
 --[[
 ShieldDown =  Animation:new({
