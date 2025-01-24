@@ -8,8 +8,7 @@ local screen_w = vars.config.SCREEN_W;
 
 local AsteroidTimer = 1;
 local AsteroidInterval = 1/4000;
---81 при 1000
---8 при 10000
+--24 при стрельбе 
 
 local Objects = {};
 local Asteroids = {};
@@ -193,6 +192,27 @@ function EventManager:update(dt)
 						area[j] = nil;
 						table.remove(Bullets, i)
 						break;
+					end
+				end
+			end
+			print(bullet.area_index);
+			if bullet.area_index - 1 >= 0 then --move in separate table? like outside area?
+				area = Asteroids[bullet.area_index - 1];
+				area_size = area[0];
+				for j = area_size, 1, -1 do
+					local asteroid = area[j];
+					if asteroid ~= nil then
+						if asteroid:checkCollisionObj(bullet) then
+							Score = Score + 1;
+							if asteroid.destroySound ~= nil then
+								asteroid.destroySound:play();
+							end
+							table.insert(Animations, Animation:spawn({type = "AsteroidDestroy", x = asteroid.x, y = asteroid.y}));
+							--table.remove(asteroids, j)
+							area[j] = nil;
+							table.remove(Bullets, i)
+							break;
+						end
 					end
 				end
 			end
